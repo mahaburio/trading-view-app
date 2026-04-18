@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- iOS viewport fix -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <!-- iOS PWA support -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="Trading View" />
+    <!-- iOS icon -->
+    <link rel="apple-touch-icon" href="icon.png" />
+    <title>Trading View</title>
+    <link rel="stylesheet" href="global.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div id="mainWrapper">
+      <div class="container">
+        <!-- Menubar -->
+        <div class="menubar d-flex items-center w-full">
+          <div
+            class="menu-item watchlist active fw-semibold d-flex flex-column items-center justify-center"
+          >
+            <span class="icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                version="1.1"
+                viewBox="-5.0 -10.0 110.0 125.0"
+              >
+                <path
+                  d="m79.688 3.125h-59.375c-4.3086 0-7.8125 3.5039-7.8125 7.8125v81.25c0 1.7812 1.0117 3.4102 2.6055 4.1992 1.5977 0.78906 3.5039 0.60938 4.9219-0.47266l29.973-22.832 29.973 22.836c0.83203 0.63281 1.8359 0.96094 2.8438 0.96094 0.70703 0 1.4219-0.16016 2.0781-0.48828 1.5938-0.79297 2.6055-2.4219 2.6055-4.2031v-81.25c0-4.3086-3.5039-7.8125-7.8125-7.8125zm-14.062 46.875h-31.25c-2.5898 0-4.6875-2.0977-4.6875-4.6875s2.0977-4.6875 4.6875-4.6875h31.25c2.5898 0 4.6875 2.0977 4.6875 4.6875s-2.0977 4.6875-4.6875 4.6875zm0-17.188h-31.25c-2.5898 0-4.6875-2.0977-4.6875-4.6875s2.0977-4.6875 4.6875-4.6875h31.25c2.5898 0 4.6875 2.0977 4.6875 4.6875s-2.0977 4.6875-4.6875 4.6875z"
+                />
+              </svg>
+            </span>
+            Watchlist
+          </div>
+
+          <div
+            class="menu-item fw-semibold d-flex flex-column items-center justify-center"
+          >
+            <span class="icon">
+              <svg
+                width="100"
+                height="100"
+                viewBox="0 0 100 100"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M50 10L85 35V70L50 90L15 70V35L50 10Z"
+                  stroke="black"
+                  stroke-width="6"
+                  stroke-linejoin="round"
+                />
+
+                <rect
+                  x="33"
+                  y="45"
+                  width="12"
+                  height="18"
+                  stroke="black"
+                  stroke-width="4"
+                  fill="none"
+                />
+                <line
+                  x1="39"
+                  y1="38"
+                  x2="39"
+                  y2="45"
+                  stroke="black"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                />
+                <line
+                  x1="39"
+                  y1="63"
+                  x2="39"
+                  y2="70"
+                  stroke="black"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                />
+
+                <rect x="55" y="38" width="12" height="18" fill="black" />
+                <line
+                  x1="61"
+                  y1="32"
+                  x2="61"
+                  y2="38"
+                  stroke="black"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                />
+                <line
+                  x1="61"
+                  y1="56"
+                  x2="61"
+                  y2="64"
+                  stroke="black"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+            Chart
+          </div>
+          <div
+            class="menu-item fw-semibold d-flex flex-column items-center justify-center"
+          >
+            <span class="icon">
+              <?xml version="1.0" encoding="utf-8"?>
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M6.45 17.216l7.981-3.845 2.98-7.115-7.116 2.98zm6.741-4.358l-4.599 2.216 2.216-4.6zM12 1.2A10.8 10.8 0 1 0 22.8 12 10.812 10.812 0 0 0 12 1.2zm0 20.6a9.8 9.8 0 1 1 9.8-9.8 9.81 9.81 0 0 1-9.8 9.8z"
+                />
+                <path fill="none" d="M0 0h24v24H0z" />
+              </svg>
+            </span>
+            Explore
+          </div>
+
+          <div
+            class="menu-item fw-semibold d-flex flex-column items-center justify-center"
+          >
+            <span class="icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M2 22C2 17.5817 5.58172 14 10 14C14.4183 14 18 17.5817 18 22H16C16 18.6863 13.3137 16 10 16C6.68629 16 4 18.6863 4 22H2ZM10 13C6.685 13 4 10.315 4 7C4 3.685 6.685 1 10 1C13.315 1 16 3.685 16 7C16 10.315 13.315 13 10 13ZM10 11C12.21 11 14 9.21 14 7C14 4.79 12.21 3 10 3C7.79 3 6 4.79 6 7C6 9.21 7.79 11 10 11ZM18.2837 14.7028C21.0644 15.9561 23 18.752 23 22H21C21 19.564 19.5483 17.4671 17.4628 16.5271L18.2837 14.7028ZM17.5962 3.41321C19.5944 4.23703 21 6.20361 21 8.5C21 11.3702 18.8042 13.7252 16 13.9776V11.9646C17.6967 11.7222 19 10.264 19 8.5C19 7.11935 18.2016 5.92603 17.041 5.35635L17.5962 3.41321Z"
+                ></path>
+              </svg>
+            </span>
+            Community
+          </div>
+
+          <div
+            class="menu-item fw-semibold d-flex flex-column items-center justify-center"
+          >
+            <span class="icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M3 4H21V6H3V4ZM3 11H21V13H3V11ZM3 18H21V20H3V18Z"
+                ></path>
+              </svg>
+            </span>
+            Menu
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

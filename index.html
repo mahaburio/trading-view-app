@@ -32,6 +32,11 @@
   <body>
     <div id="mainWrapper">
       <div class="container">
+        <div class="app-banner">
+          <div class="logo">
+            <img src="./assets/white-full-logo.svg" alt="Trading View Logo" />
+          </div>
+        </div>
         <header>
           <div class="header-actions d-flex justify-between items-center">
             <div class="expand-action" id="expandAction">
@@ -42,13 +47,36 @@
                   <ul class="dropdown-menu">
                     <li class="dropdown-item title fs-12">Watchlist</li>
                     <li class="dropdown-item">
-                      Edit <i class="ri-pencil-line"></i>
+                      Edit
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 16 16"
+                        width="16"
+                        height="16"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M10.62.72a2.47 2.47 0 0 1 3.5 0l1.16 1.16c.96.97.96 2.54 0 3.5l-.58.58-8.9 8.9-1 1-.14.14H0v-4.65l.14-.15 1-1 8.9-8.9.58-.58Zm2.8.7a1.48 1.48 0 0 0-2.1 0l-.23.23 3.26 3.26.23-.23c.58-.58.58-1.52 0-2.1l-1.16-1.16Zm.23 4.2-3.26-3.27-8.2 8.2 3.25 3.27 8.2-8.2Zm-8.9 8.9-3.27-3.26-.5.5V15h3.27l.5-.5Z"
+                        ></path>
+                      </svg>
                     </li>
                     <li class="dropdown-item">
                       Sort by <i class="ri-arrow-up-down-line"></i>
                     </li>
                     <li class="dropdown-item">
-                      News by watchlist <i class="ri-file-list-3-line"></i>
+                      News by watchlist
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 28 28"
+                        width="28"
+                        height="28"
+                        fill="none"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M21 13h3v8.5a2.5 2.5 0 0 1-2.5 2.5h-15a2.5 2.5 0 0 1-2.487-2.244L4 21.5V5h17zM5 21.5A1.5 1.5 0 0 0 6.5 23H20V6H5zM21 23h.5a1.5 1.5 0 0 0 1.5-1.5V14h-2zm-7-3H7v-1h7zm4-3H7v-1h11zm-7-4H7V9h4zm7 0h-5v-1h5zM8 12h2v-2H8zm10-2h-5V9h5z"
+                        ></path>
+                      </svg>
                     </li>
 
                     <div class="border-line"></div>
@@ -122,9 +150,6 @@
           </div>
         </header>
 
-        <!--  -->
-
-        <!-- content -->
         <!-- Watchlist Page -->
         <main class="content" id="watchlistPage">
           <ul class="list-container" id="watchlistContainer">
@@ -140,7 +165,6 @@
           </div>
         </main>
 
-        
         <!-- Bottom Sheet Modal -->
         <div class="bottom-sheet-modal" id="bottomSheetModal">
           <div class="modal-backdrop"></div>
@@ -189,6 +213,223 @@
           </div>
         </div>
 
+        <!-- Chart Page -->
+        <div class="chart-page-container">
+          <!-- Chart Page -->
+          <main class="" id="chartPage">
+            <div class="chart-container">
+              <div class="chart-main">
+                <div id="tradingviewChart"></div>
+              </div>
+
+              <!-- Bottom Section -->
+              <div class="chart-bottom-nav">
+                <!-- Left: Vertical Symbol List -->
+                <div class="symbol-list-vertical-container">
+                  <div class="symbol-list-vertical" id="symbolListVertical">
+                    <div class="symbol-item-vertical" data-symbol="GC1!">
+                      <span class="symbol-name">GC1!</span>
+                    </div>
+                    <div class="symbol-item-vertical active" data-symbol="NQ1!">
+                      <span class="symbol-name">NQ1!</span>
+                    </div>
+                    <div class="symbol-item-vertical" data-symbol="ES1!">
+                      <span class="symbol-name">ES1!</span>
+                    </div>
+                    <div class="symbol-item-vertical" data-symbol="YM1!">
+                      <span class="symbol-name">YM1!</span>
+                    </div>
+                    <div class="symbol-item-vertical" data-symbol="RTY1!">
+                      <span class="symbol-name">RTY1!</span>
+                    </div>
+                    <div class="symbol-item-vertical" data-symbol="SI1!">
+                      <span class="symbol-name">SI1!</span>
+                    </div>
+                    <div class="symbol-item-vertical" data-symbol="CL1!">
+                      <span class="symbol-name">CL1!</span>
+                    </div>
+                    <div class="symbol-item-vertical" data-symbol="NG1!">
+                      <span class="symbol-name">NG1!</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Center: Date Range -->
+                <div class="date-range-container">
+                  <button class="date-range-btn" id="dateRangeBtn">
+                    <span>6M</span>
+                  </button>
+                </div>
+
+                <!-- Right: Tool Icons -->
+                <div class="tool-icons-container">
+                  <div class="tool-icons" id="toolIcons">
+                    <button class="tool-icon" title="Drawings">
+                      <i class="ri-pencil-line"></i>
+                    </button>
+                    <button class="tool-icon" title="Trade with broker">
+                      <i class="ri-exchange-line"></i>
+                    </button>
+                    <button class="tool-icon" title="Analysis hub">
+                      <i class="ri-bar-chart-line"></i>
+                    </button>
+                    <button class="tool-icon" title="Previous">
+                      <i class="ri-arrow-left-s-line"></i>
+                    </button>
+                    <button class="tool-icon" title="Next">
+                      <i class="ri-arrow-right-s-line"></i>
+                    </button>
+                    <button class="tool-icon" title="Expand screen">
+                      <i class="ri-fullscreen-line"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          <!-- Date Range & Interval Modal -->
+          <div class="date-range-modal" id="dateRangeModal">
+            <div class="date-range-backdrop"></div>
+            <div class="date-range-content">
+              <!-- Sticky Header -->
+              <div class="date-range-sticky-header">
+                <h3>Date range</h3>
+                <button class="close-modal" id="closeDateRange">
+                  <i class="ri-close-line"></i>
+                </button>
+              </div>
+              
+              <!-- Scrollable Content -->
+              <div class="date-range-scrollable">
+                <!-- Date Range Section -->
+                <div class="date-range-section">
+                  <div class="date-range-options">
+                    <div class="date-option" data-range="1d">1D</div>
+                    <div class="date-option" data-range="5d">5D</div>
+                    <div class="date-option" data-range="1m">1M</div>
+                    <div class="date-option" data-range="3m">3M</div>
+                    <div class="date-option active" data-range="6m">6M</div>
+                    <div class="date-option" data-range="ytd">YTD</div>
+                    <div class="date-option" data-range="1y">1Y</div>
+                    <div class="date-option" data-range="5y">5Y</div>
+                    <div class="date-option" data-range="all">All</div>
+                  </div>
+                </div>
+
+                <!-- Interval Section -->
+                <div class="interval-section">
+                  <h3 class="interval-title">Interval</h3>
+                  
+                  <!-- Favorites -->
+                  <div class="interval-category">
+                    <div class="interval-category-title">FAVORITES</div>
+                    <div class="interval-options">
+                      <div class="interval-option favorite">
+                        <span>8m</span>
+                        <i class="ri-star-fill"></i>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Ticks -->
+                  <div class="interval-category">
+                    <div class="interval-category-title">TICKS</div>
+                    <div class="interval-options">
+                      <div class="interval-option">1T</div>
+                      <div class="interval-option">10T</div>
+                      <div class="interval-option">100T</div>
+                      <div class="interval-option">1000T</div>
+                    </div>
+                  </div>
+
+                  <!-- Seconds -->
+                  <div class="interval-category">
+                    <div class="interval-category-title">SECONDS</div>
+                    <div class="interval-options">
+                      <div class="interval-option">1s</div>
+                      <div class="interval-option">5s</div>
+                      <div class="interval-option">10s</div>
+                      <div class="interval-option">15s</div>
+                      <div class="interval-option">30s</div>
+                      <div class="interval-option">45s</div>
+                    </div>
+                  </div>
+
+                  <!-- Minutes -->
+                  <div class="interval-category">
+                    <div class="interval-category-title">MINUTES</div>
+                    <div class="interval-options">
+                      <div class="interval-option">1m</div>
+                      <div class="interval-option">2m</div>
+                      <div class="interval-option">3m</div>
+                      <div class="interval-option">5m</div>
+                      <div class="interval-option active">6m</div>
+                      <div class="interval-option favorite">
+                        <span>8m</span>
+                        <i class="ri-star-fill"></i>
+                      </div>
+                      <div class="interval-option">10m</div>
+                      <div class="interval-option">15m</div>
+                      <div class="interval-option">20m</div>
+                      <div class="interval-option">30m</div>
+                    </div>
+                  </div>
+
+                  <!-- Hours -->
+                  <div class="interval-category">
+                    <div class="interval-category-title">HOURS</div>
+                    <div class="interval-options">
+                      <div class="interval-option">1H</div>
+                      <div class="interval-option">2H</div>
+                      <div class="interval-option">3H</div>
+                      <div class="interval-option">4H</div>
+                      <div class="interval-option">6H</div>
+                      <div class="interval-option">8H</div>
+                      <div class="interval-option">12H</div>
+                      <div class="interval-option">16H</div>
+                    </div>
+                  </div>
+
+                  <!-- Days -->
+                  <div class="interval-category">
+                    <div class="interval-category-title">DAYS</div>
+                    <div class="interval-options">
+                      <div class="interval-option">1D</div>
+                      <div class="interval-option">3D</div>
+                      <div class="interval-option">1W</div>
+                      <div class="interval-option">1M</div>
+                      <div class="interval-option">3M</div>
+                      <div class="interval-option">6M</div>
+                      <div class="interval-option">1Y</div>
+                    </div>
+                  </div>
+
+
+                  <div class="interval-category">
+                    <div class="interval-category-title">Ranges</div>
+                    <div class="interval-options">
+                      <div class="interval-option">1R</div>
+                      <div class="interval-option">10R</div>
+                      <div class="interval-option">40R</div>
+                      <div class="interval-option">100R</div>
+                      <div class="interval-option">1000R</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Fixed Bottom Button -->
+              <div class="date-range-footer">
+                <button class="add-interval-btn" id="addIntervalBtn">
+                  <span class="add-icon"><i class="ri-add-line"></i></span>
+                  Add interval
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Menubar -->
         <div class="menubar d-flex items-center w-full">
           <div
@@ -232,25 +473,21 @@
             Watchlist
           </div>
 
-          <div class="menu-item chart fw-semibold d-flex flex-column items-center justify-center">
+          <div
+            class="menu-item chart fw-semibold d-flex flex-column items-center justify-center"
+          >
             <span class="icon">
               <svg
-                id="Layer_1"
-                data-name="Layer 1"
                 xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 200 200"
+                viewBox="0 0 18 18"
+                width="18"
+                height="18"
+                fill="none"
               >
-                <defs>
-                  <style>
-                    .cls-1 {
-                      fill: #2b2d3a;
-                    }
-                  </style>
-                </defs>
                 <path
-                  class="cls-1"
-                  d="M141.65,6.83H58.35A51.52,51.52,0,0,0,6.83,58.35v83.3a51.52,51.52,0,0,0,51.52,51.52h83.3a51.52,51.52,0,0,0,51.52-51.52V58.35A51.52,51.52,0,0,0,141.65,6.83ZM119.59,125.76,81.2,91.57,52.45,118.1l-8.71-9.44L81,74.24l38.37,34.16,28.11-26.1,8.74,9.41Z"
-                />
+                  fill="currentColor"
+                  d="M17 8.2 9 16 1 8.2 3.667 3h10.666zM2.226 8 9 14.602 15.773 8l-2.05-4H4.277zM9.5 7H11v3H9.5v2h-1v-2H7V7h1.5V5h1z"
+                ></path>
               </svg>
             </span>
             Chart
@@ -290,40 +527,16 @@
           >
             <span class="icon">
               <svg
-                id="Layer_1"
-                data-name="Layer 1"
                 xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 200 200"
+                viewBox="0 0 28 28"
+                width="28"
+                height="28"
+                fill="none"
               >
-                <defs>
-                  <style>
-                    .cls-1 {
-                      fill: #2b2d3a;
-                    }
-                  </style>
-                </defs>
                 <path
-                  class="cls-1"
-                  d="M141.8,144.89H58.19a5.13,5.13,0,0,1-3-1,76,76,0,1,1,89.71,0A5.18,5.18,0,0,1,141.8,144.89ZM59.92,134.55h80.15a65.65,65.65,0,1,0-80.15,0Z"
-                />
-                <rect
-                  class="cls-1"
-                  x="76.67"
-                  y="77.25"
-                  width="46.66"
-                  height="10.33"
-                />
-                <rect
-                  class="cls-1"
-                  x="94.83"
-                  y="82.42"
-                  width="10.33"
-                  height="57.3"
-                />
-                <path
-                  class="cls-1"
-                  d="M119.48,193.41h-39a22,22,0,0,1-22-22V158.13h82.9v13.31A22,22,0,0,1,119.48,193.41Zm-50.6-24.95v3a11.65,11.65,0,0,0,11.64,11.64h39a11.65,11.65,0,0,0,11.64-11.64v-3Z"
-                />
+                  fill="currentColor"
+                  d="M12.014 16.005A4.995 4.995 0 0 1 17.009 21h-1.5a3.495 3.495 0 0 0-3.495-3.495H7.996a3.493 3.493 0 0 0-3.492 3.492h-1.5a4.993 4.993 0 0 1 4.992-4.992zm8.996 1A3.995 3.995 0 0 1 25.004 21h-1.5a2.494 2.494 0 0 0-2.493-2.494H18v-1.5zM19.5 8c.464 0 .697 0 .892.025a3 3 0 0 1 2.583 2.583c.025.195.025.428.025.892s0 .697-.025.891l-.044.25a3 3 0 0 1-2.54 2.333l-.156.015c-.169.01-.387.01-.735.01s-.566 0-.735-.01l-.157-.015a3 3 0 0 1-2.539-2.334l-.044-.249C16 12.197 16 11.964 16 11.5s0-.697.025-.892a3 3 0 0 1 2.583-2.583C18.803 8 19.036 8 19.5 8M10 6c.464 0 .696 0 .892.022a3.5 3.5 0 0 1 3.085 3.086C14 9.303 14 9.536 14 10s0 .696-.023.891a3.5 3.5 0 0 1-3.085 3.086C10.696 14 10.464 14 10 14c-.348 0-.566 0-.735-.01l-.157-.013a3.5 3.5 0 0 1-3.039-2.785l-.047-.3C6.001 10.695 6 10.463 6 10c0-.348 0-.566.01-.736l.012-.156A3.5 3.5 0 0 1 8.808 6.07l.3-.047C9.304 6 9.536 6 10 6m9.5 3.5c-.51 0-.622.003-.695.012a1.5 1.5 0 0 0-1.292 1.292c-.01.073-.013.185-.013.696s.003.622.013.695a1.5 1.5 0 0 0 1.292 1.292c.073.01.184.013.695.013s.622-.003.695-.013a1.5 1.5 0 0 0 1.292-1.292c.01-.073.013-.185.013-.695 0-.511-.003-.623-.013-.696a1.5 1.5 0 0 0-1.292-1.292c-.073-.01-.184-.012-.695-.012m-9.5-2c-.505 0-.633.002-.724.012a2 2 0 0 0-1.763 1.764c-.01.09-.013.22-.013.724s.003.633.013.723a2 2 0 0 0 1.763 1.764c.09.01.22.013.724.013.505 0 .633-.003.724-.013a2 2 0 0 0 1.763-1.764c.01-.09.013-.219.013-.723 0-.505-.002-.633-.013-.724a2 2 0 0 0-1.763-1.764c-.09-.01-.22-.012-.724-.012"
+                ></path>
               </svg>
             </span>
             Community
@@ -1000,6 +1213,386 @@
       // Initialize watchlist on page load
       generateWatchlist();
 
-          </script>
+      // Tab switching functionality
+      const menuItems = document.querySelectorAll(".menu-item");
+      const watchlistPage = document.getElementById("watchlistPage");
+      const chartPage = document.getElementById("chartPage");
+      const header = document.querySelector("header");
+      const appBanner = document.querySelector(".app-banner");
+      let chartInitialized = false;
+      let chartInstance = null;
+
+      menuItems.forEach((item) => {
+        item.addEventListener("click", function () {
+          // Remove active class from all menu items
+          menuItems.forEach((mi) => mi.classList.remove("active"));
+          // Add active class to clicked item
+          this.classList.add("active");
+
+          // Check which tab was clicked
+          if (this.classList.contains("watchlist")) {
+            // Show watchlist, hide chart
+            watchlistPage.style.display = "block";
+            chartPage.style.display = "none";
+            document.querySelector(".chart-page-container").style.display =
+              "none";
+            // Show header and app banner
+            if (header) header.style.display = "block";
+            if (appBanner) appBanner.style.display = "flex";
+          } else if (this.classList.contains("chart")) {
+            // Show chart, hide watchlist
+            watchlistPage.style.display = "none";
+            chartPage.style.display = "block";
+            document.querySelector(".chart-page-container").style.display =
+              "block";
+            // Hide header and app banner
+            if (header) header.style.display = "none";
+            if (appBanner) appBanner.style.display = "none";
+            // Initialize chart if not already done
+            if (!chartInitialized) {
+              initializeChart();
+              chartInitialized = true;
+            } else if (chartInstance) {
+              // Resize chart when becoming visible
+              setTimeout(() => {
+                const chartContainer =
+                  document.getElementById("tradingviewChart");
+                chartInstance.applyOptions({
+                  width: chartContainer.clientWidth,
+                  height: chartContainer.clientHeight || 400,
+                });
+              }, 100);
+            }
+          }
+        });
+      });
+
+      // Initialize TradingView Chart
+      function initializeChart() {
+        const chartContainer = document.getElementById("tradingviewChart");
+        if (!chartContainer) return;
+
+        // Create the chart
+        chartInstance = LightweightCharts.createChart(chartContainer, {
+          width: chartContainer.clientWidth,
+          height: chartContainer.clientHeight || 400,
+          layout: {
+            background: { color: "#ffffff" },
+            textColor: "#2b2c39",
+          },
+          grid: {
+            vertLines: { color: "#f0f0f0" },
+            horzLines: { color: "#f0f0f0" },
+          },
+          crosshair: {
+            mode: LightweightCharts.CrosshairMode.Normal,
+          },
+          rightPriceScale: {
+            borderColor: "#c6c6c8",
+          },
+          timeScale: {
+            borderColor: "#c6c6c8",
+          },
+        });
+
+        // Add candlestick series
+        const candlestickSeries = chartInstance.addCandlestickSeries({
+          upColor: "#2a7e6a",
+          downColor: "#e74c3c",
+          borderUpColor: "#2a7e6a",
+          borderDownColor: "#e74c3c",
+          wickUpColor: "#2a7e6a",
+          wickDownColor: "#e74c3c",
+        });
+
+        // Generate sample data for NQ1! (6 months)
+        const sampleData = generateSampleData();
+        candlestickSeries.setData(sampleData);
+
+        // Fit content
+        chartInstance.timeScale().fitContent();
+
+        // Handle resize
+        window.addEventListener("resize", () => {
+          if (chartInstance) {
+            chartInstance.applyOptions({
+              width: chartContainer.clientWidth,
+              height: chartContainer.clientHeight || 400,
+            });
+          }
+        });
+      }
+
+      // Generate sample candlestick data
+      function generateSampleData() {
+        const data = [];
+        const now = new Date();
+        let price = 20000;
+
+        for (let i = 180; i >= 0; i--) {
+          const date = new Date(now);
+          date.setDate(date.getDate() - i);
+
+          const volatility = price * 0.02;
+          const open = price + (Math.random() - 0.5) * volatility * 0.5;
+          const close = open + (Math.random() - 0.5) * volatility;
+          const high = Math.max(open, close) + Math.random() * volatility * 0.3;
+          const low = Math.min(open, close) - Math.random() * volatility * 0.3;
+
+          data.push({
+            time: date.toISOString().split("T")[0],
+            open: parseFloat(open.toFixed(2)),
+            high: parseFloat(high.toFixed(2)),
+            low: parseFloat(low.toFixed(2)),
+            close: parseFloat(close.toFixed(2)),
+          });
+
+          price = close;
+        }
+
+        return data;
+      }
+
+      // Symbol list vertical click handling
+      const symbolItems = document.querySelectorAll(".symbol-item-vertical");
+      symbolItems.forEach((item) => {
+        item.addEventListener("click", function () {
+          symbolItems.forEach((si) => si.classList.remove("active"));
+          this.classList.add("active");
+          // Here you could update the chart with the selected symbol's data
+        });
+      });
+
+      // Date range modal functionality
+      const dateRangeBtn = document.getElementById("dateRangeBtn");
+      const dateRangeModal = document.getElementById("dateRangeModal");
+      const closeDateRange = document.getElementById("closeDateRange");
+      const addIntervalBtn = document.getElementById("addIntervalBtn");
+      const dateRangeContent = dateRangeModal ? dateRangeModal.querySelector(".date-range-content") : null;
+      const dateRangeScrollable = dateRangeModal ? dateRangeModal.querySelector(".date-range-scrollable") : null;
+
+      let isFullHeight = false;
+      let isTransitioning = false;
+      let touchStartY = 0;
+      let touchCurrentY = 0;
+      let isDragging = false;
+
+      function expandModal() {
+        if (dateRangeContent && !isTransitioning) {
+          isTransitioning = true;
+          dateRangeContent.classList.add("full-height");
+          // Wait for transition to complete (300ms matches CSS)
+          setTimeout(() => {
+            isFullHeight = true;
+            isTransitioning = false;
+          }, 300);
+        }
+      }
+
+      function collapseModal() {
+        if (dateRangeContent && !isTransitioning) {
+          isTransitioning = true;
+          dateRangeContent.classList.remove("full-height");
+          // Wait for transition to complete
+          setTimeout(() => {
+            isFullHeight = false;
+            isTransitioning = false;
+          }, 300);
+        }
+      }
+
+      function closeModalFunc() {
+        if (dateRangeModal) {
+          dateRangeModal.classList.remove("active");
+          setTimeout(() => {
+            collapseModal();
+            if (dateRangeScrollable) {
+              dateRangeScrollable.scrollTop = 0;
+            }
+          }, 300);
+        }
+      }
+
+      if (dateRangeBtn) {
+        dateRangeBtn.addEventListener("click", () => {
+          collapseModal();
+          dateRangeModal.classList.add("active");
+        });
+      }
+
+      if (closeDateRange) {
+        closeDateRange.addEventListener("click", () => {
+          closeModalFunc();
+        });
+      }
+
+      // Close modal when clicking backdrop
+      if (dateRangeModal) {
+        dateRangeModal.addEventListener("click", function(e) {
+          if (e.target === this.querySelector(".date-range-backdrop")) {
+            closeModalFunc();
+          }
+        });
+      }
+
+      // Touch handling for swipe up/down
+      if (dateRangeContent && dateRangeScrollable) {
+        let startScrollTop = 0;
+        let hasExpanded = false;
+        
+        // Handle touch on the header/sticky area to drag
+        const stickyHeader = dateRangeContent.querySelector(".date-range-sticky-header");
+        
+        if (stickyHeader) {
+          stickyHeader.addEventListener("touchstart", (e) => {
+            touchStartY = e.touches[0].clientY;
+            isDragging = true;
+            hasExpanded = false;
+          }, { passive: true });
+
+          stickyHeader.addEventListener("touchmove", (e) => {
+            if (!isDragging) return;
+            touchCurrentY = e.touches[0].clientY;
+            
+            const diff = touchStartY - touchCurrentY;
+            
+            // Swipe up on header expands modal
+            if (diff > 30 && !isFullHeight && !hasExpanded) {
+              hasExpanded = true;
+              expandModal();
+            }
+          }, { passive: true });
+
+          stickyHeader.addEventListener("touchend", (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            hasExpanded = false;
+            
+            const diff = touchStartY - touchCurrentY;
+            const threshold = 50;
+
+            if (diff > threshold) {
+              // Swiped up - expand to full
+              expandModal();
+            } else if (diff < -threshold) {
+              // Swiped down - collapse or close
+              if (isFullHeight) {
+                collapseModal();
+              } else {
+                closeModalFunc();
+              }
+            }
+          });
+        }
+
+        // Handle scroll area touch
+        let pullStartY = 0;
+        let isPulling = false;
+        
+        dateRangeScrollable.addEventListener("touchstart", (e) => {
+          touchStartY = e.touches[0].clientY;
+          startScrollTop = dateRangeScrollable.scrollTop;
+          hasExpanded = false;
+          
+          // Track pull start when at top and full height
+          if (isFullHeight && startScrollTop <= 0) {
+            pullStartY = touchStartY;
+            isPulling = true;
+          } else if (!isFullHeight) {
+            // Track for close gesture when at 70vh
+            pullStartY = touchStartY;
+            isPulling = true;
+          }
+        }, { passive: true });
+
+        dateRangeScrollable.addEventListener("touchmove", (e) => {
+          touchCurrentY = e.touches[0].clientY;
+          const currentScrollTop = dateRangeScrollable.scrollTop;
+          const diffY = touchStartY - touchCurrentY;
+          
+          // Block all scrolling during transition animation
+          if (isTransitioning) {
+            e.preventDefault();
+            return;
+          }
+          
+          // If not at full height, completely block all scrolling and expand
+          if (!isFullHeight) {
+            // Swipe up to expand
+            if (diffY > 5 && !hasExpanded) {
+              hasExpanded = true;
+              expandModal();
+            }
+            // Swipe down to close when at 70vh
+            if (diffY < -80 && isPulling) {
+              isPulling = false;
+              closeModalFunc();
+              e.preventDefault();
+              return;
+            }
+            // Always prevent scroll when not full height
+            e.preventDefault();
+            return;
+          }
+          
+          // When at full height and pulling down from top
+          if (isFullHeight && currentScrollTop <= 0 && diffY < 0 && isPulling) {
+            const pullDiff = touchCurrentY - pullStartY;
+            
+            if (pullDiff > 60) {
+              // Collapse from full to half
+              isPulling = false;
+              collapseModal();
+              e.preventDefault();
+            }
+          }
+        }, { passive: false });
+
+        dateRangeScrollable.addEventListener("touchend", () => {
+          hasExpanded = false;
+          isPulling = false;
+        });
+      }
+
+      // Date range options
+      const dateOptions = document.querySelectorAll(".date-range-section .date-option");
+      dateOptions.forEach((option) => {
+        option.addEventListener("click", function () {
+          dateOptions.forEach((o) => o.classList.remove("active"));
+          this.classList.add("active");
+          const range = this.getAttribute("data-range");
+          if (dateRangeBtn) {
+            dateRangeBtn.querySelector("span").textContent = range.toUpperCase();
+          }
+        });
+      });
+
+      // Interval options
+      const intervalOptions = document.querySelectorAll(".interval-option");
+      intervalOptions.forEach((option) => {
+        option.addEventListener("click", function () {
+          intervalOptions.forEach((o) => o.classList.remove("active"));
+          this.classList.add("active");
+          const intervalText = this.querySelector("span") ? this.querySelector("span").textContent : this.textContent;
+          if (dateRangeBtn) {
+            dateRangeBtn.querySelector("span").textContent = intervalText;
+          }
+          setTimeout(() => {
+            dateRangeModal.classList.remove("active");
+          }, 200);
+        });
+      });
+
+      // Add interval button
+      if (addIntervalBtn) {
+        addIntervalBtn.addEventListener("click", () => {
+          alert("Add custom interval feature coming soon!");
+        });
+      }
+
+      // Initially hide chart page
+      chartPage.style.display = "none";
+      document.querySelector(".chart-page-container").style.display = "none";
+    </script>
   </body>
 </html>

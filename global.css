@@ -1,7 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a:focus,
+button:focus {
+  outline: none;
 }
 
 html,
@@ -10,23 +18,37 @@ body {
   width: 100%;
 }
 
+html {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 body {
-  margin: 0;
-  padding: env(safe-area-inset-top) env(safe-area-inset-right)
-    env(safe-area-inset-bottom) env(safe-area-inset-left);
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  overflow-y: visible;
 }
 
 :root {
   --color-primary: #007bff;
-  --color-black: #000;
+  --color-black: #2b2c39;
   --color-white: #fff;
+  --color-gray: #8c8c8c;
+  --color-success: #2a7e6a;
+  --color-danger: #e74c3c;
+  --color-border: #c6c6c8;
+}
+
+#mainWrapper {
+  min-height: 100vh;
+  width: 100%;
 }
 
 .container {
   max-width: 500px;
-  background-color: red;
   margin: 0 auto;
+  min-height: 100vh;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .fw-medium {
@@ -50,6 +72,10 @@ body {
   display: inline;
 }
 
+.d-inline-flex {
+  display: inline-flex;
+}
+
 .d-flex {
   display: flex;
 }
@@ -67,6 +93,9 @@ body {
 }
 .justify-center {
   justify-content: center;
+}
+.justify-end {
+  justify-content: flex-end;
 }
 
 .gap-1 {
@@ -87,6 +116,9 @@ body {
 .mt-3 {
   margin-top: 12px;
 }
+.mt-6 {
+  margin-top: 24px;
+}
 
 .cursor-pointer {
   cursor: pointer;
@@ -94,4 +126,48 @@ body {
 
 .w-full {
   width: 100%;
+}
+
+.text-success {
+  color: var(--color-success);
+}
+
+.text-danger {
+  color: var(--color-danger);
+}
+
+.text-gray {
+  color: var(--color-gray);
+}
+
+.text-right {
+  text-align: right;
+}
+
+.fs-24 {
+  font-size: 24px;
+}
+
+.fs-20 {
+  font-size: 20px;
+}
+.fs-16 {
+  font-size: 16px;
+}
+.fs-14 {
+  font-size: 14px;
+}
+
+.fs-12 {
+  font-size: 12px;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Whitespace */
+.whitespace-nowrap {
+  white-space: nowrap;
 }

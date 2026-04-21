@@ -26,7 +26,7 @@
 /* Header */
 
 header {
-/*   position: sticky;
+  /*   position: sticky;
   top: 48px; */
   background-color: var(--color-white);
   z-index: 99;
@@ -91,7 +91,6 @@ header {
   width: 100%;
   height: 100%;
   background: var(--color-white);
-  border-radius: 20px 20px 0 0;
   transform: translateY(100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
@@ -447,8 +446,7 @@ header {
 /* Chart Page Container */
 .chart-page-container {
   display: none;
-  height: calc(100vh - 90px);
-  min-height: 400px;
+  height: calc(100dvh - 60px);
   padding-top: env(safe-area-inset-top);
 }
 
@@ -462,7 +460,7 @@ header {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 0 16px;
+  width: 100%;
 }
 
 .chart-main {
@@ -475,68 +473,90 @@ header {
 .chart-bottom-nav {
   display: flex;
   align-items: center;
-  padding: 12px 0px;
   background: var(--color-white);
-  gap: 18px;
+  gap: 10px;
   width: 100%;
-  box-sizing: border-box;
   overflow: hidden;
 }
 
-/* Symbol List - Vertical */
+/* Symbol List - Vertical Picker */
 .symbol-list-vertical-container {
-  flex: 0 0 60px;
-  height: 60px;
+  flex: 0 0 80px;
+  height: 72px;
   overflow: hidden;
   position: relative;
 }
 
-.symbol-list-vertical {
+/* Fade edges top/bottom */
+.symbol-list-vertical-container::before,
+.symbol-list-vertical-container::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 24px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.symbol-list-vertical-container::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--color-white), transparent);
+}
+
+.symbol-list-vertical-container::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--color-white), transparent);
+}
+
+.symbol-scroller {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
   overflow-y: auto;
+  scroll-snap-type: y mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  height: 100%;
+  height: 72px;
   width: 100%;
-  scroll-snap-type: y mandatory;
+  padding-left: 10px;
 }
 
-.symbol-list-vertical::-webkit-scrollbar {
+.symbol-scroller::-webkit-scrollbar {
   display: none;
 }
 
-.symbol-item-vertical {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 3px 6px;
-  border-radius: 6px;
-  color: var(--color-black);
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-  scroll-snap-align: center;
-  white-space: nowrap;
-  opacity: 0.3;
+.symbol-chip {
+  flex-shrink: 0;
+  height: 24px;
   width: 100%;
-}
-
-.symbol-item-vertical:hover {
-  opacity: 0.6;
-}
-
-.symbol-item-vertical.active {
-  color: var(--color-black);
-  opacity: 1;
-}
-
-.symbol-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: center;
+  cursor: pointer;
+  font-size: 16px;
   font-weight: 600;
+  color: var(--color-black);
+  opacity: 0.25;
+  transition: 0.2s ease;
+  white-space: nowrap;
+  border-radius: 0;
+  padding: 0;
+  user-select: none;
+  background-color: transparent;
+}
+
+.symbol-chip:hover {
+  opacity: 0.5;
+  color: var(--color-black);
+}
+
+.symbol-chip.active {
+  opacity: 1;
+  font-size: 16px;
+  color: var(--color-black);
 }
 
 /* Date Range */
@@ -589,10 +609,9 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 12px;
+  padding: 8px 8px;
   background-color: transparent;
   border: none;
-  border-radius: 6px;
   color: var(--color-black);
   cursor: pointer;
   transition: all 0.2s;
@@ -602,6 +621,11 @@ header {
 
 .tool-icon i {
   font-size: 24px;
+}
+
+.tool-icon svg {
+  height: 32px;
+  width: 32px;
 }
 
 /* Date Range & Interval Modal */
@@ -614,6 +638,9 @@ header {
   z-index: 1000;
   visibility: hidden;
   pointer-events: none;
+  width: 500px;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 .date-range-modal.active {
@@ -638,18 +665,30 @@ header {
 
 .date-range-content {
   position: absolute;
-  bottom: 0;
   left: 0;
   right: 0;
+  bottom: 0;
+  height: 100dvh;
+
   background: var(--color-white);
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  transform: translateY(100%);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  height: 70vh;
-  max-height: 95vh;
+  border-radius: 20px 20px 0 0;
+
+  transform: translateY(70%);
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+
+  will-change: transform;
+  touch-action: none;
+}
+
+.date-range-content.full-height {
+  border-radius: 0;
+  transition:
+    transform 0.35s cubic-bezier(0.32, 0.72, 0, 1),
+    border-radius 0.35s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .date-range-modal.active .date-range-content {
@@ -657,12 +696,15 @@ header {
 }
 
 .date-range-content.full-height {
-  height: 100vh !important;
+  height: 100dvh;
+  height: -webkit-fill-available;
+  border-radius: 0;
+  transition: 0.3s ease;
 }
 
 /* Drag handle indicator */
 .date-range-content::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 8px;
   left: 50%;
@@ -681,11 +723,6 @@ header {
   align-items: center;
   padding: 20px 20px 16px;
   background: var(--color-white);
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
 }
 
 .date-range-sticky-header h3 {
@@ -695,7 +732,7 @@ header {
   color: var(--color-black);
 }
 
-.date-range-sticky-header .close-modal {
+#closeDateRange {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -708,6 +745,10 @@ header {
   align-items: center;
   justify-content: center;
   padding: 0;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  z-index: 20;
 }
 
 /* Scrollable Content */
@@ -868,10 +909,12 @@ header {
   font-size: 20px;
 }
 
-.add-interval-btn .add-icon{
+.add-interval-btn .add-icon {
   position: absolute;
   left: 20px;
 }
+
+/* For Chart Container */
 
 @media screen and (max-width: 390px) {
   .list-container .list-item .tickerCardDetails {

@@ -219,39 +219,20 @@
           <main class="" id="chartPage">
             <div class="chart-container">
               <div class="chart-main">
-                <div id="tradingviewChart"></div>
+                <!-- TradingView Widget Container -->
+                <div
+                  id="tradingviewWidgetContainer"
+                  class="tradingview-widget-container"
+                  style="height: 100%; width: 100%"
+                ></div>
+                <!-- TradingView Widget END -->
               </div>
 
               <!-- Bottom Section -->
               <div class="chart-bottom-nav">
                 <!-- Left: Vertical Symbol List -->
                 <div class="symbol-list-vertical-container">
-                  <div class="symbol-list-vertical" id="symbolListVertical">
-                    <div class="symbol-item-vertical" data-symbol="GC1!">
-                      <span class="symbol-name">GC1!</span>
-                    </div>
-                    <div class="symbol-item-vertical active" data-symbol="NQ1!">
-                      <span class="symbol-name">NQ1!</span>
-                    </div>
-                    <div class="symbol-item-vertical" data-symbol="ES1!">
-                      <span class="symbol-name">ES1!</span>
-                    </div>
-                    <div class="symbol-item-vertical" data-symbol="YM1!">
-                      <span class="symbol-name">YM1!</span>
-                    </div>
-                    <div class="symbol-item-vertical" data-symbol="RTY1!">
-                      <span class="symbol-name">RTY1!</span>
-                    </div>
-                    <div class="symbol-item-vertical" data-symbol="SI1!">
-                      <span class="symbol-name">SI1!</span>
-                    </div>
-                    <div class="symbol-item-vertical" data-symbol="CL1!">
-                      <span class="symbol-name">CL1!</span>
-                    </div>
-                    <div class="symbol-item-vertical" data-symbol="NG1!">
-                      <span class="symbol-name">NG1!</span>
-                    </div>
-                  </div>
+                  <div class="symbol-scroller" id="symbolListVertical"></div>
                 </div>
 
                 <!-- Center: Date Range -->
@@ -265,22 +246,85 @@
                 <div class="tool-icons-container">
                   <div class="tool-icons" id="toolIcons">
                     <button class="tool-icon" title="Drawings">
-                      <i class="ri-pencil-line"></i>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 28 28"
+                        width="28"
+                        height="28"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M16.73 6.56a2.5 2.5 0 0 1 3.54 0l1.17 1.17a2.5 2.5 0 0 1 0 3.54l-.59.58-9 9-1 1-.14.15H6v-4.7l.15-.15 1-1 9-9 .58-.59Zm2.83.7a1.5 1.5 0 0 0-2.12 0l-.23.24 3.29 3.3.23-.24a1.5 1.5 0 0 0 0-2.12l-1.17-1.17Zm.23 4.24L16.5 8.2l-8.3 8.3 3.3 3.3 8.3-8.3Zm-9 9L7.5 17.2l-.5.5V21h3.3l.5-.5Z"
+                        ></path>
+                      </svg>
                     </button>
                     <button class="tool-icon" title="Trade with broker">
-                      <i class="ri-exchange-line"></i>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 28 28"
+                        width="28"
+                        height="28"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="m17.53 15.08.45.33.44-.33 6.65-4.92a2.3 2.3 0 0 0 .42-3.3 2.35 2.35 0 0 0-3.23-.4l-4.28 3.18-4.29-3.18a2.35 2.35 0 0 0-3.22.4 2.3 2.3 0 0 0 .42 3.3l6.64 4.92Zm6.64-6.1-6.2 4.59-6.19-4.6a.83.83 0 0 1-.15-1.18.85.85 0 0 1 1.17-.15l4.73 3.51.45.33.44-.33 4.74-3.5a.85.85 0 0 1 1.16.14c.3.37.23.9-.15 1.19Zm-13.7 3.94-.45-.33-.44.33-6.65 4.92a2.3 2.3 0 0 0-.42 3.3 2.35 2.35 0 0 0 3.23.4l4.28-3.18 4.29 3.18c1 .75 2.44.57 3.22-.4a2.3 2.3 0 0 0-.42-3.3l-6.64-4.92Zm-6.64 6.1 6.2-4.59 6.19 4.6c.38.27.45.81.15 1.18a.85.85 0 0 1-1.17.15l-4.73-3.51-.45-.33-.44.33-4.74 3.5a.85.85 0 0 1-1.16-.14.83.83 0 0 1 .15-1.19Z"
+                        ></path>
+                      </svg>
                     </button>
                     <button class="tool-icon" title="Analysis hub">
-                      <i class="ri-bar-chart-line"></i>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 28 28"
+                        width="28"
+                        height="28"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M7.5 13a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM5 14.5a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0zm9.5-1.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM12 14.5a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0zm9.5-1.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM19 14.5a2.5 2.5 0 1 1 5 0 2.5 2.5 0 0 1-5 0z"
+                        ></path>
+                      </svg>
                     </button>
                     <button class="tool-icon" title="Previous">
-                      <i class="ri-arrow-left-s-line"></i>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 28 28"
+                        width="28"
+                        height="28"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M8.707 13l2.647 2.646-.707.708L6.792 12.5l3.853-3.854.708.708L8.707 12H14.5a5.5 5.5 0 0 1 5.5 5.5V19h-1v-1.5a4.5 4.5 0 0 0-4.5-4.5H8.707z"
+                        ></path>
+                      </svg>
                     </button>
-                    <button class="tool-icon" title="Next">
-                      <i class="ri-arrow-right-s-line"></i>
-                    </button>
+
                     <button class="tool-icon" title="Expand screen">
-                      <i class="ri-fullscreen-line"></i>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 28 28"
+                        width="28"
+                        height="28"
+                        fill="none"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M7 18.5A2.5 2.5 0 0 0 9.5 21H12v1H9.5A3.5 3.5 0 0 1 6 18.5V16h1zm15 0a3.5 3.5 0 0 1-3.5 3.5H16v-1h2.5a2.5 2.5 0 0 0 2.5-2.5V16h1zM12 7H9.5A2.5 2.5 0 0 0 7 9.5V12H6V9.5A3.5 3.5 0 0 1 9.5 6H12zm6.5-1A3.5 3.5 0 0 1 22 9.5V12h-1V9.5A2.5 2.5 0 0 0 18.5 7H16V6z"
+                        ></path>
+                      </svg>
+                    </button>
+
+                    <button class="tool-icon" title="Next">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 28 28"
+                        width="28"
+                        height="28"
+                      >
+                        <path
+                          fill="currentColor"
+                          d="M18.293 13l-2.647 2.646.707.708 3.854-3.854-3.854-3.854-.707.708L18.293 12H12.5A5.5 5.5 0 0 0 7 17.5V19h1v-1.5a4.5 4.5 0 0 1 4.5-4.5h5.793z"
+                        ></path>
+                      </svg>
                     </button>
                   </div>
                 </div>
@@ -293,13 +337,14 @@
             <div class="date-range-backdrop"></div>
             <div class="date-range-content">
               <!-- Sticky Header -->
+
+              <button class="close-modal" id="closeDateRange">
+                <i class="ri-close-line"></i>
+              </button>
               <div class="date-range-sticky-header">
                 <h3>Date range</h3>
-                <button class="close-modal" id="closeDateRange">
-                  <i class="ri-close-line"></i>
-                </button>
               </div>
-              
+
               <!-- Scrollable Content -->
               <div class="date-range-scrollable">
                 <!-- Date Range Section -->
@@ -320,7 +365,7 @@
                 <!-- Interval Section -->
                 <div class="interval-section">
                   <h3 class="interval-title">Interval</h3>
-                  
+
                   <!-- Favorites -->
                   <div class="interval-category">
                     <div class="interval-category-title">FAVORITES</div>
@@ -364,7 +409,7 @@
                       <div class="interval-option">2m</div>
                       <div class="interval-option">3m</div>
                       <div class="interval-option">5m</div>
-                      <div class="interval-option active">6m</div>
+                      <div class="interval-option">6m</div>
                       <div class="interval-option favorite">
                         <span>8m</span>
                         <i class="ri-star-fill"></i>
@@ -405,7 +450,6 @@
                     </div>
                   </div>
 
-
                   <div class="interval-category">
                     <div class="interval-category-title">Ranges</div>
                     <div class="interval-options">
@@ -418,7 +462,7 @@
                   </div>
                 </div>
               </div>
-              
+
               <!-- Fixed Bottom Button -->
               <div class="date-range-footer">
                 <button class="add-interval-btn" id="addIntervalBtn">
@@ -587,6 +631,9 @@
         </div>
       </div>
     </div>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
       // Dropdown functionality
@@ -1220,7 +1267,6 @@
       const header = document.querySelector("header");
       const appBanner = document.querySelector(".app-banner");
       let chartInitialized = false;
-      let chartInstance = null;
 
       menuItems.forEach((item) => {
         item.addEventListener("click", function () {
@@ -1248,347 +1294,14 @@
             // Hide header and app banner
             if (header) header.style.display = "none";
             if (appBanner) appBanner.style.display = "none";
-            // Initialize chart if not already done
+            // Load TradingView widget if not already done
             if (!chartInitialized) {
-              initializeChart();
+              loadTradingViewWidget(currentSymbol, currentInterval);
               chartInitialized = true;
-            } else if (chartInstance) {
-              // Resize chart when becoming visible
-              setTimeout(() => {
-                const chartContainer =
-                  document.getElementById("tradingviewChart");
-                chartInstance.applyOptions({
-                  width: chartContainer.clientWidth,
-                  height: chartContainer.clientHeight || 400,
-                });
-              }, 100);
             }
           }
         });
       });
-
-      // Initialize TradingView Chart
-      function initializeChart() {
-        const chartContainer = document.getElementById("tradingviewChart");
-        if (!chartContainer) return;
-
-        // Create the chart
-        chartInstance = LightweightCharts.createChart(chartContainer, {
-          width: chartContainer.clientWidth,
-          height: chartContainer.clientHeight || 400,
-          layout: {
-            background: { color: "#ffffff" },
-            textColor: "#2b2c39",
-          },
-          grid: {
-            vertLines: { color: "#f0f0f0" },
-            horzLines: { color: "#f0f0f0" },
-          },
-          crosshair: {
-            mode: LightweightCharts.CrosshairMode.Normal,
-          },
-          rightPriceScale: {
-            borderColor: "#c6c6c8",
-          },
-          timeScale: {
-            borderColor: "#c6c6c8",
-          },
-        });
-
-        // Add candlestick series
-        const candlestickSeries = chartInstance.addCandlestickSeries({
-          upColor: "#2a7e6a",
-          downColor: "#e74c3c",
-          borderUpColor: "#2a7e6a",
-          borderDownColor: "#e74c3c",
-          wickUpColor: "#2a7e6a",
-          wickDownColor: "#e74c3c",
-        });
-
-        // Generate sample data for NQ1! (6 months)
-        const sampleData = generateSampleData();
-        candlestickSeries.setData(sampleData);
-
-        // Fit content
-        chartInstance.timeScale().fitContent();
-
-        // Handle resize
-        window.addEventListener("resize", () => {
-          if (chartInstance) {
-            chartInstance.applyOptions({
-              width: chartContainer.clientWidth,
-              height: chartContainer.clientHeight || 400,
-            });
-          }
-        });
-      }
-
-      // Generate sample candlestick data
-      function generateSampleData() {
-        const data = [];
-        const now = new Date();
-        let price = 20000;
-
-        for (let i = 180; i >= 0; i--) {
-          const date = new Date(now);
-          date.setDate(date.getDate() - i);
-
-          const volatility = price * 0.02;
-          const open = price + (Math.random() - 0.5) * volatility * 0.5;
-          const close = open + (Math.random() - 0.5) * volatility;
-          const high = Math.max(open, close) + Math.random() * volatility * 0.3;
-          const low = Math.min(open, close) - Math.random() * volatility * 0.3;
-
-          data.push({
-            time: date.toISOString().split("T")[0],
-            open: parseFloat(open.toFixed(2)),
-            high: parseFloat(high.toFixed(2)),
-            low: parseFloat(low.toFixed(2)),
-            close: parseFloat(close.toFixed(2)),
-          });
-
-          price = close;
-        }
-
-        return data;
-      }
-
-      // Symbol list vertical click handling
-      const symbolItems = document.querySelectorAll(".symbol-item-vertical");
-      symbolItems.forEach((item) => {
-        item.addEventListener("click", function () {
-          symbolItems.forEach((si) => si.classList.remove("active"));
-          this.classList.add("active");
-          // Here you could update the chart with the selected symbol's data
-        });
-      });
-
-      // Date range modal functionality
-      const dateRangeBtn = document.getElementById("dateRangeBtn");
-      const dateRangeModal = document.getElementById("dateRangeModal");
-      const closeDateRange = document.getElementById("closeDateRange");
-      const addIntervalBtn = document.getElementById("addIntervalBtn");
-      const dateRangeContent = dateRangeModal ? dateRangeModal.querySelector(".date-range-content") : null;
-      const dateRangeScrollable = dateRangeModal ? dateRangeModal.querySelector(".date-range-scrollable") : null;
-
-      let isFullHeight = false;
-      let isTransitioning = false;
-      let touchStartY = 0;
-      let touchCurrentY = 0;
-      let isDragging = false;
-
-      function expandModal() {
-        if (dateRangeContent && !isTransitioning) {
-          isTransitioning = true;
-          dateRangeContent.classList.add("full-height");
-          // Wait for transition to complete (300ms matches CSS)
-          setTimeout(() => {
-            isFullHeight = true;
-            isTransitioning = false;
-          }, 300);
-        }
-      }
-
-      function collapseModal() {
-        if (dateRangeContent && !isTransitioning) {
-          isTransitioning = true;
-          dateRangeContent.classList.remove("full-height");
-          // Wait for transition to complete
-          setTimeout(() => {
-            isFullHeight = false;
-            isTransitioning = false;
-          }, 300);
-        }
-      }
-
-      function closeModalFunc() {
-        if (dateRangeModal) {
-          dateRangeModal.classList.remove("active");
-          setTimeout(() => {
-            collapseModal();
-            if (dateRangeScrollable) {
-              dateRangeScrollable.scrollTop = 0;
-            }
-          }, 300);
-        }
-      }
-
-      if (dateRangeBtn) {
-        dateRangeBtn.addEventListener("click", () => {
-          collapseModal();
-          dateRangeModal.classList.add("active");
-        });
-      }
-
-      if (closeDateRange) {
-        closeDateRange.addEventListener("click", () => {
-          closeModalFunc();
-        });
-      }
-
-      // Close modal when clicking backdrop
-      if (dateRangeModal) {
-        dateRangeModal.addEventListener("click", function(e) {
-          if (e.target === this.querySelector(".date-range-backdrop")) {
-            closeModalFunc();
-          }
-        });
-      }
-
-      // Touch handling for swipe up/down
-      if (dateRangeContent && dateRangeScrollable) {
-        let startScrollTop = 0;
-        let hasExpanded = false;
-        
-        // Handle touch on the header/sticky area to drag
-        const stickyHeader = dateRangeContent.querySelector(".date-range-sticky-header");
-        
-        if (stickyHeader) {
-          stickyHeader.addEventListener("touchstart", (e) => {
-            touchStartY = e.touches[0].clientY;
-            isDragging = true;
-            hasExpanded = false;
-          }, { passive: true });
-
-          stickyHeader.addEventListener("touchmove", (e) => {
-            if (!isDragging) return;
-            touchCurrentY = e.touches[0].clientY;
-            
-            const diff = touchStartY - touchCurrentY;
-            
-            // Swipe up on header expands modal
-            if (diff > 30 && !isFullHeight && !hasExpanded) {
-              hasExpanded = true;
-              expandModal();
-            }
-          }, { passive: true });
-
-          stickyHeader.addEventListener("touchend", (e) => {
-            if (!isDragging) return;
-            isDragging = false;
-            hasExpanded = false;
-            
-            const diff = touchStartY - touchCurrentY;
-            const threshold = 50;
-
-            if (diff > threshold) {
-              // Swiped up - expand to full
-              expandModal();
-            } else if (diff < -threshold) {
-              // Swiped down - collapse or close
-              if (isFullHeight) {
-                collapseModal();
-              } else {
-                closeModalFunc();
-              }
-            }
-          });
-        }
-
-        // Handle scroll area touch
-        let pullStartY = 0;
-        let isPulling = false;
-        
-        dateRangeScrollable.addEventListener("touchstart", (e) => {
-          touchStartY = e.touches[0].clientY;
-          startScrollTop = dateRangeScrollable.scrollTop;
-          hasExpanded = false;
-          
-          // Track pull start when at top and full height
-          if (isFullHeight && startScrollTop <= 0) {
-            pullStartY = touchStartY;
-            isPulling = true;
-          } else if (!isFullHeight) {
-            // Track for close gesture when at 70vh
-            pullStartY = touchStartY;
-            isPulling = true;
-          }
-        }, { passive: true });
-
-        dateRangeScrollable.addEventListener("touchmove", (e) => {
-          touchCurrentY = e.touches[0].clientY;
-          const currentScrollTop = dateRangeScrollable.scrollTop;
-          const diffY = touchStartY - touchCurrentY;
-          
-          // Block all scrolling during transition animation
-          if (isTransitioning) {
-            e.preventDefault();
-            return;
-          }
-          
-          // If not at full height, completely block all scrolling and expand
-          if (!isFullHeight) {
-            // Swipe up to expand
-            if (diffY > 5 && !hasExpanded) {
-              hasExpanded = true;
-              expandModal();
-            }
-            // Swipe down to close when at 70vh
-            if (diffY < -80 && isPulling) {
-              isPulling = false;
-              closeModalFunc();
-              e.preventDefault();
-              return;
-            }
-            // Always prevent scroll when not full height
-            e.preventDefault();
-            return;
-          }
-          
-          // When at full height and pulling down from top
-          if (isFullHeight && currentScrollTop <= 0 && diffY < 0 && isPulling) {
-            const pullDiff = touchCurrentY - pullStartY;
-            
-            if (pullDiff > 60) {
-              // Collapse from full to half
-              isPulling = false;
-              collapseModal();
-              e.preventDefault();
-            }
-          }
-        }, { passive: false });
-
-        dateRangeScrollable.addEventListener("touchend", () => {
-          hasExpanded = false;
-          isPulling = false;
-        });
-      }
-
-      // Date range options
-      const dateOptions = document.querySelectorAll(".date-range-section .date-option");
-      dateOptions.forEach((option) => {
-        option.addEventListener("click", function () {
-          dateOptions.forEach((o) => o.classList.remove("active"));
-          this.classList.add("active");
-          const range = this.getAttribute("data-range");
-          if (dateRangeBtn) {
-            dateRangeBtn.querySelector("span").textContent = range.toUpperCase();
-          }
-        });
-      });
-
-      // Interval options
-      const intervalOptions = document.querySelectorAll(".interval-option");
-      intervalOptions.forEach((option) => {
-        option.addEventListener("click", function () {
-          intervalOptions.forEach((o) => o.classList.remove("active"));
-          this.classList.add("active");
-          const intervalText = this.querySelector("span") ? this.querySelector("span").textContent : this.textContent;
-          if (dateRangeBtn) {
-            dateRangeBtn.querySelector("span").textContent = intervalText;
-          }
-          setTimeout(() => {
-            dateRangeModal.classList.remove("active");
-          }, 200);
-        });
-      });
-
-      // Add interval button
-      if (addIntervalBtn) {
-        addIntervalBtn.addEventListener("click", () => {
-          alert("Add custom interval feature coming soon!");
-        });
-      }
 
       // Initially hide chart page
       chartPage.style.display = "none";

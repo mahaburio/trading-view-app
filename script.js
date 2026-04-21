@@ -1,308 +1,558 @@
-// Chart functionality
-let chart = null;
-let liveUpdateInterval = null;
+const symbolsData = [
+  // 📊 Stocks (USA)
+  { name: "AAPL", symbol: "NASDAQ:AAPL", type: "stock", exchange: "NASDAQ" },
+  { name: "TSLA", symbol: "NASDAQ:TSLA", type: "stock", exchange: "NASDAQ" },
+  { name: "GOOGL", symbol: "NASDAQ:GOOGL", type: "stock", exchange: "NASDAQ" },
+  { name: "MSFT", symbol: "NASDAQ:MSFT", type: "stock", exchange: "NASDAQ" },
+  { name: "AMZN", symbol: "NASDAQ:AMZN", type: "stock", exchange: "NASDAQ" },
+  { name: "META", symbol: "NASDAQ:META", type: "stock", exchange: "NASDAQ" },
+  { name: "NVDA", symbol: "NASDAQ:NVDA", type: "stock", exchange: "NASDAQ" },
+  { name: "NFLX", symbol: "NASDAQ:NFLX", type: "stock", exchange: "NASDAQ" },
 
-// Initialize chart on page load
-document.addEventListener("DOMContentLoaded", function () {
-  initializeChart();
-  setupEventHandlers();
+  // 📈 Indices
+  { name: "S&P 500", symbol: "SP:SPX", type: "index", exchange: "SP" },
+  { name: "Dow Jones", symbol: "DJ:DJI", type: "index", exchange: "DJ" },
+  {
+    name: "NASDAQ 100",
+    symbol: "NASDAQ:NDX",
+    type: "index",
+    exchange: "NASDAQ",
+  },
+
+  // 💰 Crypto
+  {
+    name: "BTC",
+    symbol: "BINANCE:BTCUSDT",
+    type: "crypto",
+    exchange: "BINANCE",
+  },
+  {
+    name: "ETH",
+    symbol: "BINANCE:ETHUSDT",
+    type: "crypto",
+    exchange: "BINANCE",
+  },
+  {
+    name: "BNB",
+    symbol: "BINANCE:BNBUSDT",
+    type: "crypto",
+    exchange: "BINANCE",
+  },
+  {
+    name: "SOL",
+    symbol: "BINANCE:SOLUSDT",
+    type: "crypto",
+    exchange: "BINANCE",
+  },
+  {
+    name: "XRP",
+    symbol: "BINANCE:XRPUSDT",
+    type: "crypto",
+    exchange: "BINANCE",
+  },
+  {
+    name: "ADA",
+    symbol: "BINANCE:ADAUSDT",
+    type: "crypto",
+    exchange: "BINANCE",
+  },
+
+  // 💱 Forex
+  { name: "EUR/USD", symbol: "FX:EURUSD", type: "forex", exchange: "FX" },
+  { name: "GBP/USD", symbol: "FX:GBPUSD", type: "forex", exchange: "FX" },
+  { name: "USD/JPY", symbol: "FX:USDJPY", type: "forex", exchange: "FX" },
+  { name: "AUD/USD", symbol: "FX:AUDUSD", type: "forex", exchange: "FX" },
+
+  // 🛢 Commodities
+  { name: "Gold", symbol: "COMEX:GC1!", type: "commodity", exchange: "COMEX" },
+  {
+    name: "Silver",
+    symbol: "COMEX:SI1!",
+    type: "commodity",
+    exchange: "COMEX",
+  },
+  { name: "Oil", symbol: "NYMEX:CL1!", type: "commodity", exchange: "NYMEX" },
+];
+
+function renderSymbolList() {
+  const container = document.getElementById("symbolListVertical");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const ITEM_H = 24;
+
+  // Spacer so first item can center
+  const topSpacer = document.createElement("div");
+  topSpacer.style.cssText = `height:${ITEM_H}px;flex-shrink:0`;
+  container.appendChild(topSpacer);
+
+  symbolsData.forEach((item) => {
+    const div = document.createElement("div");
+    div.className = "symbol-chip";
+    div.textContent = item.name;
+    div.dataset.symbol = item.symbol;
+    container.appendChild(div);
+  });
+
+  // Spacer so last item can center
+  const bottomSpacer = document.createElement("div");
+  bottomSpacer.style.cssText = `height:${ITEM_H}px;flex-shrink:0`;
+  container.appendChild(bottomSpacer);
+
+  // Scroll to initially active symbol
+  const activeIndex = symbolsData.findIndex((s) => s.symbol === currentSymbol);
+  if (activeIndex >= 0) {
+    container.scrollTop = activeIndex * ITEM_H;
+  }
+
+  // Mark the centered chip as active
+  let lastActiveIndex = activeIndex >= 0 ? activeIndex : 0;
+
+  function updateActive() {
+    const index = Math.round(container.scrollTop / ITEM_H);
+    container.querySelectorAll(".symbol-chip").forEach((el, i) => {
+      el.classList.toggle("active", i === index);
+    });
+
+    // Haptic feedback when active item changes
+    if (index !== lastActiveIndex) {
+      lastActiveIndex = index;
+      if (navigator.vibrate) navigator.vibrate(8);
+    }
+
+    return index;
+  }
+
+  updateActive();
+
+  // On scroll settle: update active + reload widget
+  let scrollTimer;
+  container.addEventListener("scroll", () => {
+    updateActive();
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      const index = Math.round(container.scrollTop / ITEM_H);
+      const newSymbol = symbolsData[index]?.symbol;
+      if (newSymbol && newSymbol !== currentSymbol) {
+        currentSymbol = newSymbol;
+        loadTradingViewWidget(currentSymbol, currentInterval);
+      }
+    }, 300);
+  });
+
+  // Click scrolls item to center
+  container.querySelectorAll(".symbol-chip").forEach((chip, i) => {
+    chip.addEventListener("click", () => {
+      container.scrollTo({ top: i * ITEM_H, behavior: "smooth" });
+    });
+  });
+}
+
+// Global chart instance
+let chartInstance = null;
+let currentSymbol = "NASDAQ:AAPL";
+let currentInterval = "D";
+
+// Load TradingView Widget
+function loadTradingViewWidget(symbol = "NASDAQ:AAPL", interval = "D") {
+  const container = document.getElementById("tradingviewWidgetContainer");
+  if (!container) return;
+
+  // Add fade-out effect
+  container.style.transition = "opacity 0.2s ease";
+  container.style.opacity = "0";
+
+  // Wait for fade-out, then reload
+  setTimeout(() => {
+    // Clear existing widget
+    container.innerHTML = "";
+
+    // Create widget div
+    const widgetDiv = document.createElement("div");
+    widgetDiv.className = "tradingview-widget-container__widget";
+    widgetDiv.style.height = "calc(100% - 32px)";
+    widgetDiv.style.width = "100%";
+    container.appendChild(widgetDiv);
+
+    // Create script element
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src =
+      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+    script.async = true;
+    script.textContent = JSON.stringify({
+      allow_symbol_change: true,
+      calendar: false,
+      details: false,
+      hide_side_toolbar: true,
+      hide_top_toolbar: true,
+      hide_bottom_toolbar: true,
+      hide_legend: false,
+      hide_volume: false,
+      hotlist: false,
+      interval: interval,
+      locale: "en",
+      save_image: true,
+      style: "1",
+      symbol: symbol,
+      theme: "dark",
+      timezone: "Etc/UTC",
+      backgroundColor: "#0F0F0F",
+      gridColor: "rgba(242, 242, 242, 0.06)",
+      watchlist: [],
+      withdateranges: false,
+      compareSymbols: [],
+      studies: [],
+      autosize: true,
+    });
+
+    container.appendChild(script);
+
+    // Fade back in after widget loads
+    setTimeout(() => {
+      container.style.opacity = "1";
+    }, 100);
+  }, 200);
+}
+
+// Date range modal functionality
+
+// ==========================
+// ELEMENTS
+// ==========================
+const dateRangeBtn = document.getElementById("dateRangeBtn");
+const dateRangeModal = document.getElementById("dateRangeModal");
+const closeDateRange = document.getElementById("closeDateRange");
+const addIntervalBtn = document.getElementById("addIntervalBtn");
+
+const dateRangeContent = dateRangeModal
+  ? dateRangeModal.querySelector(".date-range-content")
+  : null;
+
+const dateRangeScrollable = dateRangeModal
+  ? dateRangeModal.querySelector(".date-range-scrollable")
+  : null;
+
+// ==========================
+// STATE
+// ==========================
+let startY = 0;
+let currentY = 0;
+let startTranslate = 0;
+let currentTranslate = 0;
+let gestureIntent = null; // 'drag' | 'scroll' | null
+let startScrollTop = 0;
+
+let velocity = 0;
+let lastY = 0;
+let lastTime = 0;
+
+// ==========================
+// POSITIONS
+// ==========================
+const FULL = 0;
+const HALF = window.innerHeight * 0.5;
+const CLOSE = window.innerHeight;
+
+// ==========================
+// HELPERS
+// ==========================
+function setTranslate(y) {
+  currentTranslate = y;
+  dateRangeContent.style.transform = `translateY(${y}px)`;
+
+  // Add/remove full-height class based on position
+  if (y === FULL) {
+    dateRangeContent.classList.add("full-height");
+  } else {
+    dateRangeContent.classList.remove("full-height");
+  }
+}
+
+function getTranslate() {
+  const style = window.getComputedStyle(dateRangeContent);
+  const matrix = new DOMMatrix(style.transform);
+  return matrix.m42;
+}
+
+// ==========================
+// OPEN MODAL
+// ==========================
+dateRangeBtn?.addEventListener("click", () => {
+  dateRangeModal.classList.add("active");
+
+  requestAnimationFrame(() => {
+    setTranslate(CLOSE);
+    requestAnimationFrame(() => {
+      dateRangeContent.style.transition =
+        "transform 0.35s cubic-bezier(0.32, 0.72, 0, 1)";
+      setTranslate(HALF);
+    });
+  });
 });
 
-function setupEventHandlers() {
-  // Vertical Symbol list handlers
-  const symbolItemsVertical = document.querySelectorAll(
-    ".symbol-item-vertical",
-  );
-  const symbolListVertical = document.getElementById("symbolListVertical");
+// ==========================
+// CLOSE MODAL
+// ==========================
+function closeModalFunc() {
+  dateRangeContent.style.transition =
+    "transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)";
+  setTranslate(CLOSE);
 
-  // Scroll to active symbol on load
-  function scrollToActiveSymbol() {
-    const activeSymbol = document.querySelector(".symbol-item-vertical.active");
-    if (activeSymbol) {
-      activeSymbol.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    }
-  }
-
-  symbolItemsVertical.forEach((item) => {
-    item.addEventListener("click", function () {
-      // Remove active class from all symbols
-      symbolItemsVertical.forEach((s) => s.classList.remove("active"));
-      // Add active class to clicked symbol
-      this.classList.add("active");
-
-      const symbol = this.dataset.symbol;
-      console.log(`Switched to symbol: ${symbol}`);
-
-      // Start live updates for this symbol
-      startLiveUpdates(symbol);
-
-      // Regenerate chart with new symbol data
-      if (chart) {
-        const candlestickSeries = chart.getSeries()[0];
-        if (candlestickSeries) {
-          const newData = generateSampleData();
-          candlestickSeries.setData(newData);
-          updatePriceDisplay(newData);
-        }
-      }
-    });
-  });
-
-  function startLiveUpdates(symbol) {
-    // Clear existing interval
-    if (liveUpdateInterval) {
-      clearInterval(liveUpdateInterval);
-    }
-
-    // Update time indicators to show live status
-    updateLiveTimeIndicators();
-
-    // Start new live update interval
-    liveUpdateInterval = setInterval(() => {
-      updateLiveTimeIndicators();
-
-      // Simulate live price updates
-      if (chart) {
-        const candlestickSeries = chart.getSeries()[0];
-        if (candlestickSeries) {
-          // Add new candle or update last one
-          const currentData = candlestickSeries.data();
-          if (currentData.length > 0) {
-            const lastCandle = currentData[currentData.length - 1];
-            const newPrice = lastCandle.close + (Math.random() - 0.5) * 10;
-
-            // Update last candle
-            const updatedData = [...currentData];
-            updatedData[updatedData.length - 1] = {
-              ...lastCandle,
-              close: newPrice,
-              high: Math.max(lastCandle.high, newPrice),
-              low: Math.min(lastCandle.low, newPrice),
-            };
-
-            candlestickSeries.setData(updatedData);
-            updatePriceDisplay(updatedData);
-          }
-        }
-      }
-    }, 3000); // Update every 3 seconds for live effect
-  }
-
-  function updateLiveTimeIndicators() {
-    const activeSymbol = document.querySelector(".symbol-item-vertical.active");
-    if (activeSymbol) {
-      const timeElement = activeSymbol.querySelector(".symbol-time");
-      const now = new Date();
-      const minutes = now.getMinutes();
-      timeElement.textContent = `${minutes}m`;
-    }
-
-    // Update other symbols with different times
-    symbolItemsVertical.forEach((item, index) => {
-      if (!item.classList.contains("active")) {
-        const timeElement = item.querySelector(".symbol-time");
-        const now = new Date();
-        const minutes = (now.getMinutes() + index * 2) % 60;
-        timeElement.textContent = `${minutes}m`;
-      }
-    });
-  }
-
-  function stopLiveUpdates() {
-    if (liveUpdateInterval) {
-      clearInterval(liveUpdateInterval);
-      liveUpdateInterval = null;
-    }
-  }
-
-  // Initialize with scroll to active symbol
-  setTimeout(scrollToActiveSymbol, 100);
-
-  // Date range modal handlers
-  const dateRangeBtn = document.getElementById("dateRangeBtn");
-  const dateRangeModal = document.getElementById("dateRangeModal");
-  const closeDateRange = document.getElementById("closeDateRange");
-  const applyDateRange = document.getElementById("applyDateRange");
-  const cancelDateRange = document.getElementById("cancelDateRange");
-  const dateOptions = document.querySelectorAll(".date-option");
-
-  dateRangeBtn.addEventListener("click", function () {
-    dateRangeModal.classList.add("active");
-  });
-
-  function closeDateRangeModal() {
+  setTimeout(() => {
     dateRangeModal.classList.remove("active");
-  }
-
-  closeDateRange.addEventListener("click", closeDateRangeModal);
-  cancelDateRange.addEventListener("click", closeDateRangeModal);
-
-  dateRangeModal.addEventListener("click", function (e) {
-    if (e.target === dateRangeModal.querySelector(".date-range-backdrop")) {
-      closeDateRangeModal();
-    }
-  });
-
-  dateOptions.forEach((option) => {
-    option.addEventListener("click", function () {
-      dateOptions.forEach((o) => o.classList.remove("active"));
-      this.classList.add("active");
-    });
-  });
-
-  applyDateRange.addEventListener("click", function () {
-    const activeOption = document.querySelector(".date-option.active");
-    if (activeOption) {
-      console.log("Applying date range:", activeOption.dataset.range);
-      // In a real app, this would update chart data
-      if (chart) {
-        const candlestickSeries = chart.getSeries()[0];
-        if (candlestickSeries) {
-          const newData = generateSampleData();
-          candlestickSeries.setData(newData);
-          updatePriceDisplay(newData);
-        }
-      }
-    }
-    closeDateRangeModal();
-  });
-
-  // Tool icon handlers
-  const toolIcons = document.querySelectorAll(".tool-icon");
-  toolIcons.forEach((icon) => {
-    icon.addEventListener("click", function () {
-      const title = this.getAttribute("title");
-      console.log(`${title} clicked`);
-      // Future: Implement specific tool functionality
-    });
-  });
+    if (dateRangeScrollable) dateRangeScrollable.scrollTop = 0;
+  }, 300);
 }
 
-// TradingView Chart functionality
-function initializeChart() {
-  // Check if TradingView library is loaded
-  if (typeof LightweightCharts === "undefined") {
-    console.error("TradingView LightweightCharts library not loaded");
+closeDateRange?.addEventListener("click", closeModalFunc);
+
+// ==========================
+// BACKDROP CLICK
+// ==========================
+dateRangeModal?.addEventListener("click", (e) => {
+  if (e.target.classList.contains("date-range-backdrop")) {
+    closeModalFunc();
+  }
+});
+
+// ==========================
+// TOUCH START
+// ==========================
+dateRangeContent?.addEventListener(
+  "touchstart",
+  (e) => {
+    startY = e.touches[0].clientY;
+    startTranslate = getTranslate();
+    startScrollTop = dateRangeScrollable ? dateRangeScrollable.scrollTop : 0;
+
+    lastY = startY;
+    lastTime = Date.now();
+    velocity = 0;
+    gestureIntent = null; // reset every touch
+
+    dateRangeContent.style.transition = "none";
+  },
+  { passive: true },
+);
+
+// ==========================
+// TOUCH MOVE (MAIN ENGINE)
+// ==========================
+dateRangeContent?.addEventListener(
+  "touchmove",
+  (e) => {
+    currentY = e.touches[0].clientY;
+    const diffY = currentY - startY;
+    const absDiff = Math.abs(diffY);
+    const scrollTop = dateRangeScrollable ? dateRangeScrollable.scrollTop : 0;
+    const isAtTop = scrollTop <= 0;
+
+    // Determine gesture intent once (after 5px threshold)
+    if (gestureIntent === null && absDiff > 5) {
+      if (currentTranslate !== FULL) {
+        gestureIntent = "drag"; // not fully open -> always drag
+      } else if (diffY > 0 && isAtTop) {
+        gestureIntent = "drag"; // fully open + at top + pulling down -> collapse
+      } else {
+        gestureIntent = "scroll"; // fully open -> scroll content
+      }
+    }
+
+    if (gestureIntent === null) return; // not enough movement yet
+    if (gestureIntent === "scroll") return; // let native scroll work freely
+
+    // DRAG: move the modal
+    e.preventDefault();
+
+    let next = startTranslate + diffY;
+
+    // Rubber band at top
+    if (next < 0) next *= 0.25;
+    if (next > CLOSE) next = CLOSE;
+
+    setTranslate(next);
+
+    // Velocity tracking
+    const now = Date.now();
+    if (now - lastTime > 0) {
+      velocity = (currentY - lastY) / (now - lastTime);
+    }
+    lastY = currentY;
+    lastTime = now;
+  },
+  { passive: false },
+);
+
+// ==========================
+// TOUCH END (SNAP)
+// ==========================
+dateRangeContent?.addEventListener("touchend", () => {
+  if (gestureIntent !== "drag") return;
+
+  dateRangeContent.style.transition =
+    "transform 0.35s cubic-bezier(0.32, 0.72, 0, 1)";
+
+  // Velocity snap (iOS feel)
+  if (velocity < -0.5) {
+    setTranslate(FULL);
+    return;
+  }
+  if (velocity > 0.5) {
+    closeModalFunc();
     return;
   }
 
-  const chartContainer = document.getElementById("tradingviewChart");
-
-  if (!chartContainer) {
-    console.error("Chart container not found");
-    return;
+  // Position snap
+  if (currentTranslate < window.innerHeight * 0.25) {
+    setTranslate(FULL);
+  } else if (currentTranslate < window.innerHeight * 0.6) {
+    setTranslate(HALF);
+  } else {
+    closeModalFunc();
   }
+});
 
-  const containerWidth = chartContainer.clientWidth || window.innerWidth - 32;
-  const containerHeight =
-    chartContainer.clientHeight || window.innerHeight - 80;
+// ==========================
+// SCROLL AREA - block only when modal is NOT at FULL
+// ==========================
+dateRangeScrollable?.addEventListener(
+  "touchmove",
+  (e) => {
+    if (currentTranslate !== FULL) {
+      e.preventDefault();
+    }
+  },
+  { passive: false },
+);
 
-  console.log(
-    "Initializing chart with dimensions:",
-    containerWidth,
-    containerHeight,
-  );
+// ==========================
+// DATE RANGE OPTIONS
+// ==========================
+document.querySelectorAll(".date-option").forEach((option) => {
+  option.addEventListener("click", function () {
+    // Remove active from ALL date options AND interval options
+    document
+      .querySelectorAll(".date-option")
+      .forEach((o) => o.classList.remove("active"));
+    document
+      .querySelectorAll(".interval-option")
+      .forEach((o) => o.classList.remove("active"));
 
-  try {
-    chart = LightweightCharts.createChart(chartContainer, {
-      width: containerWidth,
-      height: containerHeight,
-      layout: {
-        textColor: "#d1d5db",
-        background: { type: "solid", color: "#1a1b1e" },
-      },
-      grid: {
-        vertLines: { color: "#2d3139" },
-        horzLines: { color: "#2d3139" },
-      },
-      crosshair: {
-        mode: LightweightCharts.CrosshairMode.Normal,
-      },
-      rightPriceScale: {
-        borderColor: "#2d3139",
-        textColor: "#d1d5db",
-      },
-      timeScale: {
-        borderColor: "#2d3139",
-        textColor: "#d1d5db",
-        timeVisible: true,
-        secondsVisible: false,
-      },
-    });
+    this.classList.add("active");
 
-    // Add candlestick series
-    const candlestickSeries = chart.addCandlestickSeries({
-      upColor: "#26a69a",
-      downColor: "#ef5350",
-      borderVisible: false,
-      wickUpColor: "#26a69a",
-      wickDownColor: "#ef5350",
-    });
+    const range = this.getAttribute("data-range");
 
-    // Generate sample data
-    const sampleData = generateSampleData();
-    candlestickSeries.setData(sampleData);
+    if (dateRangeBtn) {
+      dateRangeBtn.querySelector("span").textContent = range.toUpperCase();
+    }
 
-    // Update price display with sample data
-    updatePriceDisplay(sampleData);
+    // Map date range to TradingView interval
+    const intervalMap = {
+      "1d": "1",
+      "5d": "5",
+      "1m": "15",
+      "3m": "30",
+      "6m": "60",
+      ytd: "D",
+      "1y": "D",
+      "5y": "W",
+      all: "M",
+    };
 
-    // Handle window resize
-    window.addEventListener("resize", () => {
-      if (chart) {
-        const chartContainer = document.getElementById("tradingviewChart");
-        chart.applyOptions({
-          width: chartContainer.clientWidth,
-          height: chartContainer.clientHeight,
-        });
-      }
-    });
+    currentInterval = intervalMap[range] || "D";
+    loadTradingViewWidget(currentSymbol, currentInterval);
 
-    console.log("Chart initialized successfully");
-  } catch (error) {
-    console.error("Error initializing chart:", error);
-  }
-}
+    // Close modal after selection
+    setTimeout(closeModalFunc, 200);
+  });
+});
 
-function generateSampleData() {
-  const data = [];
-  const basePrice = 26825;
-  const now = Date.now();
-  const dayInMs = 24 * 60 * 60 * 1000;
+// ==========================
+// INTERVAL OPTIONS
+// ==========================
+document.querySelectorAll(".interval-option").forEach((option) => {
+  option.addEventListener("click", function () {
+    // Remove active from ALL interval options AND date options
+    document
+      .querySelectorAll(".interval-option")
+      .forEach((o) => o.classList.remove("active"));
+    document
+      .querySelectorAll(".date-option")
+      .forEach((o) => o.classList.remove("active"));
 
-  for (let i = 100; i >= 0; i--) {
-    const time = now - i * dayInMs;
-    const variance = Math.random() * 2000 - 1000;
-    const open = basePrice + variance;
-    const close = open + (Math.random() * 1000 - 500);
-    const high = Math.max(open, close) + Math.random() * 500;
-    const low = Math.min(open, close) - Math.random() * 500;
+    this.classList.add("active");
 
-    data.push({
-      time: Math.floor(time / 1000),
-      open: open,
-      high: high,
-      low: low,
-      close: close,
-    });
-  }
+    const text = this.querySelector("span")
+      ? this.querySelector("span").textContent
+      : this.textContent;
 
-  return data;
-}
+    if (dateRangeBtn) {
+      dateRangeBtn.querySelector("span").textContent = text;
+    }
 
-function updatePriceDisplay(data) {
-  if (data.length === 0) return;
+    // Map interval to TradingView format
+    let tvInterval;
 
-  const lastCandle = data[data.length - 1];
-  const open = data[0].open;
-  const close = lastCandle.close;
-  const change = close - open;
-  const changePercent = ((change / open) * 100).toFixed(2);
+    // Check if it's a tick value (e.g., 1T, 10T)
+    if (text.includes("T")) {
+      tvInterval = text.replace("T", ""); // 1T -> 1, 10T -> 10
+    }
+    // Check if it's seconds (e.g., 1s, 5s)
+    else if (text.includes("s")) {
+      tvInterval = text.replace("s", "S"); // 1s -> 1S, 5s -> 5S
+    }
+    // Check if it's minutes (e.g., 1m, 5m)
+    else if (text.includes("m")) {
+      tvInterval = text.replace("m", ""); // 1m -> 1, 5m -> 5
+    }
+    // Check if it's hours (e.g., 1H, 2H)
+    else if (text.includes("H")) {
+      tvInterval = text.replace("H", ""); // 1H -> 1, 2H -> 2
+    }
+    // Check if it's days (e.g., 1D, 3D)
+    else if (text.includes("D")) {
+      tvInterval = "D"; // All day values use "D"
+    }
+    // Check if it's weeks
+    else if (text.includes("W")) {
+      tvInterval = "W";
+    }
+    // Check if it's months
+    else if (text.includes("M")) {
+      tvInterval = "M";
+    }
+    // Check if it's ranges (e.g., 1R, 10R) - treat as minutes
+    else if (text.includes("R")) {
+      tvInterval = text.replace("R", "");
+    }
+    // Default: use as-is
+    else {
+      tvInterval = text;
+    }
 
-  // Note: Header elements removed, price display now handled by chart only
-  console.log(
-    `Price: ${close.toFixed(2)}, Change: ${change >= 0 ? "+" : ""}${change.toFixed(2)} (${changePercent >= 0 ? "+" : ""}${changePercent}%)`,
-  );
-}
+    currentInterval = tvInterval;
+    loadTradingViewWidget(currentSymbol, currentInterval);
+
+    setTimeout(closeModalFunc, 200);
+  });
+});
+
+// ==========================
+// ADD INTERVAL BUTTON
+// ==========================
+addIntervalBtn?.addEventListener("click", () => {
+  alert("Add custom interval feature coming soon!");
+});
+
+// ==========================
+// INIT
+// ==========================
+document.addEventListener("DOMContentLoaded", () => {
+  renderSymbolList();
+
+  const chartPage = document.getElementById("chartPage");
+  const chartPageContainer = document.querySelector(".chart-page-container");
+  if (chartPage) chartPage.style.display = "none";
+  if (chartPageContainer) chartPageContainer.style.display = "none";
+});

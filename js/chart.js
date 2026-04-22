@@ -80,59 +80,82 @@ function renderSymbolList() {
   container.innerHTML = "";
 
   const ITEM_H = 24;
+  const count  = symbolsData.length;
 
-  // Spacer so first item can center
+  // Top spacer so first item can center
   const topSpacer = document.createElement("div");
   topSpacer.style.cssText = `height:${ITEM_H}px;flex-shrink:0`;
   container.appendChild(topSpacer);
 
-  symbolsData.forEach((item) => {
-    const div = document.createElement("div");
-    div.className = "symbol-chip";
-    div.textContent = item.name;
-    div.dataset.symbol = item.symbol;
-    container.appendChild(div);
-  });
+  // Render 3 copies: [clone-top | real | clone-bottom]
+  // Gives infinite-loop feel: when user hits an edge we silently
+  // snap back to the equivalent position in the middle (real) copy.
+  for (let copy = 0; copy < 3; copy++) {
+    symbolsData.forEach((item, idx) => {
+      const div = document.createElement("div");
+      div.className = "symbol-chip";
+      div.textContent = item.name;
+      div.dataset.symbol = item.symbol;
+      div.dataset.realIndex = String(idx);
+      container.appendChild(div);
+    });
+  }
 
-  // Spacer so last item can center
+  // Bottom spacer so last item can center
   const bottomSpacer = document.createElement("div");
   bottomSpacer.style.cssText = `height:${ITEM_H}px;flex-shrink:0`;
   container.appendChild(bottomSpacer);
 
-  // Scroll to initially active symbol
+  // Start at the active symbol inside the MIDDLE copy
   const activeIndex = symbolsData.findIndex((s) => s.symbol === currentSymbol);
-  if (activeIndex >= 0) {
-    container.scrollTop = activeIndex * ITEM_H;
+  const startIndex  = activeIndex >= 0 ? activeIndex : 0;
+  container.scrollTop = (count + startIndex) * ITEM_H;
+
+  let lastActiveRealIndex = startIndex;
+  let isLooping = false;
+
+  function getRealIndex() {
+    return Math.round(container.scrollTop / ITEM_H) % count;
   }
 
-  // Mark the centered chip as active
-  let lastActiveIndex = activeIndex >= 0 ? activeIndex : 0;
-
   function updateActive() {
-    const index = Math.round(container.scrollTop / ITEM_H);
-    container.querySelectorAll(".symbol-chip").forEach((el, i) => {
-      el.classList.toggle("active", i === index);
+    const realIndex = getRealIndex();
+    container.querySelectorAll(".symbol-chip").forEach((el) => {
+      el.classList.toggle("active", parseInt(el.dataset.realIndex) === realIndex);
     });
-
-    // Haptic feedback when active item changes
-    if (index !== lastActiveIndex) {
-      lastActiveIndex = index;
+    if (realIndex !== lastActiveRealIndex) {
+      lastActiveRealIndex = realIndex;
       if (navigator.vibrate) navigator.vibrate(8);
     }
+    return realIndex;
+  }
 
-    return index;
+  // Silently jump back to the middle copy after scroll settles
+  function loopCorrect() {
+    const raw = Math.round(container.scrollTop / ITEM_H);
+    if (raw < count) {
+      isLooping = true;
+      container.scrollTop += count * ITEM_H;
+      setTimeout(() => { isLooping = false; }, 50);
+    } else if (raw >= 2 * count) {
+      isLooping = true;
+      container.scrollTop -= count * ITEM_H;
+      setTimeout(() => { isLooping = false; }, 50);
+    }
   }
 
   updateActive();
 
-  // On scroll settle: update active + reload widget
+  // On scroll: update active highlight + settle handler
   let scrollTimer;
   container.addEventListener("scroll", () => {
+    if (isLooping) return;
     updateActive();
     clearTimeout(scrollTimer);
     scrollTimer = setTimeout(() => {
-      const index = Math.round(container.scrollTop / ITEM_H);
-      const newSymbol = symbolsData[index]?.symbol;
+      loopCorrect(); // silent position reset to middle copy
+      const realIndex = getRealIndex();
+      const newSymbol = symbolsData[realIndex]?.symbol;
       if (newSymbol && newSymbol !== currentSymbol) {
         currentSymbol = newSymbol;
         loadTradingViewWidget(currentSymbol, currentInterval);
@@ -140,10 +163,11 @@ function renderSymbolList() {
     }, 300);
   });
 
-  // Click scrolls item to center
-  container.querySelectorAll(".symbol-chip").forEach((chip, i) => {
+  // Click: always scroll to the symbol's position in the middle copy
+  container.querySelectorAll(".symbol-chip").forEach((chip) => {
     chip.addEventListener("click", () => {
-      container.scrollTo({ top: i * ITEM_H, behavior: "smooth" });
+      const realIdx = parseInt(chip.dataset.realIndex);
+      container.scrollTo({ top: (count + realIdx) * ITEM_H, behavior: "smooth" });
     });
   });
 }
@@ -151,7 +175,7 @@ function renderSymbolList() {
 // Global chart instance
 let chartInstance = null;
 let currentSymbol = "NASDAQ:AAPL";
-let currentInterval = "D";
+let currentInterval = "3"; // Default: 3 minutes
 
 // Load TradingView Widget
 function loadTradingViewWidget(symbol = "NASDAQ:AAPL", interval = "D") {
@@ -184,9 +208,8 @@ function loadTradingViewWidget(symbol = "NASDAQ:AAPL", interval = "D") {
       allow_symbol_change: true,
       calendar: false,
       details: false,
-      hide_side_toolbar: true,
+      hide_side_toolbar: false,
       hide_top_toolbar: true,
-      hide_bottom_toolbar: true,
       hide_legend: false,
       hide_volume: false,
       hotlist: false,
@@ -550,9 +573,126 @@ addIntervalBtn?.addEventListener("click", () => {
 // ==========================
 document.addEventListener("DOMContentLoaded", () => {
   renderSymbolList();
+  initAnalysisHub();
 
   const chartPage = document.getElementById("chartPage");
   const chartPageContainer = document.querySelector(".chart-page-container");
   if (chartPage) chartPage.style.display = "none";
   if (chartPageContainer) chartPageContainer.style.display = "none";
 });
+
+// ==========================
+// ANALYSIS HUB MODAL
+// ==========================
+function initAnalysisHub() {
+  const ahBtn     = document.getElementById("analysisHubBtn");
+  const ahModal   = document.getElementById("analysisHubModal");
+  const ahContent = ahModal ? ahModal.querySelector(".analysis-hub-content") : null;
+  const ahScroll  = ahModal ? ahModal.querySelector(".analysis-hub-scrollable") : null;
+  const ahCloseBtn = document.getElementById("closeAnalysisHub");
+  const ahBroker  = document.getElementById("ahBrokerBtn");
+
+  if (!ahModal || !ahContent) return;
+
+  // Positions
+  const AH_FULL  = 0;
+  const AH_HALF  = window.innerHeight * 0.45;
+  const AH_CLOSE = window.innerHeight;
+
+  let ahStartY = 0, ahCurrentY = 0;
+  let ahStartTr = 0, ahCurrentTr = 0;
+  let ahIntent = null;
+  let ahStartScroll = 0;
+  let ahVelocity = 0, ahLastY = 0, ahLastTime = 0;
+
+  function ahGetTr() {
+    return new DOMMatrix(getComputedStyle(ahContent).transform).m42;
+  }
+
+  function ahSetTr(y) {
+    ahCurrentTr = y;
+    ahContent.style.transform = `translateY(${y}px)`;
+    ahContent.classList.toggle("full-height", y === AH_FULL);
+  }
+
+  function ahOpen() {
+    ahModal.classList.add("active");
+    requestAnimationFrame(() => {
+      ahSetTr(AH_CLOSE);
+      requestAnimationFrame(() => {
+        ahContent.style.transition = "transform 0.35s cubic-bezier(0.32, 0.72, 0, 1)";
+        ahSetTr(AH_HALF);
+      });
+    });
+  }
+
+  function ahClose() {
+    ahContent.style.transition = "transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)";
+    ahSetTr(AH_CLOSE);
+    setTimeout(() => {
+      ahModal.classList.remove("active");
+      if (ahScroll) ahScroll.scrollTop = 0;
+    }, 300);
+  }
+
+  // Open / close wires
+  ahBtn?.addEventListener("click", ahOpen);
+  ahCloseBtn?.addEventListener("click", ahClose);
+  ahModal.addEventListener("click", (e) => {
+    if (e.target.classList.contains("analysis-hub-backdrop")) ahClose();
+  });
+
+  // Broker CTA → open broker modal
+  ahBroker?.addEventListener("click", () => {
+    ahClose();
+    setTimeout(() => document.getElementById("brokerBtn")?.click(), 320);
+  });
+
+  // Touch: drag or scroll intent detection
+  ahContent.addEventListener("touchstart", (e) => {
+    ahStartY     = e.touches[0].clientY;
+    ahStartTr    = ahGetTr();
+    ahStartScroll = ahScroll ? ahScroll.scrollTop : 0;
+    ahLastY = ahStartY; ahLastTime = Date.now(); ahVelocity = 0;
+    ahIntent = null;
+    ahContent.style.transition = "none";
+  }, { passive: true });
+
+  ahContent.addEventListener("touchmove", (e) => {
+    ahCurrentY = e.touches[0].clientY;
+    const diff = ahCurrentY - ahStartY;
+    const abs  = Math.abs(diff);
+    const isTop = (ahScroll ? ahScroll.scrollTop : 0) <= 0;
+
+    if (ahIntent === null && abs > 5) {
+      if (ahCurrentTr !== AH_FULL)      ahIntent = "drag";
+      else if (diff > 0 && isTop)       ahIntent = "drag";
+      else                               ahIntent = "scroll";
+    }
+    if (ahIntent === null || ahIntent === "scroll") return;
+
+    e.preventDefault();
+    let next = ahStartTr + diff;
+    if (next < 0) next *= 0.25;
+    if (next > AH_CLOSE) next = AH_CLOSE;
+    ahSetTr(next);
+
+    const now = Date.now();
+    if (now - ahLastTime > 0) ahVelocity = (ahCurrentY - ahLastY) / (now - ahLastTime);
+    ahLastY = ahCurrentY; ahLastTime = now;
+  }, { passive: false });
+
+  ahContent.addEventListener("touchend", () => {
+    if (ahIntent !== "drag") return;
+    ahContent.style.transition = "transform 0.35s cubic-bezier(0.32, 0.72, 0, 1)";
+    if (ahVelocity < -0.5) { ahSetTr(AH_FULL); return; }
+    if (ahVelocity >  0.5) { ahClose();          return; }
+    if (ahCurrentTr < window.innerHeight * 0.25)      ahSetTr(AH_FULL);
+    else if (ahCurrentTr < window.innerHeight * 0.65) ahSetTr(AH_HALF);
+    else                                               ahClose();
+  });
+
+  ahScroll?.addEventListener("touchmove", (e) => {
+    if (ahCurrentTr !== AH_FULL) e.preventDefault();
+  }, { passive: false });
+}

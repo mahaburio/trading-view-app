@@ -238,7 +238,7 @@
                 <!-- Center: Date Range -->
                 <div class="date-range-container">
                   <button class="date-range-btn" id="dateRangeBtn">
-                    <span>6M</span>
+                    <span>3m</span>
                   </button>
                 </div>
 
@@ -258,7 +258,11 @@
                         ></path>
                       </svg>
                     </button>
-                    <button class="tool-icon" title="Trade with broker">
+                    <button
+                      class="tool-icon"
+                      id="brokerBtn"
+                      title="Trade with broker"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 28 28"
@@ -271,7 +275,11 @@
                         ></path>
                       </svg>
                     </button>
-                    <button class="tool-icon" title="Analysis hub">
+                    <button
+                      class="tool-icon"
+                      id="analysisHubBtn"
+                      title="Analysis hub"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 28 28"
@@ -331,147 +339,6 @@
               </div>
             </div>
           </main>
-
-          <!-- Date Range & Interval Modal -->
-          <div class="date-range-modal" id="dateRangeModal">
-            <div class="date-range-backdrop"></div>
-            <div class="date-range-content">
-              <!-- Sticky Header -->
-
-              <button class="close-modal" id="closeDateRange">
-                <i class="ri-close-line"></i>
-              </button>
-              <div class="date-range-sticky-header">
-                <h3>Date range</h3>
-              </div>
-
-              <!-- Scrollable Content -->
-              <div class="date-range-scrollable">
-                <!-- Date Range Section -->
-                <div class="date-range-section">
-                  <div class="date-range-options">
-                    <div class="date-option" data-range="1d">1D</div>
-                    <div class="date-option" data-range="5d">5D</div>
-                    <div class="date-option" data-range="1m">1M</div>
-                    <div class="date-option" data-range="3m">3M</div>
-                    <div class="date-option active" data-range="6m">6M</div>
-                    <div class="date-option" data-range="ytd">YTD</div>
-                    <div class="date-option" data-range="1y">1Y</div>
-                    <div class="date-option" data-range="5y">5Y</div>
-                    <div class="date-option" data-range="all">All</div>
-                  </div>
-                </div>
-
-                <!-- Interval Section -->
-                <div class="interval-section">
-                  <h3 class="interval-title">Interval</h3>
-
-                  <!-- Favorites -->
-                  <div class="interval-category">
-                    <div class="interval-category-title">FAVORITES</div>
-                    <div class="interval-options">
-                      <div class="interval-option favorite">
-                        <span>8m</span>
-                        <i class="ri-star-fill"></i>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Ticks -->
-                  <div class="interval-category">
-                    <div class="interval-category-title">TICKS</div>
-                    <div class="interval-options">
-                      <div class="interval-option">1T</div>
-                      <div class="interval-option">10T</div>
-                      <div class="interval-option">100T</div>
-                      <div class="interval-option">1000T</div>
-                    </div>
-                  </div>
-
-                  <!-- Seconds -->
-                  <div class="interval-category">
-                    <div class="interval-category-title">SECONDS</div>
-                    <div class="interval-options">
-                      <div class="interval-option">1s</div>
-                      <div class="interval-option">5s</div>
-                      <div class="interval-option">10s</div>
-                      <div class="interval-option">15s</div>
-                      <div class="interval-option">30s</div>
-                      <div class="interval-option">45s</div>
-                    </div>
-                  </div>
-
-                  <!-- Minutes -->
-                  <div class="interval-category">
-                    <div class="interval-category-title">MINUTES</div>
-                    <div class="interval-options">
-                      <div class="interval-option">1m</div>
-                      <div class="interval-option">2m</div>
-                      <div class="interval-option">3m</div>
-                      <div class="interval-option">5m</div>
-                      <div class="interval-option">6m</div>
-                      <div class="interval-option favorite">
-                        <span>8m</span>
-                        <i class="ri-star-fill"></i>
-                      </div>
-                      <div class="interval-option">10m</div>
-                      <div class="interval-option">15m</div>
-                      <div class="interval-option">20m</div>
-                      <div class="interval-option">30m</div>
-                    </div>
-                  </div>
-
-                  <!-- Hours -->
-                  <div class="interval-category">
-                    <div class="interval-category-title">HOURS</div>
-                    <div class="interval-options">
-                      <div class="interval-option">1H</div>
-                      <div class="interval-option">2H</div>
-                      <div class="interval-option">3H</div>
-                      <div class="interval-option">4H</div>
-                      <div class="interval-option">6H</div>
-                      <div class="interval-option">8H</div>
-                      <div class="interval-option">12H</div>
-                      <div class="interval-option">16H</div>
-                    </div>
-                  </div>
-
-                  <!-- Days -->
-                  <div class="interval-category">
-                    <div class="interval-category-title">DAYS</div>
-                    <div class="interval-options">
-                      <div class="interval-option">1D</div>
-                      <div class="interval-option">3D</div>
-                      <div class="interval-option">1W</div>
-                      <div class="interval-option">1M</div>
-                      <div class="interval-option">3M</div>
-                      <div class="interval-option">6M</div>
-                      <div class="interval-option">1Y</div>
-                    </div>
-                  </div>
-
-                  <div class="interval-category">
-                    <div class="interval-category-title">Ranges</div>
-                    <div class="interval-options">
-                      <div class="interval-option">1R</div>
-                      <div class="interval-option">10R</div>
-                      <div class="interval-option">40R</div>
-                      <div class="interval-option">100R</div>
-                      <div class="interval-option">1000R</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Fixed Bottom Button -->
-              <div class="date-range-footer">
-                <button class="add-interval-btn" id="addIntervalBtn">
-                  <span class="add-icon"><i class="ri-add-line"></i></span>
-                  Add interval
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- Menubar -->
@@ -629,683 +496,761 @@
             Menu
           </div>
         </div>
+
+        <!-- =========================
+
+        ALL Modal HEREs
+         =========================== -->
+
+        <!-- Analysis Hub Modal -->
+        <div class="analysis-hub-modal drag-modal" id="analysisHubModal">
+          <div class="analysis-hub-backdrop"></div>
+          <div class="analysis-hub-content">
+            <!-- Drag handle -->
+            <div class="ah-drag-handle"></div>
+            <!-- Sticky Header -->
+            <div
+              class="drag-modal-header text-black fs-18 d-flex justify-between items-center"
+            >
+              <h3>Analysis hub</h3>
+              <button class="close-drag-modal" id="closeAnalysisHub">
+                <i class="ri-close-line"></i>
+              </button>
+            </div>
+            <!-- Scrollable Content -->
+            <div class="analysis-hub-scrollable">
+              <!-- Top actions grid -->
+              <div class="ah-top-grid">
+                <div class="ah-top-item">
+                  <div class="ah-top-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="-1 -1 21 19"
+                      width="21"
+                      height="19"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M2.5 1C1.67 1 1 1.67 1 2.5v12c0 .83.67 1.5 1.5 1.5h14c.83 0 1.5-.67 1.5-1.5v-12c0-.83-.67-1.5-1.5-1.5h-14ZM0 2.5A2.5 2.5 0 0 1 2.5 0h14A2.5 2.5 0 0 1 19 2.5v12a2.5 2.5 0 0 1-2.5 2.5h-14A2.5 2.5 0 0 1 0 14.5v-12Z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <span>Layout setup</span>
+                </div>
+                <div class="ah-top-item">
+                  <div class="ah-top-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 28 28"
+                      width="24"
+                      height="24"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M14 6a8 8 0 1 0 0 16A8 8 0 0 0 14 6zm-9 8a9 9 0 1 1 18 0 9 9 0 0 1-18 0zm9.5-4.5v4.3l2.85 2.85-.7.7L13.5 14V9.5h1z"
+                      />
+                      <path
+                        fill="currentColor"
+                        d="M22 7.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
+                      />
+                    </svg>
+                  </div>
+                  <span>Manage Fresh</span>
+                </div>
+                <div class="ah-top-item">
+                  <div class="ah-top-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="28"
+                      height="28"
+                    >
+                      <g fill="none" fill-rule="evenodd">
+                        <path
+                          stroke="currentColor"
+                          d="M13 22.5H5.5a2 2 0 0 1-2-2v-14a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2V14"
+                        ></path>
+                        <path
+                          stroke="currentColor"
+                          stroke-linecap="square"
+                          d="M18.5 15.5v8m-4-4h8"
+                        ></path>
+                        <path
+                          fill="currentColor"
+                          d="M7 8h11v1H7zm0 4h11v1H7zm0 4h5v1H7z"
+                        ></path>
+                      </g>
+                    </svg>
+                  </div>
+                  <span>New</span>
+                </div>
+                <div class="ah-top-item">
+                  <div class="ah-top-icon ah-save-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="28"
+                      height="28"
+                    >
+                      <g fill="none">
+                        <path
+                          stroke="currentColor"
+                          d="M11 20.5H7.5a5 5 0 1 1 .42-9.98 7.5 7.5 0 0 1 14.57 2.1 4 4 0 0 1-1 7.877H18"
+                        ></path>
+                        <path
+                          stroke="currentColor"
+                          d="M14.5 24V12.5M11 16l3.5-3.5L18 16"
+                        ></path>
+                      </g>
+                    </svg>
+                    <span class="ah-notification-dot"></span>
+                  </div>
+                  <span>Save</span>
+                </div>
+                <div class="ah-top-item">
+                  <div class="ah-top-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 28 28"
+                      width="28"
+                      height="28"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M5 7.5C5 6.67 5.67 6 6.5 6h4.2l2 2h8.8c.83 0 1.5.67 1.5 1.5v10c0 .83-.67 1.5-1.5 1.5h-15A1.5 1.5 0 0 1 5 19.5v-12ZM6.5 7a.5.5 0 0 0-.5.5V11h16V9.5a.5.5 0 0 0-.5-.5h-9.2l-2-2H6.5ZM22 12H6v7.5c0 .28.22.5.5.5h15a.5.5 0 0 0 .5-.5V12Z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <span>Open</span>
+                </div>
+              </div>
+
+              <!-- Trade with broker CTA -->
+              <div class="ah-broker-cta" id="ahBrokerBtn">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 28 28"
+                  width="22"
+                  height="22"
+                >
+                  <path
+                    fill="currentColor"
+                    d="m17.53 15.08.45.33.44-.33 6.65-4.92a2.3 2.3 0 0 0 .42-3.3 2.35 2.35 0 0 0-3.23-.4l-4.28 3.18-4.29-3.18a2.35 2.35 0 0 0-3.22.4 2.3 2.3 0 0 0 .42 3.3l6.64 4.92Zm6.64-6.1-6.2 4.59-6.19-4.6a.83.83 0 0 1-.15-1.18.85.85 0 0 1 1.17-.15l4.73 3.51.45.33.44-.33 4.74-3.5a.85.85 0 0 1 1.16.14c.3.37.23.9-.15 1.19Zm-13.7 3.94-.45-.33-.44.33-6.65 4.92a2.3 2.3 0 0 0-.42 3.3 2.35 2.35 0 0 0 3.23.4l4.28-3.18 4.29 3.18c1 .75 2.44.57 3.22-.4a2.3 2.3 0 0 0-.42-3.3l-6.64-4.92Zm-6.64 6.1 6.2-4.59 6.19 4.6c.38.27.45.81.15 1.18a.85.85 0 0 1-1.17.15l-4.73-3.51-.45-.33-.44.33-4.74 3.5a.85.85 0 0 1-1.16-.14.83.83 0 0 1 .15-1.19Z"
+                  />
+                </svg>
+                <span>Trade with your broker</span>
+              </div>
+
+              <!-- TOOLS -->
+              <div class="ah-section-label text-gray fw-bold fs-14">TOOLS</div>
+              <div class="ah-tools ah-grid gap-2 mb-1">
+                <div class="ah-item">
+                  <div class="ah-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 28 28"
+                      width="28"
+                      height="28"
+                      fill="none"
+                    >
+                      <path
+                        stroke="currentColor"
+                        d="M6 12l4.8-4.8a1 1 0 0 1 1.4 0l2.7 2.7a1 1 0 0 0 1.3.1L23 5"
+                      ></path>
+                      <path
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        d="M19 12a1 1 0 0 0-1 1v4h-3v-1a1 1 0 0 0-1-1h-3a1 1 0 0 0-1 1v2H7a1 1 0 0 0-1 1v4h17V13a1 1 0 0 0-1-1h-3zm0 10h3v-9h-3v9zm-1 0v-4h-3v4h3zm-4-4.5V22h-3v-6h3v1.5zM10 22v-3H7v3h3z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <span>Indicators</span>
+                </div>
+                <div class="ah-item">
+                  <div class="ah-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 28 28"
+                      width="28"
+                      height="28"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M13.5 6a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zM4 14.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z"
+                      ></path>
+                      <path
+                        fill="currentColor"
+                        d="M9 14h4v-4h1v4h4v1h-4v4h-1v-4H9v-1z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <span>Compare</span>
+                </div>
+                <div class="ah-item">
+                  <div class="ah-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 28 28"
+                      width="28"
+                      height="28"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M20.1 4 25 9.32l-.73.68-4.9-5.32.73-.68ZM7.9 4 3 9.32l.73.68 4.91-5.32L7.91 4ZM14 15v-5h1v6h-4v-1h3Z"
+                      ></path>
+                      <path
+                        fill="currentColor"
+                        d="M5 15a9 9 0 1 1 18 0 9 9 0 0 1-18 0Zm9-8a8 8 0 1 0 0 16 8 8 0 0 0 0-16Z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <span>Alerts</span>
+                </div>
+                <div class="ah-item">
+                  <div class="ah-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 28 28"
+                      width="28"
+                      height="28"
+                    >
+                      <path
+                        fill="none"
+                        stroke="currentColor"
+                        d="M13.5 20V9l-6 5.5 6 5.5zM21.5 20V9l-6 5.5 6 5.5z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <span>Bar Replay</span>
+                </div>
+                <div class="ah-item">
+                  <div class="ah-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 28 28"
+                      width="28"
+                      height="28"
+                    >
+                      <path
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        d="M7 6h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1ZM5 7c0-1.1.9-2 2-2h4a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7Zm12-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Zm-2 1c0-1.1.9-2 2-2h4a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V7Zm-4 9H7a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1Zm-4-1a2 2 0 0 0-2 2v4c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2H7Zm10 1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1Zm-2 1c0-1.1.9-2 2-2h4a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-4Z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <span>Indicator templates</span>
+                </div>
+                <div class="ah-item">
+                  <div class="ah-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 28 28"
+                      width="28"
+                      height="28"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M17 11v6h3v-6h-3zm-.5-1h4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5z"
+                      ></path>
+                      <path d="M18 7h1v3.5h-1zm0 10.5h1V21h-1z"></path>
+                      <path
+                        d="M9 8v12h3V8H9zm-.5-1h4a.5.5 0 0 1 .5.5v13a.5.5 0 0 1-.5.5h-4a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 .5-.5z"
+                      ></path>
+                      <path d="M10 4h1v3.5h-1zm0 16.5h1V24h-1z"></path>
+                    </svg>
+                  </div>
+                  <span>Chart type</span>
+                </div>
+                <div class="ah-item">
+                  <div class="ah-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 28 28"
+                      width="28"
+                      height="28"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M13.39 3.84a1 1 0 0 1 1.22 0l8.19 6.37a1 1 0 0 1 0 1.58l-8.19 6.37a1 1 0 0 1-1.22 0L5.2 11.79a1 1 0 0 1 0-1.58l8.19-6.37zm.61.8L5.81 11 14 17.37 22.19 11 14 4.63zM5.3 13.6l8.7 6.76 8.7-6.76.6.78-8.69 6.77a1 1 0 0 1-1.22 0l-8.7-6.77.62-.78zm8.09 10.55l-8.7-6.77.62-.78L14 23.37l8.7-6.76.6.78-8.69 6.77a1 1 0 0 1-1.22 0z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <span>Object Tree</span>
+                </div>
+              </div>
+
+              <!-- INFO -->
+              <div class="ah-section-label text-gray fw-bold fs-14">INFO</div>
+              <div class="ah-info ah-grid gap-2 mb-1">
+                <div class="ah-item">
+                  <div class="ah-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 28 28"
+                      width="28"
+                      height="28"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M4 14a10 10 0 1 1 20 0 10 10 0 0 1-20 0zM14 3a11 11 0 1 0 0 22 11 11 0 0 0 0-22zm1 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm-1 11v-7h-1v-1h2v8h-1z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <span>Symbol details</span>
+                </div>
+                <div class="ah-item ah-item-disabled">
+                  <div class="ah-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 28 28"
+                      width="28"
+                      height="28"
+                    >
+                      <path
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        d="M17.5 7H17v6h-3v-3H9v6H5v6h17V7h-4.5Zm.5 14h3V8h-3v13Zm-1 0v-7h-3v7h3Zm-4-7.5V21h-3V11h3v2.5ZM9 21v-4H6v4h3Z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <span>Financials</span>
+                </div>
+                <div class="ah-item ah-item-disabled">
+                  <div class="ah-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 28 28"
+                      width="28"
+                      height="28"
+                      fill="none"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M15 25h-1v-2h1zm0-4h-1v-2h1zm8-13v5h-1V9.707l-7.463 7.463-5-4-4.684 4.684-.707-.707 5.317-5.317 5 4L21.293 9H18V8zm-8 5h-1v-2h1zm0-4h-1V7h1zm0-4h-1V3h1z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <span>Forecast</span>
+                </div>
+                <div class="ah-item">
+                  <div class="ah-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 28 28"
+                      width="28"
+                      height="28"
+                      fill="none"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M14 6c6.075 0 11 4.925 11 11 0 1.41-.266 2.76-.75 4l-.144.368-.391-.054-2.284-.319.138-.99 1.885.263A10 10 0 0 0 24 17c0-1.35-.267-2.639-.753-3.815l-1.523.762-.448-.894 1.543-.772A10 10 0 0 0 14 7v2h-1V7.05a10 10 0 0 0-7.82 5.231l1.544.772-.448.894-1.523-.761A10 10 0 0 0 4 17c0 1.145.192 2.244.546 3.268l1.885-.263.138.99-2.284.319-.391.054L3.75 21C3.266 19.76 3 18.41 3 17 3 10.925 7.925 6 14 6m4.416 5.277-2.926 4.389a2 2 0 1 1-.832-.555l2.926-4.388z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <span>Technicals</span>
+                </div>
+              </div>
+
+              <!-- MORE -->
+              <div class="ah-section-label text-gray fw-bold fs-14">MORE</div>
+              <div class="ah-more ah-grid gap-2 mb-1">
+                <div class="ah-item">
+                  <div class="ah-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 28 28"
+                      width="28"
+                      height="28"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M14.37 4.67a.5.5 0 0 0-.76.02l-8 10a.5.5 0 0 0 .55.78l5.74-1.91 4.79 3.83a.5.5 0 0 0 .57.04l5-3a.5.5 0 0 0 .11-.76l-8-9Zm-6.92 9.32 6.57-8.21 7.2 8.1-4.18 2.51-4.73-3.78a.5.5 0 0 0-.47-.08l-4.4 1.46Z"
+                      ></path>
+                      <path
+                        fill="currentColor"
+                        d="m6.6 17.2-4 5.5a.5.5 0 0 0 .4.8h22a.5.5 0 0 0 .4-.8l-4-5.5-.8.6 3.42 4.7H3.98l3.42-4.7-.8-.6Z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <span>Pine Editor</span>
+                </div>
+                <div class="ah-item">
+                  <div class="ah-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 28 28"
+                      width="22"
+                      height="22"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M14 5a9 9 0 1 0 0 18A9 9 0 0 0 14 5zm-1 4.5a1 1 0 0 1 2 0v5.3l3.15 3.15-.7.7L14 15.3V9.5z"
+                      />
+                    </svg>
+                  </div>
+                  <span>Siri shortcut</span>
+                </div>
+                <div class="ah-item ah-item-center ah-publish-idea flex-column">
+                  <div class="ah-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 28 28"
+                      width="28"
+                      height="28"
+                      fill="none"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M13.502 4c4.683 0 8.5 3.704 8.5 8.3 0 2.595-1.088 4.93-3.002 6.46V22h-2v3h-7v-3H8v-3.186c-1.825-1.554-3-4-3-6.514C5 7.704 8.819 4 13.502 4M11 24h5v-2h-5zm-2-5v2h9v-2zm4.502-14C9.347 5 6 8.28 6 12.3c0 2.192 1.02 4.333 2.587 5.7H13v-4h-3v-1h7v1h-3v4h4.349c1.681-1.33 2.654-3.38 2.654-5.7 0-4.02-3.346-7.3-7.501-7.3"
+                      ></path>
+                    </svg>
+                  </div>
+                  <span>Publish Idea</span>
+                </div>
+              </div>
+
+              <!-- Help Center footer -->
+              <div
+                class="ah-help-center d-flex items-center justify-center fs-16 text-black gap-2 mt-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 28 28"
+                  width="28"
+                  height="28"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M14 3a11 11 0 1 1 0 22 11 11 0 0 1 0-22m0 1a10 10 0 1 0 0 20 10 10 0 0 0 0-20m0 14a1 1 0 1 1 0 2 1 1 0 0 1 0-2m.22-10a3.78 3.78 0 0 1 2.08 6.93l-1.06.7c-.46.3-.74.82-.74 1.37h-1c0-.89.45-1.72 1.19-2.2l1.06-.7A2.77 2.77 0 0 0 14.22 9H14a3 3 0 0 0-3 3h-1a4 4 0 0 1 4-4z"
+                  ></path>
+                </svg>
+                <span class="fw-semibold">Help Center</span>
+              </div>
+            </div>
+            <!-- /scrollable -->
+          </div>
+          <!-- /content -->
+        </div>
+        <!-- /modal -->
+
+        <!-- Date Range & Interval Modal -->
+        <div class="date-range-modal drag-modal" id="dateRangeModal">
+          <div class="date-range-backdrop"></div>
+          <div class="date-range-content">
+            <!-- Sticky Header -->
+
+            <button class="close-drag-modal" id="closeDateRange">
+              <i class="ri-close-line"></i>
+            </button>
+            <div
+              class="drag-modal-header text-black fs-18 d-flex justify-between items-center"
+            >
+              <h3>Date range</h3>
+            </div>
+
+            <!-- Scrollable Content -->
+            <div class="date-range-scrollable">
+              <!-- Date Range Section -->
+              <div class="date-range-section">
+                <div class="date-range-options">
+                  <div class="date-option" data-range="1d">1D</div>
+                  <div class="date-option" data-range="5d">5D</div>
+                  <div class="date-option" data-range="1m">1M</div>
+                  <div class="date-option" data-range="3m">3M</div>
+                  <div class="date-option" data-range="6m">6M</div>
+                  <div class="date-option" data-range="ytd">YTD</div>
+                  <div class="date-option" data-range="1y">1Y</div>
+                  <div class="date-option" data-range="5y">5Y</div>
+                  <div class="date-option" data-range="all">All</div>
+                </div>
+              </div>
+
+              <!-- Interval Section -->
+              <div class="interval-section">
+                <h3 class="interval-title">Interval</h3>
+
+                <!-- Favorites -->
+                <div class="interval-category">
+                  <div class="interval-category-title">FAVORITES</div>
+                  <div class="interval-options">
+                    <div class="interval-option favorite">
+                      <span>8m</span>
+                      <i class="ri-star-fill"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Ticks -->
+                <div class="interval-category">
+                  <div class="interval-category-title">TICKS</div>
+                  <div class="interval-options">
+                    <div class="interval-option">1T</div>
+                    <div class="interval-option">10T</div>
+                    <div class="interval-option">100T</div>
+                    <div class="interval-option">1000T</div>
+                  </div>
+                </div>
+
+                <!-- Seconds -->
+                <div class="interval-category">
+                  <div class="interval-category-title">SECONDS</div>
+                  <div class="interval-options">
+                    <div class="interval-option">1s</div>
+                    <div class="interval-option">5s</div>
+                    <div class="interval-option">10s</div>
+                    <div class="interval-option">15s</div>
+                    <div class="interval-option">30s</div>
+                    <div class="interval-option">45s</div>
+                  </div>
+                </div>
+
+                <!-- Minutes -->
+                <div class="interval-category">
+                  <div class="interval-category-title">MINUTES</div>
+                  <div class="interval-options">
+                    <div class="interval-option">1m</div>
+                    <div class="interval-option">2m</div>
+                    <div class="interval-option active">3m</div>
+                    <div class="interval-option">5m</div>
+                    <div class="interval-option">6m</div>
+                    <div class="interval-option favorite">
+                      <span>8m</span>
+                      <i class="ri-star-fill"></i>
+                    </div>
+                    <div class="interval-option">10m</div>
+                    <div class="interval-option">15m</div>
+                    <div class="interval-option">20m</div>
+                    <div class="interval-option">30m</div>
+                  </div>
+                </div>
+
+                <!-- Hours -->
+                <div class="interval-category">
+                  <div class="interval-category-title">HOURS</div>
+                  <div class="interval-options">
+                    <div class="interval-option">1H</div>
+                    <div class="interval-option">2H</div>
+                    <div class="interval-option">3H</div>
+                    <div class="interval-option">4H</div>
+                    <div class="interval-option">6H</div>
+                    <div class="interval-option">8H</div>
+                    <div class="interval-option">12H</div>
+                    <div class="interval-option">16H</div>
+                  </div>
+                </div>
+
+                <!-- Days -->
+                <div class="interval-category">
+                  <div class="interval-category-title">DAYS</div>
+                  <div class="interval-options">
+                    <div class="interval-option">1D</div>
+                    <div class="interval-option">3D</div>
+                    <div class="interval-option">1W</div>
+                    <div class="interval-option">1M</div>
+                    <div class="interval-option">3M</div>
+                    <div class="interval-option">6M</div>
+                    <div class="interval-option">1Y</div>
+                  </div>
+                </div>
+
+                <div class="interval-category">
+                  <div class="interval-category-title">Ranges</div>
+                  <div class="interval-options">
+                    <div class="interval-option">1R</div>
+                    <div class="interval-option">10R</div>
+                    <div class="interval-option">40R</div>
+                    <div class="interval-option">100R</div>
+                    <div class="interval-option">1000R</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fixed Bottom Button -->
+            <div class="date-range-footer">
+              <button class="add-interval-btn" id="addIntervalBtn">
+                <span class="add-icon"><i class="ri-add-line"></i></span>
+                Add interval
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Broker Modal -->
+        <div class="broker-modal" id="brokerModal">
+          <div class="broker-content">
+            <div class="broker-modal-header">
+              <span class="broker-modal-title">Trade with your broker</span>
+              <div class="broker-close-btn" id="closeBrokerModal">
+                <i class="ri-close-large-line"></i>
+              </div>
+            </div>
+            <div class="broker-wrapper">
+              <div class="broker-search" id="brokerSearch">
+                <!-- Default: clickable trigger -->
+                <div
+                  class="broker-search-trigger d-flex justify-center cursor-pointer fs-16 fw-medium"
+                  id="brokerSearchTrigger"
+                >
+                  <i class="fs-20 ri-search-line"></i>
+                  <span>Find broker</span>
+                </div>
+                <!-- Expanded: full search input -->
+                <div class="broker-search-expanded" id="brokerSearchExpanded">
+                  <i class="ri-search-line"></i>
+                  <input
+                    class="broker-search-input"
+                    id="brokerSearchInput"
+                    type="text"
+                    placeholder="Find broker"
+                  />
+
+                  <div class="broker-search-clear" id="brokerSearchClear">
+                    Clear
+                  </div>
+                  <div class="broker-search-cancel" id="brokerSearchCancel">
+                    <i class="ri-close-line"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="broker-grid-wrapper">
+                <div class="broker-grid" id="brokerGrid"></div>
+                <div class="show-all-brokers" id="showAllBrokersWrapper">
+                  <button
+                    class="show-all-brokers-btn fw-medium cursor-pointer fs-16"
+                    id="showAllBrokersBtn"
+                  >
+                    Show all brokers
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Connect Broker Modal -->
+        <div class="cb-modal" id="connectBrokerModal">
+          <div class="cb-backdrop"></div>
+          <div class="cb-content">
+            <!-- Header -->
+            <div class="cb-header">
+              <button class="cb-back-btn" title="Back">
+                <i class="ri-arrow-left-line"></i>
+              </button>
+              <span class="cb-title">Connect broker</span>
+              <button class="cb-close-btn" title="Close">
+                <i class="ri-close-large-line"></i>
+              </button>
+            </div>
+
+            <div class="cb-body">
+              <!-- Broker Info -->
+              <div class="cb-content-container">
+                <div class="cb-broker-info">
+                  <div class="cb-logo">
+                    <img src="" alt="" />
+                  </div>
+                  <div class="cb-broker-details">
+                    <div class="cb-broker-name"></div>
+                    <div class="cb-rating-row">
+                      <i class="ri-star-fill cb-star-icon"></i>
+                      <span class="cb-rating-value fw-medium"></span>
+                      <a class="cb-learn-link" href="#" target="_blank"
+                        >Learn More <i class="ri-arrow-right-s-line"></i
+                      ></a>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Live / Demo Tabs -->
+                <div class="cb-tabs">
+                  <button class="cb-tab" data-tab="live">Live</button>
+                  <button class="cb-tab active" data-tab="demo">Demo</button>
+                </div>
+
+                <!-- Options -->
+                <div class="cb-options">
+                  <label class="cb-remember">
+                    <input type="checkbox" id="cbRememberMe" />
+                    <span>Don't remember me</span>
+                  </label>
+                </div>
+
+                <!-- Connect Button -->
+                <div class="cb-actions">
+                  <button class="cb-connect-btn">Connect</button>
+                  <p class="cb-disclaimer">
+                    By clicking "Connect" I confirm that I've read the
+                    <a
+                      href="https://www.tradingview.com/policies/"
+                      target="_blank"
+                      >warning</a
+                    >
+                    and
+                    <a
+                      href="https://www.tradingview.com/policies/"
+                      target="_blank"
+                      >terms of use</a
+                    >
+                    and accept all risks.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Footer -->
+              <div class="cb-footer">
+                Cannot connect to broker?
+                <a href="mailto:support@tradingview.com">Let us know.</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Broker Redirect Modal -->
+        <div class="broker-redirect-modal" id="brokerIframeModal">
+          <div class="broker-iframe-header">
+            <button class="broker-iframe-close" id="brokerIframeClose">
+              <i class="ri-close-large-line"></i>
+            </button>
+            <span class="broker-iframe-title" id="brokerIframeTitle"></span>
+            <div style="width: 32px"></div>
+          </div>
+          <div class="broker-redirect-body">
+            <div class="broker-redirect-logo">
+              <img id="brokerRedirectLogo" src="" alt="" />
+            </div>
+            <div class="broker-redirect-spinner">
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <p class="broker-redirect-text">
+              Opening <strong id="brokerRedirectName"></strong>...
+            </p>
+            <p class="broker-redirect-sub">
+              You're being securely redirected to the broker's login page.
+            </p>
+            <a
+              class="broker-redirect-manual"
+              id="brokerRedirectManual"
+              href="#"
+              target="_blank"
+            >
+              <i class="ri-external-link-line"></i> Didn't open? Click here
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="./js/chart.js"></script>
+    <script src="./js/broker.js"></script>
+    <script src="./js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-      // Dropdown functionality
-      const expandAction = document.getElementById("expandAction");
-      const expandDropdown = document.getElementById("expandDropdown");
-      let isDropdownOpen = false;
-
-      // Toggle dropdown on click
-      expandAction.addEventListener("click", function (e) {
-        e.stopPropagation();
-        isDropdownOpen = !isDropdownOpen;
-
-        if (isDropdownOpen) {
-          expandDropdown.classList.add("active");
-        } else {
-          expandDropdown.classList.remove("active");
-        }
-      });
-
-      // Close dropdown when clicking outside
-      document.addEventListener("click", function (e) {
-        if (isDropdownOpen && !expandDropdown.contains(e.target)) {
-          isDropdownOpen = false;
-          expandDropdown.classList.remove("active");
-        }
-      });
-
-      // Close dropdown when scrolling
-      let scrollTimeout;
-      window.addEventListener("scroll", function () {
-        if (isDropdownOpen) {
-          clearTimeout(scrollTimeout);
-          scrollTimeout = setTimeout(function () {
-            isDropdownOpen = false;
-            expandDropdown.classList.remove("active");
-          }, 100);
-        }
-      });
-
-      // Close dropdown on escape key
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && isDropdownOpen) {
-          isDropdownOpen = false;
-          expandDropdown.classList.remove("active");
-        }
-      });
-
-      // Prevent dropdown content clicks from closing
-      expandDropdown.addEventListener("click", function (e) {
-        e.stopPropagation();
-      });
-
-      // Bottom Sheet Modal functionality
-      const moreAction = document.getElementById("moreAction");
-      const addSymbolBtn = document.getElementById("addSymbolBtn");
-      const bottomSheetModal = document.getElementById("bottomSheetModal");
-      const closeModal = document.getElementById("closeModal");
-      const searchInput = bottomSheetModal.querySelector(".search-input");
-      const modalBody = bottomSheetModal.querySelector(
-        ".modal-body .list-container",
-      );
-      let isModalOpen = false;
-      let currentTab = "all";
-
-      // Open modal function
-      function openModal(tab = "all") {
-        isModalOpen = true;
-        currentTab = tab;
-
-        // Update active tab
-        tabItems.forEach((t) => t.classList.remove("active"));
-        const activeTab = bottomSheetModal.querySelector(`[data-tab="${tab}"]`);
-        if (activeTab) {
-          activeTab.classList.add("active");
-        }
-
-        bottomSheetModal.classList.add("active");
-        generateListItems(searchInput.value.trim());
-        document.body.style.overflow = "hidden";
-      }
-
-      // More action button click
-      moreAction.addEventListener("click", function () {
-        openModal("all");
-      });
-
-      // Add Symbol button click
-      addSymbolBtn.addEventListener("click", function () {
-        openModal("all");
-      });
-
-      // Tab functionality
-      const tabItems = bottomSheetModal.querySelectorAll(".tab-item");
-      tabItems.forEach((tab) => {
-        tab.addEventListener("click", function () {
-          // Remove active class from all tabs
-          tabItems.forEach((t) => t.classList.remove("active"));
-          // Add active class to clicked tab
-          this.classList.add("active");
-          // Update current tab
-          currentTab = this.getAttribute("data-tab");
-          // Regenerate list with current filter and search
-          const searchText = searchInput.value.trim();
-          generateListItems(searchText);
-        });
-      });
-
-      // Sample data for 20+ symbols with categories
-      const symbols = [
-        {
-          symbol: "AAPL",
-          name: "Apple Inc",
-          price: "189.45",
-          change: "+2.35 +1.26%",
-          logo: "https://s3-symbol-logo.tradingview.com/apple.svg",
-          exchange: "NASDAQ",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/source/NASDAQ.svg",
-          type: "stock",
-          category: "stocks",
-          checked: true,
-        },
-        {
-          symbol: "MSFT",
-          name: "Microsoft Corp",
-          price: "425.18",
-          change: "+5.67 +1.35%",
-          logo: "https://s3-symbol-logo.tradingview.com/microsoft.svg",
-          exchange: "NASDAQ",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/source/NASDAQ.svg",
-          type: "stock",
-          category: "stocks",
-          checked: false,
-        },
-        {
-          symbol: "AMZN",
-          name: "Amazon.com Inc",
-          price: "185.34",
-          change: "+3.45 +1.90%",
-          logo: "https://s3-symbol-logo.tradingview.com/amazon.svg",
-          exchange: "NASDAQ",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/source/NASDAQ.svg",
-          type: "stock",
-          category: "stocks",
-          checked: false,
-        },
-        {
-          symbol: "TSLA",
-          name: "Tesla Inc",
-          price: "245.67",
-          change: "-8.90 -3.50%",
-          logo: "https://s3-symbol-logo.tradingview.com/tesla.svg",
-          exchange: "NASDAQ",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/source/NASDAQ.svg",
-          type: "stock",
-          category: "stocks",
-          checked: false,
-        },
-        {
-          symbol: "META",
-          name: "Meta Platforms Inc",
-          price: "512.89",
-          change: "+7.23 +1.43%",
-          logo: "https://s3-symbol-logo.tradingview.com/meta.svg",
-          exchange: "NASDAQ",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/source/NASDAQ.svg",
-          type: "stock",
-          category: "stocks",
-          checked: false,
-        },
-        {
-          symbol: "NVDA",
-          name: "NVIDIA Corp",
-          price: "875.45",
-          change: "+15.67 +1.82%",
-          logo: "https://s3-symbol-logo.tradingview.com/nvidia.svg",
-          exchange: "NASDAQ",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/source/NASDAQ.svg",
-          type: "stock",
-          category: "stocks",
-          checked: false,
-        },
-        {
-          symbol: "GC1!",
-          name: "Gold Futures",
-          price: "4,879.6",
-          change: "+71.3 +1.48%",
-          logo: "https://s3-symbol-logo.tradingview.com/carbon--big.svg",
-          exchange: "CME",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/source/CME_MINI.svg",
-          type: "futures",
-          category: "futures",
-          checked: true,
-        },
-        {
-          symbol: "CL1!",
-          name: "Crude Oil WTI Futures",
-          price: "78.45",
-          change: "-0.85 -1.07%",
-          logo: "https://s3-symbol-logo.tradingview.com/crude-oil--big.svg",
-          exchange: "NYMEX",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/source/NYMEX.svg",
-          type: "futures",
-          category: "futures",
-          checked: false,
-        },
-        {
-          symbol: "NQ1!",
-          name: "NASDAQ 100 E-mini Futures",
-          price: "26,825.50",
-          change: "+338.25 +1.28%",
-          logo: "https://s3-symbol-logo.tradingview.com/indices/nasdaq-100.svg",
-          exchange: "CME",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/source/CME_MINI.svg",
-          type: "futures",
-          category: "futures",
-          checked: false,
-        },
-        {
-          symbol: "ES1!",
-          name: "S&P 500 E-mini Futures",
-          price: "7,161.50",
-          change: "+84.50 +1.19%",
-          logo: "https://s3-symbol-logo.tradingview.com/indices/s-and-p-500.svg",
-          exchange: "CME",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/source/CME_MINI.svg",
-          type: "futures",
-          category: "futures",
-          checked: false,
-        },
-        {
-          symbol: "BTCUSD",
-          name: "Bitcoin / US Dollar",
-          price: "98,542",
-          change: "+1,245 +1.28%",
-          logo: "https://s3-symbol-logo.tradingview.com/crypto/XTVCBTC.svg",
-          exchange: "CRYPTO",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/crypto/XTVCBTC.svg",
-          type: "crypto",
-          category: "crypto",
-          checked: false,
-        },
-        {
-          symbol: "ETHUSD",
-          name: "Ethereum / US Dollar",
-          price: "3,845",
-          change: "+52 +1.37%",
-          logo: "https://s3-symbol-logo.tradingview.com/indices/eur-usd--big.svg",
-          exchange: "CRYPTO",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/crypto/XTVCETH.svg",
-          type: "crypto",
-          category: "crypto",
-          checked: false,
-        },
-        {
-          symbol: "EURUSD",
-          name: "Euro / US Dollar",
-          price: "1.0845",
-          change: "+0.0023 +0.21%",
-          logo: "https://s3-symbol-logo.tradingview.com/indices/eur-usd--big.svg",
-          exchange: "FX",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/country/DEU.svg",
-          type: "forex",
-          category: "forex",
-          checked: false,
-        },
-        {
-          symbol: "GBPUSD",
-          name: "British Pound / US Dollar",
-          price: "1.2678",
-          change: "-0.0015 -0.12%",
-          logo: "https://s3-symbol-logo.tradingview.com/country/GBR.svg",
-          exchange: "FX",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/country/GBR.svg",
-          type: "forex",
-          category: "forex",
-          checked: false,
-        },
-        {
-          symbol: "USDJPY",
-          name: "US Dollar / Japanese Yen",
-          price: "154.25",
-          change: "+0.45 +0.29%",
-          logo: "https://s3-symbol-logo.tradingview.com/country/US--big.svg",
-          exchange: "FX",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/country/JPN.svg",
-          type: "forex",
-          category: "forex",
-          checked: false,
-        },
-        {
-          symbol: "SPX",
-          name: "S&P 500 Index",
-          price: "7,185.25",
-          change: "+85.50 +1.20%",
-          logo: "https://s3-symbol-logo.tradingview.com/indices/s-and-p-500.svg",
-          exchange: "INDEX",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/indices/s-and-p-500.svg",
-          type: "index",
-          category: "indices",
-          checked: false,
-        },
-        {
-          symbol: "DJI",
-          name: "Dow Jones Industrial Average",
-          price: "42,856.30",
-          change: "+245.60 +0.58%",
-          logo: "https://s3-symbol-logo.tradingview.com/country/US--big.svg",
-          exchange: "INDEX",
-          exchangeLogo: "https://s3-symbol-logo.tradingview.com/indices/dj.svg",
-          type: "index",
-          category: "indices",
-          checked: false,
-        },
-        {
-          symbol: "VIX",
-          name: "CBOE Volatility Index",
-          price: "18.45",
-          change: "-0.67 -3.51%",
-          logo: "https://s3-symbol-logo.tradingview.com/indices/mini-cboe-volatility--big.svg",
-          exchange: "CBOE",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/indices/volatility-s-p-500.svg",
-          type: "index",
-          category: "indices",
-          checked: false,
-        },
-        {
-          symbol: "US10Y",
-          name: "US 10-Year Treasury Yield",
-          price: "4.523%",
-          change: "+0.015 +0.33%",
-          logo: "https://s3-symbol-logo.tradingview.com/country/USA.svg",
-          exchange: "TREASURY",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/country/USA.svg",
-          type: "bond",
-          category: "bonds",
-          checked: false,
-        },
-        {
-          symbol: "GLD",
-          name: "SPDR Gold Trust Fund",
-          price: "234.56",
-          change: "+2.34 +1.01%",
-          logo: "https://s3-symbol-logo.tradingview.com/fund/gld.svg",
-          exchange: "NYSE",
-          exchangeLogo:
-            "https://s3-symbol-logo.tradingview.com/source/NYSE.svg",
-          type: "fund",
-          category: "funds",
-          checked: false,
-        },
-      ];
-
-      // Generate list items
-      function generateListItems(filterText = "") {
-        modalBody.innerHTML = "";
-
-        // Filter symbols based on category and search text
-        let filteredSymbols = symbols.filter((item) => {
-          // Filter by tab category
-          if (currentTab !== "all" && item.category !== currentTab) {
-            return false;
-          }
-          // Filter by search text
-          if (!filterText) return true;
-          const searchText = filterText.toLowerCase();
-          return (
-            item.symbol.toLowerCase().startsWith(searchText) ||
-            item.name.toLowerCase().includes(searchText)
-          );
-        });
-
-        // Sort: symbols starting with search text come first
-        if (filterText) {
-          const searchText = filterText.toLowerCase();
-          filteredSymbols.sort((a, b) => {
-            const aStarts = a.symbol.toLowerCase().startsWith(searchText);
-            const bStarts = b.symbol.toLowerCase().startsWith(searchText);
-            if (aStarts && !bStarts) return -1;
-            if (!aStarts && bStarts) return 1;
-            return 0;
-          });
-        }
-
-        if (filteredSymbols.length === 0) {
-          modalBody.innerHTML = `
-            <li class="list-item">
-              <div class="d-flex justify-center items-center" style="padding: 40px 0;">
-                <div class="text-center">
-                  <i class="ri-search-line" style="font-size: 48px; color: var(--color-gray);"></i>
-                  <p style="margin-top: 12px; color: var(--color-gray); font-size: 14px;">No symbols found</p>
-                </div>
-              </div>
-            </li>
-          `;
-          return;
-        }
-
-        filteredSymbols.forEach((item) => {
-          const isPositive = item.change.includes("+");
-          const changeClass = isPositive ? "text-success" : "text-danger";
-          const iconClass = item.checked ? "ri-check-line" : "ri-add-line";
-
-          const li = document.createElement("li");
-          li.className = "list-item";
-          li.innerHTML = `
-            <div class="d-flex justify-between items-center">
-              <div class="d-flex items-center gap-2">
-                <img class="symbol-logo" src="${item.logo}" alt="${item.symbol}" />
-                <div>
-                  <div class="fw-medium">
-                    <span class="d-flex items-center gap-1 ticker-name">${item.symbol}
-                      <span class="market-closed d-flex justify-center items-center" data-overflow-tooltip-text="Market Closed">
-                        <span></span>
-                      </span>
-                    </span>
-                  </div>
-                  <div class="tickerCardDetails mt-1 fs-14">
-                    <span>${item.name}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="d-flex items-center gap-2 text-right">
-                <div>
-                  <div class="text-right d-flex items-center gap-1 justify-end">
-                    ${item.exchange}
-                    <span>
-                      <img class="icon-logo" src="${item.exchangeLogo}" alt="${item.exchange}" />
-                    </span>
-                  </div>
-                  <span class="text-gray fs-12">${item.type}</span>
-                </div>
-                <div class="fs-24"><i class="${iconClass}"></i></div>
-              </div>
-            </div>
-          `;
-          modalBody.appendChild(li);
-        });
-      }
-
-      // Live search functionality
-      searchInput.addEventListener("input", function (e) {
-        const searchText = e.target.value.trim();
-        generateListItems(searchText);
-      });
-
-      // Close modal
-      function closeBottomSheet() {
-        isModalOpen = false;
-        bottomSheetModal.classList.remove("active");
-        document.body.style.overflow = "";
-        searchInput.value = ""; // Clear search input
-      }
-
-      closeModal.addEventListener("click", closeBottomSheet);
-
-      // Close modal when clicking backdrop
-      bottomSheetModal.addEventListener("click", function (e) {
-        if (e.target === bottomSheetModal.querySelector(".modal-backdrop")) {
-          closeBottomSheet();
-        }
-      });
-
-      // Close modal on escape key
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && isModalOpen) {
-          closeBottomSheet();
-        }
-      });
-
-      // Watchlist data for main page
-      const watchlistSymbols = [
-        {
-          symbol: "NQ1!",
-          name: "NASDAQ 100 E-mini Futures",
-          price: "26,825.50",
-          change: "+338.25 +1.28%",
-          logo: "https://s3-symbol-logo.tradingview.com/indices/nasdaq-100.svg",
-        },
-        {
-          symbol: "ES1!",
-          name: "S&P 500 E-mini Futures",
-          price: "7,161.50",
-          change: "+84.50 +1.19%",
-          logo: "https://s3-symbol-logo.tradingview.com/indices/s-and-p-500.svg",
-        },
-        {
-          symbol: "GC1!",
-          name: "Gold Futures",
-          price: "4,879.6",
-          change: "+71.3 +1.48%",
-          logo: "https://s3-symbol-logo.tradingview.com/metal/gold--big.svg",
-        },
-        {
-          symbol: "BTCUSD",
-          name: "Bitcoin / US Dollar",
-          price: "98,542",
-          change: "+1,245 +1.28%",
-          logo: "https://s3-symbol-logo.tradingview.com/crypto/XTVCBTC.svg",
-        },
-        {
-          symbol: "ETHUSD",
-          name: "Ethereum / US Dollar",
-          price: "3,845",
-          change: "+52 +1.37%",
-          logo: "https://s3-symbol-logo.tradingview.com/crypto/XTVCETH.svg",
-        },
-        {
-          symbol: "AAPL",
-          name: "Apple Inc",
-          price: "189.45",
-          change: "+2.35 +1.26%",
-          logo: "https://s3-symbol-logo.tradingview.com/apple.svg",
-        },
-        {
-          symbol: "MSFT",
-          name: "Microsoft Corp",
-          price: "425.18",
-          change: "+5.67 +1.35%",
-          logo: "https://s3-symbol-logo.tradingview.com/microsoft.svg",
-        },
-        {
-          symbol: "GOOGL",
-          name: "Alphabet Inc",
-          price: "156.78",
-          change: "-1.23 -0.78%",
-          logo: "https://s3-symbol-logo.tradingview.com/alph.svg",
-        },
-        {
-          symbol: "AMZN",
-          name: "Amazon.com Inc",
-          price: "185.34",
-          change: "+3.45 +1.90%",
-          logo: "https://s3-symbol-logo.tradingview.com/amazon.svg",
-        },
-        {
-          symbol: "TSLA",
-          name: "Tesla Inc",
-          price: "245.67",
-          change: "-8.90 -3.50%",
-          logo: "https://s3-symbol-logo.tradingview.com/tesla.svg",
-        },
-        {
-          symbol: "META",
-          name: "Meta Platforms Inc",
-          price: "512.89",
-          change: "+7.23 +1.43%",
-          logo: "https://s3-symbol-logo.tradingview.com/meta.svg",
-        },
-        {
-          symbol: "NVDA",
-          name: "NVIDIA Corp",
-          price: "875.45",
-          change: "+15.67 +1.82%",
-          logo: "https://s3-symbol-logo.tradingview.com/nvidia.svg",
-        },
-        {
-          symbol: "EURUSD",
-          name: "Euro / US Dollar",
-          price: "1.0845",
-          change: "+0.0023 +0.21%",
-          logo: "https://s3-symbol-logo.tradingview.com/country/DEU.svg",
-        },
-      ];
-
-      // Generate watchlist items
-      function generateWatchlist() {
-        const watchlistContainer =
-          document.getElementById("watchlistContainer");
-        watchlistContainer.innerHTML = "";
-
-        watchlistSymbols.forEach((item) => {
-          const isPositive = item.change.includes("+");
-          const changeClass = isPositive ? "text-success" : "text-danger";
-
-          const li = document.createElement("li");
-          li.className = "list-item";
-          li.innerHTML = `
-            <div class="d-flex justify-between items-center">
-              <div class="d-flex items-center gap-2">
-                <img class="symbol-logo" src="${item.logo}" alt="${item.symbol}" />
-                <div>
-                  <div class="fw-medium">
-                    <span class="d-flex items-center gap-1 ticker-name" data-overflow-tooltip-text="${item.symbol}">${item.symbol}
-                      <span class="market-closed d-flex justify-center items-center" data-overflow-tooltip-text="Market Closed">
-                        <span></span>
-                      </span>
-                    </span>
-                  </div>
-                  <div class="tickerCardDetails mt-1 fs-14">
-                    <span>${item.name}</span>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div class="group-ticker text-right">
-                  <span class="fw-medium">${item.price}</span>
-                  <span class="js-symbol-change-pt ${changeClass} whitespace-nowrap fs-14">${item.change}</span>
-                </div>
-              </div>
-            </div>
-          `;
-          watchlistContainer.appendChild(li);
-        });
-      }
-
-      // Initialize watchlist on page load
-      generateWatchlist();
-
-      // Tab switching functionality
-      const menuItems = document.querySelectorAll(".menu-item");
-      const watchlistPage = document.getElementById("watchlistPage");
-      const chartPage = document.getElementById("chartPage");
-      const header = document.querySelector("header");
-      const appBanner = document.querySelector(".app-banner");
-      let chartInitialized = false;
-
-      menuItems.forEach((item) => {
-        item.addEventListener("click", function () {
-          // Remove active class from all menu items
-          menuItems.forEach((mi) => mi.classList.remove("active"));
-          // Add active class to clicked item
-          this.classList.add("active");
-
-          // Check which tab was clicked
-          if (this.classList.contains("watchlist")) {
-            // Show watchlist, hide chart
-            watchlistPage.style.display = "block";
-            chartPage.style.display = "none";
-            document.querySelector(".chart-page-container").style.display =
-              "none";
-            // Show header and app banner
-            if (header) header.style.display = "block";
-            if (appBanner) appBanner.style.display = "flex";
-          } else if (this.classList.contains("chart")) {
-            // Show chart, hide watchlist
-            watchlistPage.style.display = "none";
-            chartPage.style.display = "block";
-            document.querySelector(".chart-page-container").style.display =
-              "block";
-            // Hide header and app banner
-            if (header) header.style.display = "none";
-            if (appBanner) appBanner.style.display = "none";
-            // Load TradingView widget if not already done
-            if (!chartInitialized) {
-              loadTradingViewWidget(currentSymbol, currentInterval);
-              chartInitialized = true;
-            }
-          }
-        });
-      });
-
-      // Initially hide chart page
-      chartPage.style.display = "none";
-      document.querySelector(".chart-page-container").style.display = "none";
+      window.onload = function () {
+        handleDropdownThreeDotActions();
+        handleMoreActionsPlusTab();
+        generateWatchListsFucntion();
+        handleTabMenu();
+      };
     </script>
   </body>
 </html>

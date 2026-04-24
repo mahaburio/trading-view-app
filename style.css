@@ -2173,7 +2173,9 @@ header {
   color: var(--color-gray);
   cursor: pointer;
   white-space: nowrap;
-  transition: color 0.15s, border-color 0.15s;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
   margin-bottom: -1px;
 }
 
@@ -2390,9 +2392,15 @@ header {
   text-align: right;
 }
 
-.bh-val-red  { color: #e53935; }
-.bh-val-blue { color: #1565c0; }
-.bh-val-green { color: #2e7d32; }
+.bh-val-red {
+  color: #e53935;
+}
+.bh-val-blue {
+  color: #1565c0;
+}
+.bh-val-green {
+  color: #2e7d32;
+}
 
 /* Order separator */
 .bh-item-separator {
@@ -2425,7 +2433,9 @@ header {
   color: var(--color-gray);
   cursor: pointer;
   white-space: nowrap;
-  transition: color 0.15s, border-color 0.15s;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
   margin-bottom: -1px;
 }
 

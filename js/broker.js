@@ -24,12 +24,13 @@ const brokersData = [
   },
   {
     name: "Tradovate",
-    logo: "https://static.tradingview.com/static/bundles/capital.cdac334887a4bfcefd24.svg",
+    logo: "https://static.tradingview.com/static/bundles/tradovate.b97dc416fddc2852d50c.svg",
     rating: "4.4",
     featured: false,
     authUrl: "https://trader.tradovate.com/welcome",
     learnUrl: "https://www.tradingview.com/broker/tradovate/",
     hasDemo: true,
+    hasLogin: true,
   },
   {
     name: "OKX",
@@ -447,15 +448,30 @@ function openConnectModal(broker) {
 
   connectBtn.onclick = () => {
     if (connecting) return;
-    connecting = true;
-    connectBtn.disabled = true;
-    connectBtn.innerHTML = `
-      <span class="cb-dots">
-        <span></span><span></span><span></span>
-      </span>`;
 
     const url = broker.authUrl;
-    if (url) {
+    if (broker.hasLogin) {
+      // Same 3-dot animation, then open in-app login modal
+      connecting = true;
+      connectBtn.disabled = true;
+      connectBtn.innerHTML = `
+        <span class="cb-dots">
+          <span></span><span></span><span></span>
+        </span>`;
+      setTimeout(() => {
+        connecting = false;
+        connectBtn.disabled = false;
+        connectBtn.innerHTML = "Connect";
+        document.getElementById("connectBrokerModal")?.classList.remove("active");
+        openBrokerLoginModal(broker);
+      }, 1200);
+    } else if (url) {
+      connecting = true;
+      connectBtn.disabled = true;
+      connectBtn.innerHTML = `
+        <span class="cb-dots">
+          <span></span><span></span><span></span>
+        </span>`;
       setTimeout(() => {
         connecting = false;
         connectBtn.disabled = false;
@@ -464,6 +480,12 @@ function openConnectModal(broker) {
       }, 1200);
     } else {
       // Paper Trading — no external URL, just simulate
+      connecting = true;
+      connectBtn.disabled = true;
+      connectBtn.innerHTML = `
+        <span class="cb-dots">
+          <span></span><span></span><span></span>
+        </span>`;
       setTimeout(() => {
         connecting = false;
         connectBtn.disabled = false;
@@ -534,10 +556,213 @@ function initBrokerIframeModal() {
 }
 
 // ==========================
+// BROKER LOGIN MODAL
+// ==========================
+function openBrokerLoginModal(broker) {
+  const modal = document.getElementById("brokerLoginModal");
+  if (!modal) return;
+
+  const logoEl    = document.getElementById("blBrokerLogo");
+  const headingEl = document.getElementById("blHeading");
+  const scrollArea = document.getElementById("blScrollArea");
+  const usernameEl = document.getElementById("blUsername");
+  const passwordEl = document.getElementById("blPassword");
+  const eyeIcon    = document.getElementById("blEyeIcon");
+
+  if (logoEl)  { logoEl.src = broker.logo; logoEl.alt = broker.name; }
+  if (headingEl) headingEl.textContent = `Sign In with ${broker.name}`;
+  if (scrollArea) scrollArea.classList.remove("checking");
+  if (usernameEl) usernameEl.value = "";
+  if (passwordEl) { passwordEl.value = ""; passwordEl.type = "password"; }
+  if (eyeIcon)    eyeIcon.className = "ri-eye-line";
+
+  // Reset Accept Cookies footer
+  const cookieFooter = document.getElementById("blCookieFooter");
+  if (cookieFooter) cookieFooter.style.display = "";
+
+  modal._broker = broker;
+  modal.classList.add("active");
+}
+
+function showConnectedBrokerInNav(broker) {
+  const btn  = document.getElementById("connectedBrokerBtn");
+  const logo = document.getElementById("connectedBrokerLogo");
+  if (btn && logo) {
+    logo.src   = broker.logo;
+    logo.alt   = broker.name;
+    btn.title  = `${broker.name} (connected)`;
+    btn.style.display = "flex";
+  }
+  // Persist across reloads for the duration of the browser session
+  sessionStorage.setItem("connectedBroker", JSON.stringify({ name: broker.name, logo: broker.logo }));
+}
+
+function restoreConnectedBrokerFromSession() {
+  const saved = sessionStorage.getItem("connectedBroker");
+  if (!saved) return;
+  try {
+    const broker = JSON.parse(saved);
+    if (broker?.name && broker?.logo) showConnectedBrokerInNav(broker);
+  } catch (e) {
+    sessionStorage.removeItem("connectedBroker");
+  }
+}
+
+function initBrokerLoginModal() {
+  const modal      = document.getElementById("brokerLoginModal");
+  if (!modal) return;
+
+  const closeBtn   = document.getElementById("brokerLoginClose");
+  const eyeBtn     = document.getElementById("blEyeBtn");
+  const loginBtn   = document.getElementById("blLoginBtn");
+  const scrollArea = document.getElementById("blScrollArea");
+
+  // Accept Cookies — dismiss footer + scroll to login form
+  const acceptCookiesBtn = document.getElementById("blAcceptCookies");
+  const cookieFooter     = document.getElementById("blCookieFooter");
+  acceptCookiesBtn?.addEventListener("click", () => {
+    if (cookieFooter) cookieFooter.style.display = "none";
+    setTimeout(() => {
+      document.getElementById("blUsername")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 100);
+  });
+
+  closeBtn?.addEventListener("click", () => {
+    modal.classList.remove("active");
+  });
+
+  // Password eye toggle
+  eyeBtn?.addEventListener("click", () => {
+    const pw   = document.getElementById("blPassword");
+    const icon = document.getElementById("blEyeIcon");
+    if (!pw) return;
+    if (pw.type === "password") {
+      pw.type = "text";
+      if (icon) icon.className = "ri-eye-off-line";
+    } else {
+      pw.type = "password";
+      if (icon) icon.className = "ri-eye-line";
+    }
+  });
+
+  // Login submit → show Checking... → go to chart + show broker logo in nav
+  loginBtn?.addEventListener("click", () => {
+    const username = document.getElementById("blUsername")?.value.trim();
+    const password = document.getElementById("blPassword")?.value.trim();
+    if (!username || !password) return;
+
+    // Enter checking state
+    if (scrollArea) scrollArea.classList.add("checking");
+
+    setTimeout(() => {
+      const broker = modal._broker;
+      if (broker) showConnectedBrokerInNav(broker);
+      // Close ALL broker modals on successful login
+      ["brokerLoginModal", "connectBrokerModal", "brokerModal", "brokerIframeModal"].forEach((id) => {
+        document.getElementById(id)?.classList.remove("active");
+      });
+      if (scrollArea) scrollArea.classList.remove("checking");
+    }, 2000);
+  });
+}
+
+// ==========================
+// BROKER HISTORY MODAL
+// ==========================
+function initBrokerHistoryModal() {
+  const modal        = document.getElementById("brokerHistoryModal");
+  const closeBtn     = document.getElementById("brokerHistoryClose");
+  const connectedBtn = document.getElementById("connectedBrokerBtn");
+  const titleBtn     = modal?.querySelector(".bh-broker-title");
+  const backdrop     = document.getElementById("bhDropdownBackdrop");
+  const sheet        = document.getElementById("bhDropdownSheet");
+  const logoutBtn    = document.getElementById("bhLogoutBtn");
+  if (!modal) return;
+
+  // Helper: open/close broker title dropdown
+  function openDropdown() {
+    backdrop?.classList.add("active");
+    sheet?.classList.add("active");
+    titleBtn?.classList.add("open");
+  }
+  function closeDropdown() {
+    backdrop?.classList.remove("active");
+    sheet?.classList.remove("active");
+    titleBtn?.classList.remove("open");
+  }
+
+  // Toggle on broker title click
+  titleBtn?.addEventListener("click", () => {
+    sheet?.classList.contains("active") ? closeDropdown() : openDropdown();
+  });
+
+  // Backdrop click closes dropdown
+  backdrop?.addEventListener("click", closeDropdown);
+
+  // Log out: clear session + close modal + remove nav icon
+  logoutBtn?.addEventListener("click", () => {
+    sessionStorage.removeItem("connectedBroker");
+    closeDropdown();
+    modal.classList.remove("active");
+    const btn = document.getElementById("connectedBrokerBtn");
+    if (btn) btn.style.display = "none";
+  });
+
+  // Open when connected broker icon is clicked
+  connectedBtn?.addEventListener("click", () => {
+    const saved = sessionStorage.getItem("connectedBroker");
+    if (saved) {
+      try {
+        const broker = JSON.parse(saved);
+        const nameEl = document.getElementById("bhBrokerName");
+        if (nameEl && broker.name) nameEl.textContent = broker.name;
+        // Update logout label
+        if (logoutBtn) logoutBtn.textContent = `Log out ${broker.name}`;
+      } catch (e) {}
+    }
+    closeDropdown(); // reset dropdown state on open
+    modal.classList.add("active");
+  });
+
+  closeBtn?.addEventListener("click", () => {
+    closeDropdown();
+    modal.classList.remove("active");
+  });
+
+  // Tab switching
+  const tabs   = modal.querySelectorAll(".bh-tab");
+  const panels = modal.querySelectorAll(".bh-tab-panel");
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      tabs.forEach((t)   => t.classList.remove("active"));
+      panels.forEach((p) => p.classList.remove("active"));
+      tab.classList.add("active");
+      document.getElementById(tab.dataset.bhpanel)?.classList.add("active");
+    });
+  });
+
+  // Orders sub-tab switching with group filter
+  const subTabs = modal.querySelectorAll(".bh-sub-tab");
+  subTabs.forEach((sub) => {
+    sub.addEventListener("click", () => {
+      subTabs.forEach((s) => s.classList.remove("active"));
+      sub.classList.add("active");
+      const filter = sub.dataset.bhsub;
+      modal.querySelectorAll(".bh-order-group").forEach((group) => {
+        group.style.display = (filter === "all" || group.dataset.bhgroup === filter) ? "" : "none";
+      });
+    });
+  });
+}
+
+// ==========================
 // INIT
 // ==========================
 document.addEventListener("DOMContentLoaded", () => {
   initBrokerModal();
   initConnectBrokerModal();
   initBrokerIframeModal();
+  initBrokerLoginModal();
+  initBrokerHistoryModal();
+  restoreConnectedBrokerFromSession(); // restore broker icon after reload
 });

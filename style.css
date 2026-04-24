@@ -69,27 +69,13 @@ header {
   pointer-events: auto;
 }
 
-.modal-backdrop {
+.modal-content {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.bottom-sheet-modal.active .modal-backdrop {
-  opacity: 1;
-}
-
-.modal-content {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  max-height: calc(100dvh - 60px);
   background: var(--color-white);
   transform: translateY(100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -405,7 +391,7 @@ header {
 
 /* Menubar */
 .menubar {
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #f5f5f5;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -1695,6 +1681,792 @@ header {
 .broker-redirect-manual.visible {
   opacity: 1;
   pointer-events: auto;
+}
+
+/* ==========================
+   BROKER LOGIN MODAL
+========================== */
+.broker-login-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-white);
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  width: 500px;
+  max-width: 100%;
+  margin: 0 auto;
+  max-height: calc(100dvh - 60px);
+}
+
+.broker-login-modal.active {
+  transform: translateY(0);
+}
+
+/* Header */
+.bl-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  flex-shrink: 0;
+  background: var(--color-white);
+}
+
+.bl-header-spacer {
+  width: 32px;
+}
+
+.bl-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-black);
+}
+
+.bl-close-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: var(--color-black);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* Yellow banner */
+.bl-banner {
+  background: #f5a623;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--color-black);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
+.bl-banner i {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* Scrollable area */
+.bl-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-white);
+  transition: background 0.3s;
+}
+
+.bl-scroll-area.checking {
+  background: var(--color-black);
+}
+
+/* Brand row */
+.bl-brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+  flex-shrink: 0;
+}
+
+.bl-broker-logo {
+  height: 36px;
+  width: auto;
+  max-width: 130px;
+  object-fit: contain;
+}
+
+.bl-lang {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 13px;
+  color: var(--color-black);
+  background: var(--color-white);
+  cursor: pointer;
+  outline: none;
+}
+
+/* Main content */
+.bl-main {
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px 30px;
+  gap: 16px;
+}
+
+.bl-scroll-area.checking .bl-main {
+  display: none;
+}
+
+/* Heading */
+.bl-heading {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-black);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.bl-subtext {
+  font-size: 15px;
+  color: #555;
+  margin: 0;
+}
+
+/* Permissions box */
+.bl-permissions {
+  background: #e8f3fd;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 13px;
+  color: #333;
+}
+
+.bl-perm-icon-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.bl-info-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.bl-perm-section {
+  margin: 8px 0 4px;
+  font-size: 13px;
+}
+
+.bl-perm-list {
+  margin: 0 0 8px 0;
+  padding-left: 18px;
+}
+
+.bl-perm-list li {
+  margin-bottom: 3px;
+  font-size: 13px;
+}
+
+/* Cookie & privacy texts */
+.bl-cookie-text,
+.bl-privacy-text {
+  font-size: 12px;
+  color: var(--color-gray);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.bl-link {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.bl-link:hover {
+  text-decoration: underline;
+}
+
+/* Accept Cookies sticky footer */
+.bl-cookie-footer {
+  flex-shrink: 0;
+  padding: 20px 20px 24px;
+  background: var(--color-black);
+  border-top: none;
+  position: fixed;
+  bottom: 0;
+}
+
+.bl-cookie-footer .bl-cookie-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+  margin: 0 0 16px;
+}
+
+.bl-link-light {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.bl-link-light:hover {
+  text-decoration: underline;
+}
+
+/* Accept Cookies */
+.bl-accept-cookies-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.bl-accept-cookies-btn:hover {
+  opacity: 0.9;
+}
+
+/* Register link */
+.bl-register-text {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+}
+
+/* Login form */
+.bl-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.bl-field-label {
+  display: block;
+  font-size: 14px;
+  color: var(--color-black);
+  margin-bottom: 4px;
+}
+
+.bl-field-input {
+  border: none;
+  width: 100%;
+  font-size: 16px;
+  color: var(--color-white);
+  outline: none;
+  padding: 0;
+  background-color: var(--color-black);
+  padding: 10px;
+}
+
+.bl-password-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.bl-password-row .bl-field-input {
+  padding-right: 36px;
+  flex: 1;
+}
+
+.bl-field-bottom {
+  margin-top: 10px;
+}
+
+.bl-eye-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--color-white);
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+/* Login button */
+.bl-login-btn {
+  margin-top: 18px;
+  width: 100%;
+  padding: 16px;
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.bl-login-btn:hover {
+  opacity: 0.9;
+}
+
+/* Checking content (dark state) */
+.bl-checking-content {
+  display: none;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+
+.bl-scroll-area.checking .bl-checking-content {
+  display: flex;
+}
+
+.bl-checking-text {
+  font-size: 18px;
+  color: var(--color-white);
+  font-weight: 500;
+}
+
+/* Connected broker logo in bottom nav */
+.connected-broker-btn .connected-broker-logo {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  object-fit: contain;
+}
+
+/* ==========================
+   BROKER HISTORY MODAL
+========================== */
+.bh-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-white);
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  width: 500px;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  max-height: calc(100dvh - 60px);
+}
+
+.bh-modal.active {
+  transform: translateY(0);
+}
+
+/* Header */
+.bh-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  flex-shrink: 0;
+}
+
+.bh-broker-title {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--color-black);
+  cursor: pointer;
+}
+
+.bh-broker-title i {
+  font-size: 20px;
+}
+
+.bh-close-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: var(--color-black);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* Account row */
+.bh-account-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.bh-account-id {
+  font-size: 13px;
+  color: var(--color-black);
+  font-weight: 400;
+}
+
+.bh-account-row i {
+  font-size: 16px;
+  color: var(--color-black);
+}
+
+/* Stats row */
+.bh-stats-row {
+  display: flex;
+  padding: 6px 16px 14px;
+  gap: 24px;
+  flex-shrink: 0;
+}
+
+.bh-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.bh-stat-label {
+  font-size: 11px;
+  color: var(--color-gray);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.bh-stat-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-black);
+}
+
+.bh-profit-zero {
+  color: var(--color-gray);
+}
+
+/* Tabs row */
+.bh-tabs-row {
+  display: flex;
+  border-bottom: 1px solid #f0f0f0;
+  overflow-x: auto;
+  flex-shrink: 0;
+  scrollbar-width: none;
+  padding: 0 8px;
+}
+
+.bh-tabs-row::-webkit-scrollbar {
+  display: none;
+}
+
+.bh-tab {
+  flex-shrink: 0;
+  padding: 10px 10px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-gray);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
+}
+
+.bh-tab.active {
+  color: var(--color-black);
+  border-bottom-color: var(--color-black);
+  font-weight: 600;
+}
+
+/* Content area */
+.bh-content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bh-tab-panel {
+  display: none;
+  height: 100%;
+}
+
+.bh-tab-panel.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Empty state */
+.bh-empty-state {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
+  text-align: center;
+}
+
+.bh-empty-state p {
+  font-size: 14px;
+  color: var(--color-gray);
+  line-height: 1.5;
+}
+
+/* Broker title dropdown backdrop */
+.bh-dropdown-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.bh-dropdown-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Broker title dropdown bottom sheet */
+.bh-dropdown-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 21;
+  background: var(--color-white);
+  border-radius: 14px 14px 0 0;
+  padding: 8px 0 24px;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.bh-dropdown-sheet.active {
+  transform: translateY(0);
+}
+
+.bh-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 20px;
+  font-size: 15px;
+  color: var(--color-black);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.bh-dropdown-item:active {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.bh-dropdown-item.bh-dropdown-arrow i {
+  font-size: 20px;
+  color: var(--color-gray);
+}
+
+.bh-dropdown-divider {
+  height: 1px;
+  background: #f0f0f0;
+  margin: 4px 0;
+}
+
+.bh-dropdown-logout {
+  color: #e53935;
+}
+
+/* Chevron flip when dropdown open */
+.bh-broker-title.open i {
+  transform: rotate(180deg);
+}
+
+.bh-broker-title i {
+  transition: transform 0.25s ease;
+}
+
+/* Tab count badge */
+.bh-tab-count {
+  font-size: 11px;
+  font-weight: 600;
+  color: inherit;
+  opacity: 0.7;
+}
+
+/* Position / Order item card */
+.bh-item-card {
+  padding: 14px 16px 4px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.bh-item-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.bh-item-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.bh-item-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bh-item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.bh-item-symbol {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-black);
+  background-color: #f0f0f0;
+  padding: 4px 6px;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+.bh-item-name {
+  font-size: 11px;
+  color: var(--color-gray);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bh-item-info-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #b0b0b0;
+  padding: 4px 2px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Detail grid */
+.bh-detail-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-bottom: 10px;
+}
+
+.bh-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.bh-detail-label {
+  font-size: 12px;
+  color: var(--color-gray);
+  min-width: 110px;
+}
+
+.bh-detail-value {
+  font-size: 12px;
+  color: var(--color-black);
+  font-weight: 500;
+  text-align: right;
+}
+
+.bh-val-red  { color: #e53935; }
+.bh-val-blue { color: #1565c0; }
+.bh-val-green { color: #2e7d32; }
+
+/* Order separator */
+.bh-item-separator {
+  height: 8px;
+  background: #f5f5f5;
+}
+
+/* Orders sub-tabs */
+.bh-sub-tabs {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 0 8px;
+  flex-shrink: 0;
+}
+
+.bh-sub-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.bh-sub-tab {
+  flex-shrink: 0;
+  padding: 8px 10px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-gray);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
+}
+
+.bh-sub-tab.active {
+  color: var(--color-black);
+  border-bottom-color: var(--color-black);
+  font-weight: 600;
+}
+
+.bh-orders-list {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Notification item */
+.bh-notif-item {
+  padding: 14px 16px 4px;
+}
+
+.bh-val-notif {
+  color: #0d9b76;
+  text-align: right;
+  line-height: 1.45;
+}
+
+/* Account Summary */
+.bh-account-summary {
+  padding: 16px 16px 24px;
+}
+
+.bh-summary-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.bh-summary-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-black);
 }
 
 @media screen and (max-width: 390px) {

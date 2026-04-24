@@ -524,8 +524,32 @@ window.handleTabMenu = function () {
   const appBanner = document.querySelector(".app-banner");
   let chartInitialized = false;
 
+  // Close every modal that may be open
+  function closeAllModals() {
+    const ids = [
+      "bottomSheetModal",
+      "analysisHubModal",
+      "dateRangeModal",
+      "brokerModal",
+      "connectBrokerModal",
+      "brokerIframeModal",
+      "brokerLoginModal",
+      "brokerHistoryModal",
+    ];
+    ids.forEach((id) => {
+      document.getElementById(id)?.classList.remove("active");
+    });
+    // Reset broker login scroll area (checking state)
+    document.getElementById("blScrollArea")?.classList.remove("checking");
+    // Always restore body scroll (in case bottomSheetModal had locked it)
+    document.body.style.overflow = "";
+  }
+
   menuItems.forEach((item) => {
     item.addEventListener("click", function () {
+      // Close all modals whenever a tab is switched
+      closeAllModals();
+
       // Remove active class from all menu items
       menuItems.forEach((mi) => mi.classList.remove("active"));
       // Add active class to clicked item

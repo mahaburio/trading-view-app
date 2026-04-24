@@ -176,6 +176,19 @@ function renderSymbolList() {
 let chartInstance = null;
 let currentSymbol = "NASDAQ:AAPL";
 let currentInterval = "3"; // Default: 3 minutes
+let sideToolbarVisible = false; // Default: toolbar hidden
+
+// Drawings button toggle
+document.addEventListener("DOMContentLoaded", () => {
+  const drawingsBtn = document.getElementById("drawingsBtn");
+  if (drawingsBtn) {
+    drawingsBtn.addEventListener("click", () => {
+      sideToolbarVisible = !sideToolbarVisible;
+      drawingsBtn.classList.toggle("active", sideToolbarVisible);
+      loadTradingViewWidget(currentSymbol, currentInterval);
+    });
+  }
+});
 
 // Load TradingView Widget
 function loadTradingViewWidget(symbol = "NASDAQ:AAPL", interval = "D") {
@@ -208,7 +221,7 @@ function loadTradingViewWidget(symbol = "NASDAQ:AAPL", interval = "D") {
       allow_symbol_change: true,
       calendar: false,
       details: false,
-      hide_side_toolbar: false,
+      hide_side_toolbar: !sideToolbarVisible,
       hide_top_toolbar: true,
       hide_legend: false,
       hide_volume: false,

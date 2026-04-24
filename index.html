@@ -245,7 +245,7 @@
                 <!-- Right: Tool Icons -->
                 <div class="tool-icons-container">
                   <div class="tool-icons" id="toolIcons">
-                    <button class="tool-icon" title="Drawings">
+                    <button class="tool-icon" id="drawingsBtn" title="Drawings">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 28 28"
@@ -275,6 +275,21 @@
                         ></path>
                       </svg>
                     </button>
+                    <!-- Connected broker indicator -->
+                    <button
+                      class="tool-icon connected-broker-btn"
+                      id="connectedBrokerBtn"
+                      style="display: none"
+                      title="Connected broker"
+                    >
+                      <img
+                        class="connected-broker-logo"
+                        id="connectedBrokerLogo"
+                        src=""
+                        alt=""
+                      />
+                    </button>
+
                     <button
                       class="tool-icon"
                       id="analysisHubBtn"
@@ -1235,6 +1250,795 @@
               <i class="ri-external-link-line"></i> Didn't open? Click here
             </a>
           </div>
+        </div>
+
+        <!-- Broker Login Modal (Tradovate-style) -->
+        <div class="broker-login-modal" id="brokerLoginModal">
+          <!-- Header -->
+          <div class="bl-header">
+            <div class="bl-header-spacer"></div>
+            <span class="bl-title">Broker login</span>
+            <button class="bl-close-btn" id="brokerLoginClose">
+              <i class="ri-close-large-line"></i>
+            </button>
+          </div>
+          <!-- Yellow notification banner -->
+          <div class="bl-banner">
+            <i class="ri-error-warning-fill"></i>
+            We need to improve your practice. We'd like to improve your
+            experience.
+          </div>
+          <!-- Scrollable area (becomes dark when checking) -->
+          <div class="bl-scroll-area" id="blScrollArea">
+            <!-- Brand row: always visible -->
+            <div class="bl-brand">
+              <img class="bl-broker-logo" id="blBrokerLogo" src="" alt="" />
+              <div class="bl-lang-select">
+                <select class="bl-lang">
+                  <option>English</option>
+                  <option>Spanish</option>
+                  <option>French</option>
+                </select>
+              </div>
+            </div>
+            <!-- Main content (hidden during checking) -->
+            <div class="bl-main" id="blMain">
+              <h2 class="bl-heading" id="blHeading">Sign In with Tradovate</h2>
+              <p class="bl-subtext">to continue to TradingView</p>
+              <!-- Permissions box -->
+              <div class="bl-permissions">
+                <div class="bl-perm-icon-row">
+                  <i class="ri-information-line bl-info-icon"></i>
+                  <span>We will share the following with TradingView:</span>
+                </div>
+                <p class="bl-perm-section">
+                  <strong>Read Only Access:</strong>
+                </p>
+                <ul class="bl-perm-list">
+                  <li>
+                    Basic Profile information including Name and Email address
+                  </li>
+                  <li>Prices</li>
+                  <li>Positions</li>
+                  <li>ContractLibrary</li>
+                </ul>
+                <p class="bl-perm-section">
+                  <strong>Full access including ability to modify:</strong>
+                </p>
+                <ul class="bl-perm-list">
+                  <li>Chat</li>
+                  <li>Users</li>
+                  <li>Orders</li>
+                  <li>Accounting</li>
+                  <li>Alerts</li>
+                  <li>Risks</li>
+                </ul>
+
+                <p class="bl-privacy-text">
+                  Before using this app, you can review TradingView's
+                  <a
+                    href="https://www.tradingview.com/policies/"
+                    target="_blank"
+                    class="bl-link"
+                    >Privacy Policy</a
+                  >
+                  and
+                  <a
+                    href="https://www.tradingview.com/policies/"
+                    target="_blank"
+                    class="bl-link"
+                    >Terms of Service</a
+                  >.
+                </p>
+              </div>
+
+              <!-- Register link -->
+              <p class="bl-register-text">
+                Don't have an account?
+                <a href="#" class="bl-link">Register now</a>
+              </p>
+              <!-- Login form -->
+              <div class="bl-form">
+                <div class="bl-field bl-field-top">
+                  <label class="bl-field-label">Username</label>
+                  <input
+                    type="text"
+                    class="bl-field-input"
+                    id="blUsername"
+                    autocomplete="username"
+                  />
+                </div>
+                <div class="bl-field bl-field-bottom">
+                  <label class="bl-field-label">Password</label>
+                  <div class="bl-password-row">
+                    <input
+                      type="password"
+                      class="bl-field-input"
+                      id="blPassword"
+                      autocomplete="current-password"
+                    />
+                    <button class="bl-eye-btn" id="blEyeBtn" type="button">
+                      <i class="ri-eye-line" id="blEyeIcon"></i>
+                    </button>
+                  </div>
+                </div>
+                <button class="bl-login-btn" id="blLoginBtn">Log In</button>
+              </div>
+            </div>
+            <!-- Checking state content -->
+            <div class="bl-checking-content" id="blCheckingContent">
+              <p class="bl-checking-text">Checking...</p>
+            </div>
+          </div>
+          <!-- Accept Cookies sticky footer (dark, matches screenshot) -->
+          <div class="bl-cookie-footer" id="blCookieFooter">
+            <p class="bl-cookie-text">
+              We use cookies to ensure that we give you the best experience on
+              our website. By continuing using the website, you consent to our
+              use of cookies as described in our
+              <a href="#" class="bl-link-light">Privacy Policy</a>.
+            </p>
+            <button class="bl-accept-cookies-btn" id="blAcceptCookies">
+              Accept Cookies
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Broker History Modal -->
+    <div class="bh-modal" id="brokerHistoryModal">
+      <!-- Header -->
+      <div class="bh-header">
+        <div class="bh-broker-title">
+          <span id="bhBrokerName">Tradovate</span>
+          <i class="ri-arrow-down-s-line"></i>
+        </div>
+        <button class="bh-close-btn" id="brokerHistoryClose">
+          <i class="ri-close-large-line"></i>
+        </button>
+      </div>
+      <!-- Account selector -->
+      <div class="bh-account-row">
+        <span class="bh-account-id">MFFUEVRPD322596042 USD</span>
+        <i class="ri-arrow-down-s-line"></i>
+      </div>
+      <!-- Stats row -->
+      <div class="bh-stats-row">
+        <div class="bh-stat">
+          <div class="bh-stat-label">Account Balance</div>
+          <div class="bh-stat-value">51,497.64</div>
+        </div>
+        <div class="bh-stat">
+          <div class="bh-stat-label">Equity</div>
+          <div class="bh-stat-value">51,497.64</div>
+        </div>
+        <div class="bh-stat">
+          <div class="bh-stat-label">Profit</div>
+          <div class="bh-stat-value bh-profit-zero">0.00</div>
+        </div>
+      </div>
+      <!-- Tabs -->
+      <div class="bh-tabs-row">
+        <button class="bh-tab active" data-bhpanel="bhPanelPositions">
+          Positions <span class="bh-tab-count">1</span>
+        </button>
+        <button class="bh-tab" data-bhpanel="bhPanelOrders">
+          Orders <span class="bh-tab-count">2</span>
+        </button>
+        <button class="bh-tab" data-bhpanel="bhPanelAccountSummary">
+          Account Summary
+        </button>
+        <button class="bh-tab" data-bhpanel="bhPanelNotifications">
+          Notifications log
+        </button>
+      </div>
+      <!-- Tab panels -->
+      <div class="bh-content">
+        <!-- POSITIONS PANEL -->
+        <div class="bh-tab-panel active" id="bhPanelPositions">
+          <div class="bh-item-card">
+            <div class="bh-item-header">
+              <div class="bh-item-icon">
+                <img
+                  src="https://s3-symbol-logo.tradingview.com/country/US.svg"
+                  alt=""
+                />
+              </div>
+              <div class="bh-item-info">
+                <span class="bh-item-symbol">MNQM6</span>
+                <span class="bh-item-name"
+                  >MICRO E-MINI NASDAQ-100 INDEX FUTURES (...</span
+                >
+              </div>
+              <button class="bh-item-menu-btn">
+                <i class="ri-more-2-fill"></i>
+              </button>
+            </div>
+            <div class="bh-detail-grid">
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Side</span>
+                <span class="bh-detail-value bh-val-red">Short</span>
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Qty</span>
+                <span class="bh-detail-value">1</span>
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Avg Fill Price</span>
+                <span class="bh-detail-value">26,763.75</span>
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Profit</span>
+                <span class="bh-detail-value bh-val-red">−2.50 USD</span>
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Position ID</span>
+                <span class="bh-detail-value">4327110</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ORDERS PANEL -->
+        <div class="bh-tab-panel" id="bhPanelOrders">
+          <!-- Sub-tabs -->
+          <div class="bh-sub-tabs" id="bhSubTabs">
+            <button class="bh-sub-tab active" data-bhsub="all">All 5</button>
+            <button class="bh-sub-tab" data-bhsub="working">Working 2</button>
+            <button class="bh-sub-tab" data-bhsub="inactive">Inactive</button>
+            <button class="bh-sub-tab" data-bhsub="filled">Filled 1</button>
+            <button class="bh-sub-tab" data-bhsub="cancelled">
+              Cancelled 2
+            </button>
+            <button class="bh-sub-tab" data-bhsub="rejected">Rejected</button>
+          </div>
+          <!-- Orders list -->
+          <div class="bh-orders-list">
+            <!-- === WORKING GROUP === -->
+            <div class="bh-order-group" data-bhgroup="working">
+              <div class="bh-item-card">
+                <div class="bh-item-header">
+                  <div class="bh-item-icon">
+                    <img
+                      src="https://s3-symbol-logo.tradingview.com/country/US.svg"
+                      alt=""
+                    />
+                  </div>
+                  <div class="bh-item-info">
+                    <span class="bh-item-symbol">MNQM6</span>
+                    <span class="bh-item-name"
+                      >MICRO E-MINI NASDAQ-100 INDEX FUTURES (...</span
+                    >
+                  </div>
+                  <button class="bh-item-info-btn">
+                    <i class="ri-information-line"></i>
+                  </button>
+                </div>
+                <div class="bh-detail-grid">
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Side</span
+                    ><span class="bh-detail-value bh-val-blue">Buy</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Type</span
+                    ><span class="bh-detail-value">Stop Loss</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Qty</span
+                    ><span class="bh-detail-value">1</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Stop Price</span
+                    ><span class="bh-detail-value">26,768.75</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Take Profit</span
+                    ><span class="bh-detail-value"></span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Stop Loss</span
+                    ><span class="bh-detail-value"></span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Status</span
+                    ><span class="bh-detail-value bh-val-blue">Working</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Update Time</span
+                    ><span class="bh-detail-value">2026-04-17 23:11:44</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Order ID</span
+                    ><span class="bh-detail-value">473220550481</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Expiry</span
+                    ><span class="bh-detail-value">Day</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bh-item-card">
+                <div class="bh-item-header">
+                  <div class="bh-item-icon">
+                    <img
+                      src="https://s3-symbol-logo.tradingview.com/country/US.svg"
+                      alt=""
+                    />
+                  </div>
+                  <div class="bh-item-info">
+                    <span class="bh-item-symbol">MNQM6</span>
+                    <span class="bh-item-name"
+                      >MICRO E-MINI NASDAQ-100 INDEX FUTURES (...</span
+                    >
+                  </div>
+                  <button class="bh-item-info-btn">
+                    <i class="ri-information-line"></i>
+                  </button>
+                </div>
+                <div class="bh-detail-grid">
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Side</span
+                    ><span class="bh-detail-value bh-val-blue">Buy</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Type</span
+                    ><span class="bh-detail-value">Take Profit</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Qty</span
+                    ><span class="bh-detail-value">1</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Limit Price</span
+                    ><span class="bh-detail-value">26,752.50</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Take Profit</span
+                    ><span class="bh-detail-value"></span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Stop Loss</span
+                    ><span class="bh-detail-value"></span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Status</span
+                    ><span class="bh-detail-value bh-val-blue">Working</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Update Time</span
+                    ><span class="bh-detail-value">2026-04-17 23:11:44</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Order ID</span
+                    ><span class="bh-detail-value">473220550479</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Expiry</span
+                    ><span class="bh-detail-value">Day</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- === FILLED GROUP === -->
+            <div
+              class="bh-order-group"
+              data-bhgroup="filled"
+              style="display: none"
+            >
+              <div class="bh-item-card">
+                <div class="bh-item-header">
+                  <div class="bh-item-icon">
+                    <img
+                      src="https://s3-symbol-logo.tradingview.com/country/US.svg"
+                      alt=""
+                    />
+                  </div>
+                  <div class="bh-item-info">
+                    <span class="bh-item-symbol">MNQM6</span>
+                    <span class="bh-item-name"
+                      >MICRO E-MINI NASDAQ-100 INDEX FUTURES (...</span
+                    >
+                  </div>
+                  <button class="bh-item-info-btn">
+                    <i class="ri-information-line"></i>
+                  </button>
+                </div>
+                <div class="bh-detail-grid">
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Side</span
+                    ><span class="bh-detail-value bh-val-red">Sell</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Type</span
+                    ><span class="bh-detail-value">Market</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Qty</span
+                    ><span class="bh-detail-value">1</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Remaining Qty</span
+                    ><span class="bh-detail-value">0</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Filled Qty</span
+                    ><span class="bh-detail-value">1</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Take Profit</span
+                    ><span class="bh-detail-value">26,752.50</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Stop Loss</span
+                    ><span class="bh-detail-value">26,768.75</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Avg Fill Price</span
+                    ><span class="bh-detail-value">26,763.75</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Update Time</span
+                    ><span class="bh-detail-value">2026-04-17 23:11:44</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Order ID</span
+                    ><span class="bh-detail-value">473220550470</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Expiry</span
+                    ><span class="bh-detail-value">Day</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- === CANCELLED GROUP === -->
+            <div
+              class="bh-order-group"
+              data-bhgroup="cancelled"
+              style="display: none"
+            >
+              <div class="bh-item-card">
+                <div class="bh-item-header">
+                  <div class="bh-item-icon">
+                    <img
+                      src="https://s3-symbol-logo.tradingview.com/country/US.svg"
+                      alt=""
+                    />
+                  </div>
+                  <div class="bh-item-info">
+                    <span class="bh-item-symbol">MNQM6</span>
+                    <span class="bh-item-name"
+                      >MICRO E-MINI NASDAQ-100 INDEX FUTURES (...</span
+                    >
+                  </div>
+                  <button class="bh-item-info-btn">
+                    <i class="ri-information-line"></i>
+                  </button>
+                </div>
+                <div class="bh-detail-grid">
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Side</span
+                    ><span class="bh-detail-value bh-val-blue">Buy</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Type</span
+                    ><span class="bh-detail-value">Stop Loss</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Qty</span
+                    ><span class="bh-detail-value">1</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Stop Price</span
+                    ><span class="bh-detail-value">26,772.75</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Take Profit</span
+                    ><span class="bh-detail-value"></span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Stop Loss</span
+                    ><span class="bh-detail-value"></span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Update Time</span
+                    ><span class="bh-detail-value">2026-04-17 23:12:29</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Order ID</span
+                    ><span class="bh-detail-value">473220550481</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Expiry</span
+                    ><span class="bh-detail-value">Day</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bh-item-card">
+                <div class="bh-item-header">
+                  <div class="bh-item-icon">
+                    <img
+                      src="https://s3-symbol-logo.tradingview.com/country/US.svg"
+                      alt=""
+                    />
+                  </div>
+                  <div class="bh-item-info">
+                    <span class="bh-item-symbol">MNQM6</span>
+                    <span class="bh-item-name"
+                      >MICRO E-MINI NASDAQ-100 INDEX FUTURES (...</span
+                    >
+                  </div>
+                  <button class="bh-item-info-btn">
+                    <i class="ri-information-line"></i>
+                  </button>
+                </div>
+                <div class="bh-detail-grid">
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Side</span
+                    ><span class="bh-detail-value bh-val-blue">Buy</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Type</span
+                    ><span class="bh-detail-value">Take Profit</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Qty</span
+                    ><span class="bh-detail-value">1</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Limit Price</span
+                    ><span class="bh-detail-value">26,752.50</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Take Profit</span
+                    ><span class="bh-detail-value"></span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Stop Loss</span
+                    ><span class="bh-detail-value"></span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Update Time</span
+                    ><span class="bh-detail-value">2026-04-17 23:12:29</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Order ID</span
+                    ><span class="bh-detail-value">473220550479</span>
+                  </div>
+                  <div class="bh-detail-row">
+                    <span class="bh-detail-label">Expiry</span
+                    ><span class="bh-detail-value">Day</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bh-tab-panel" id="bhPanelAccountSummary">
+          <div class="bh-account-summary">
+            <div class="bh-summary-header">
+              <span class="bh-summary-title">Account Info</span>
+              <button class="bh-item-menu-btn">
+                <i class="ri-more-2-fill"></i>
+              </button>
+            </div>
+            <div class="bh-detail-grid">
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Total P/L</span
+                ><span class="bh-detail-value">1451.68</span>
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Open P/L</span
+                ><span class="bh-detail-value">0.00</span>
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Net Liq</span
+                ><span class="bh-detail-value">51497.64</span>
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Total Margin Used</span
+                ><span class="bh-detail-value">0.00</span>
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Available Margin</span
+                ><span class="bh-detail-value">51497.64</span>
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Day Margin</span
+                ><span class="bh-detail-value">0.00</span>
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Initial Margin</span
+                ><span class="bh-detail-value">0.00</span>
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Maintenance Ma...</span
+                ><span class="bh-detail-value">0.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bh-tab-panel" id="bhPanelNotifications">
+          <!-- Notification 1 -->
+          <div class="bh-notif-item">
+            <div class="bh-item-header">
+              <div class="bh-item-icon">
+                <img
+                  src="https://s3-symbol-logo.tradingview.com/country/US.svg"
+                  alt=""
+                />
+              </div>
+              <div class="bh-item-info">
+                <span class="bh-item-symbol">MNQM6</span>
+                <span class="bh-item-name"
+                  >MICRO E-MINI NASDAQ-100 INDEX FUTURES (...</span
+                >
+              </div>
+              <button class="bh-item-info-btn">
+                <i class="ri-information-line"></i>
+              </button>
+              <button class="bh-item-menu-btn">
+                <i class="ri-more-2-fill"></i>
+              </button>
+            </div>
+            <div class="bh-detail-grid">
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Time</span
+                ><span class="bh-detail-value">2026-04-17 23:12:30</span>
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Title</span
+                ><span class="bh-detail-value bh-val-notif"
+                  >Stop Loss order cancelled on MNQM6 (473220550481)</span
+                >
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Text</span
+                ><span class="bh-detail-value">Buy 1 at 26,772.75</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notification 2 -->
+          <div class="bh-notif-item">
+            <div class="bh-item-header">
+              <div class="bh-item-icon">
+                <img
+                  src="https://s3-symbol-logo.tradingview.com/country/US.svg"
+                  alt=""
+                />
+              </div>
+              <div class="bh-item-info">
+                <span class="bh-item-symbol">MNQM6</span>
+                <span class="bh-item-name"
+                  >MICRO E-MINI NASDAQ-100 INDEX FUTURES (...</span
+                >
+              </div>
+              <button class="bh-item-info-btn">
+                <i class="ri-information-line"></i>
+              </button>
+              <button class="bh-item-menu-btn">
+                <i class="ri-more-2-fill"></i>
+              </button>
+            </div>
+            <div class="bh-detail-grid">
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Time</span
+                ><span class="bh-detail-value">2026-04-17 23:12:30</span>
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Title</span
+                ><span class="bh-detail-value bh-val-notif"
+                  >Take Profit order cancelled on MNQM6 (473220550479)</span
+                >
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Text</span
+                ><span class="bh-detail-value">Buy 1 at 26,752.50</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notification 3 -->
+          <div class="bh-notif-item">
+            <div class="bh-item-header">
+              <div class="bh-item-icon">
+                <img
+                  src="https://s3-symbol-logo.tradingview.com/country/US.svg"
+                  alt=""
+                />
+              </div>
+              <div class="bh-item-info">
+                <span class="bh-item-symbol">MNQM6</span>
+                <span class="bh-item-name"
+                  >MICRO E-MINI NASDAQ-100 INDEX FUTURES (...</span
+                >
+              </div>
+              <button class="bh-item-info-btn">
+                <i class="ri-information-line"></i>
+              </button>
+              <button class="bh-item-menu-btn">
+                <i class="ri-more-2-fill"></i>
+              </button>
+            </div>
+            <div class="bh-detail-grid">
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Time</span
+                ><span class="bh-detail-value">2026-04-17 23:12:30</span>
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Title</span
+                ><span class="bh-detail-value bh-val-notif"
+                  >Market order executed on MNQM6 (473220550505)</span
+                >
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Text</span
+                ><span class="bh-detail-value">Buy 1 at 26,760.25</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notification 4 -->
+          <div class="bh-notif-item">
+            <div class="bh-item-header">
+              <div class="bh-item-icon">
+                <img
+                  src="https://s3-symbol-logo.tradingview.com/country/US.svg"
+                  alt=""
+                />
+              </div>
+              <div class="bh-item-info">
+                <span class="bh-item-symbol">MNQM6</span>
+                <span class="bh-item-name"
+                  >MICRO E-MINI NASDAQ-100 INDEX FUTURES (...</span
+                >
+              </div>
+              <button class="bh-item-info-btn">
+                <i class="ri-information-line"></i>
+              </button>
+              <button class="bh-item-menu-btn">
+                <i class="ri-more-2-fill"></i>
+              </button>
+            </div>
+            <div class="bh-detail-grid">
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Time</span
+                ><span class="bh-detail-value">2026-04-17 23:12:30</span>
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Title</span
+                ><span class="bh-detail-value bh-val-notif"
+                  >Market order placed on MNQM6 (473220550505)</span
+                >
+              </div>
+              <div class="bh-detail-row">
+                <span class="bh-detail-label">Text</span
+                ><span class="bh-detail-value">Sell 1 at 26,763.75</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Broker title dropdown: backdrop + bottom sheet -->
+      <div class="bh-dropdown-backdrop" id="bhDropdownBackdrop"></div>
+      <div class="bh-dropdown-sheet" id="bhDropdownSheet">
+        <div class="bh-dropdown-item">Trading settings...</div>
+        <div class="bh-dropdown-item bh-dropdown-arrow">
+          Summary row
+          <i class="ri-arrow-right-s-line"></i>
+        </div>
+        <div class="bh-dropdown-divider"></div>
+        <div class="bh-dropdown-item">Connect another broker...</div>
+        <div class="bh-dropdown-divider"></div>
+        <div class="bh-dropdown-item bh-dropdown-logout" id="bhLogoutBtn">
+          Log out Tradovate
         </div>
       </div>
     </div>

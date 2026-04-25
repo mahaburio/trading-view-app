@@ -222,24 +222,28 @@
           <main class="" id="chartPage">
             <div class="chart-container">
               <div class="chart-main">
-                <!-- TradingView Widget Container -->
-                <div
-                  id="tradingviewWidgetContainer"
-                  class="tradingview-widget-container"
-                  style="height: 100%; width: 100%"
-                ></div>
-                <!-- TradingView Widget END -->
-
-                <!-- Candle countdown timer overlay -->
-                <div class="chart-timer" id="chartTimer">
-                  <span id="chartTimerValue" style="
-                    background: #e53935;
-                    padding: 2px 5px;
-                    border-radius: 2px;
-                    font-size: 10px;
-                    white-space: nowrap;
-                  "><span id="chartTimerSymbol"></span> --:--:--</span>
+                <!-- Custom Lightweight Chart -->
+                <div id="customChartWrapper" style="height:100%;width:100%;display:flex;flex-direction:column;background:#0F0F0F;">
+                  <!-- Chart Header -->
+                  <div class="chart-header" id="chartHeader">
+                    <div class="chart-header-top">
+                      <span id="chartSymbolName" class="chart-symbol-name">--</span>
+                      <span id="chartIntervalBadge" class="chart-interval-badge">--</span>
+                    </div>
+                    <div class="chart-header-ohlcv">
+                      <span class="ohlcv-label">O<span id="chartOpen" class="ohlcv-val">--</span></span>
+                      <span class="ohlcv-label">H<span id="chartHigh" class="ohlcv-val ohlcv-high">--</span></span>
+                      <span class="ohlcv-label">L<span id="chartLow" class="ohlcv-val ohlcv-low">--</span></span>
+                      <span class="ohlcv-label">C<span id="chartClose" class="ohlcv-val">--</span></span>
+                      <span id="chartChange" class="ohlcv-change">--</span>
+                      <span class="ohlcv-label">Vol <span id="chartVol" class="ohlcv-val">--</span></span>
+                    </div>
+                  </div>
+                  <!-- Canvas Area -->
+                  <div id="lwChart" style="flex:1;min-height:0;width:100%;"></div>
                 </div>
+
+
               </div>
 
               <!-- Bottom Section -->

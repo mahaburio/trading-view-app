@@ -421,6 +421,169 @@
   position: relative;
 }
 
+/* ===========================
+   Custom Lightweight Chart
+=========================== */
+.chart-header {
+  background: #0f0f0f;
+  padding: 6px 10px 4px;
+  flex-shrink: 0;
+  color: #d1d4dc;
+  border-bottom: 1px solid rgba(242, 242, 242, 0.06);
+}
+
+.chart-header-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+
+.chart-symbol-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #d1d4dc;
+}
+
+.chart-interval-badge {
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.1);
+  color: #9598a1;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.chart-header-ohlcv {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ohlcv-label {
+  font-size: 11px;
+  color: #787b86;
+}
+
+.ohlcv-val {
+  color: #d1d4dc;
+  margin-left: 2px;
+}
+
+.ohlcv-high {
+  color: #26a69a;
+}
+.ohlcv-low {
+  color: #ef5350;
+}
+
+.ohlcv-change {
+  font-size: 11px;
+  font-weight: 500;
+  color: #d1d4dc;
+}
+
+/* Loading & error states */
+.chart-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: #0f0f0f;
+}
+
+.chart-loading-spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #26a69a;
+  border-radius: 50%;
+  animation: chartSpin 0.7s linear infinite;
+}
+
+@keyframes chartSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.chart-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: #0f0f0f;
+  color: #ef5350;
+  font-size: 13px;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Price + Timer label overlay inside chart canvas area */
+.price-timer-label {
+  position: absolute;
+  right: 8px;
+  transform: translateY(-50%);
+  color: #fff;
+  border-radius: 4px;
+  z-index: 20;
+  pointer-events: none;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Trebuchet MS", sans-serif;
+  line-height: 1.3;
+  background-color: transparent;
+}
+
+.ptl-left {
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.25);
+  height: fit-content;
+}
+
+.ptl-symbol {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 4px 8px;
+}
+
+.ptl-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 4px 8px;
+  border-left: 2px solid rgba(0,0,0,0.2);
+}
+
+.ptl-top {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.ptl-price {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+.ptl-time {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.9;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
 /* Candle countdown timer overlay — sits on the right price axis */
 .chart-timer {
   position: absolute;
@@ -432,16 +595,13 @@
   padding: 1px 5px;
   z-index: 10;
   pointer-events: none;
-  font-family: -apple-system, BlinkMacSystemFont, "Trebuchet MS", Roboto, Ubuntu, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Trebuchet MS", Roboto, Ubuntu,
+    sans-serif;
   letter-spacing: 0.2px;
   line-height: 1;
   text-align: center;
   top: 50%;
-  visibility: hidden;
-}
-
-.chart-timer.active{
-  visibility: visible;
 }
 
 /* Bottom Navigation */

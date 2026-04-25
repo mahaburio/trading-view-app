@@ -158,7 +158,7 @@ function renderSymbolList() {
       const newSymbol = symbolsData[realIndex]?.symbol;
       if (newSymbol && newSymbol !== currentSymbol) {
         currentSymbol = newSymbol;
-        loadTradingViewWidget(currentSymbol, currentInterval);
+        loadCustomChart(currentSymbol, currentInterval);
       }
     }, 300);
   });
@@ -178,80 +178,237 @@ let currentSymbol = "NASDAQ:AAPL";
 let currentInterval = "3"; // Default: 3 minutes
 let sideToolbarVisible = false; // Default: toolbar hidden
 
-// Drawings button toggle
-document.addEventListener("DOMContentLoaded", () => {
-  const drawingsBtn = document.getElementById("drawingsBtn");
-  if (drawingsBtn) {
-    drawingsBtn.addEventListener("click", () => {
-      sideToolbarVisible = !sideToolbarVisible;
-      drawingsBtn.classList.toggle("active", sideToolbarVisible);
-      loadTradingViewWidget(currentSymbol, currentInterval);
-    });
-  }
-});
+// ==========================
+// SYMBOL → YAHOO FINANCE MAP
+// ==========================
+const tvToYahoo = {
+  "NASDAQ:AAPL": "AAPL",
+  "NASDAQ:TSLA": "TSLA",
+  "NASDAQ:GOOGL": "GOOGL",
+  "NASDAQ:MSFT": "MSFT",
+  "NASDAQ:AMZN": "AMZN",
+  "NASDAQ:META": "META",
+  "NASDAQ:NVDA": "NVDA",
+  "NASDAQ:NFLX": "NFLX",
+  "SP:SPX": "^GSPC",
+  "DJ:DJI": "^DJI",
+  "NASDAQ:NDX": "^NDX",
+  "BINANCE:BTCUSDT": "BTC-USD",
+  "BINANCE:ETHUSDT": "ETH-USD",
+  "BINANCE:BNBUSDT": "BNB-USD",
+  "BINANCE:SOLUSDT": "SOL-USD",
+  "BINANCE:XRPUSDT": "XRP-USD",
+  "BINANCE:ADAUSDT": "ADA-USD",
+  "FX:EURUSD": "EURUSD=X",
+  "FX:GBPUSD": "GBPUSD=X",
+  "FX:USDJPY": "JPY=X",
+  "FX:AUDUSD": "AUDUSD=X",
+  "COMEX:GC1!": "GC=F",
+  "COMEX:SI1!": "SI=F",
+  "NYMEX:CL1!": "CL=F",
+};
 
-// Load TradingView Widget
-function loadTradingViewWidget(symbol = "NASDAQ:AAPL", interval = "D") {
-  const container = document.getElementById("tradingviewWidgetContainer");
+function getYahooParams(tvInterval) {
+  const map = {
+    "1S": { interval: "1m", range: "1d" },
+    "5S": { interval: "1m", range: "1d" },
+    "1":  { interval: "1m", range: "1d" },
+    "2":  { interval: "2m", range: "5d" },
+    "3":  { interval: "5m", range: "2d" },
+    "5":  { interval: "5m", range: "5d" },
+    "15": { interval: "15m", range: "5d" },
+    "30": { interval: "30m", range: "1mo" },
+    "60": { interval: "60m", range: "3mo" },
+    "D":  { interval: "1d", range: "1y" },
+    "W":  { interval: "1wk", range: "5y" },
+    "M":  { interval: "1mo", range: "max" },
+  };
+  return map[String(tvInterval).toUpperCase()] || { interval: "1d", range: "1y" };
+}
+
+async function fetchYahooData(yahooSymbol, interval, range) {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${yahooSymbol}?interval=${interval}&range=${range}&includePrePost=false&corsDomain=finance.yahoo.com`;
+  // Try direct
+  try {
+    const res = await fetch(url);
+    if (res.ok) {
+      const data = await res.json();
+      if (data?.chart?.result) return data;
+    }
+  } catch (e) {}
+  // Fallback: CORS proxy
+  const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
+  const res = await fetch(proxyUrl);
+  if (!res.ok) throw new Error("Data fetch failed");
+  return res.json();
+}
+
+function formatVol(v) {
+  if (v == null || isNaN(v)) return "--";
+  if (v >= 1e9) return (v / 1e9).toFixed(2) + "B";
+  if (v >= 1e6) return (v / 1e6).toFixed(2) + "M";
+  if (v >= 1e3) return (v / 1e3).toFixed(2) + "K";
+  return String(v);
+}
+
+let lwChartInst = null;
+let lwCandle = null;
+let lwVolume = null;
+let priceTimerInterval = null;
+
+function destroyLWChart() {
+  if (priceTimerInterval) { clearInterval(priceTimerInterval); priceTimerInterval = null; }
+  if (lwChartInst) {
+    try { lwChartInst.remove(); } catch (e) {}
+    lwChartInst = null;
+    lwCandle = null;
+    lwVolume = null;
+  }
+}
+
+function updateChartHeaderOHLCV(candle, change, changePct, vol) {
+  const fmt = (n) => (n != null ? Number(n).toFixed(2) : "--");
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  set("chartOpen",  fmt(candle.open));
+  set("chartHigh",  fmt(candle.high));
+  set("chartLow",   fmt(candle.low));
+  set("chartClose", fmt(candle.close));
+  const changeEl = document.getElementById("chartChange");
+  if (changeEl) {
+    const pos = change >= 0;
+    changeEl.textContent = `${pos ? "+" : ""}${fmt(change)} (${pos ? "+" : ""}${changePct.toFixed(2)}%)`;
+    changeEl.style.color = pos ? "#26a69a" : "#ef5350";
+  }
+  set("chartVol", formatVol(vol));
+}
+
+// Load Custom Lightweight Chart
+async function loadCustomChart(symbol = "NASDAQ:AAPL", interval = "D") {
+  const container = document.getElementById("lwChart");
   if (!container) return;
 
-  // Add fade-out effect
-  container.style.transition = "opacity 0.2s ease";
-  container.style.opacity = "0";
+  // Show loading spinner
+  destroyLWChart();
+  container.innerHTML = '<div class="chart-loading"><div class="chart-loading-spinner"></div></div>';
 
-  // Wait for fade-out, then reload
-  setTimeout(() => {
-    // Clear existing widget
+  // Update interval badge
+  const badgeEl = document.getElementById("chartIntervalBadge");
+  if (badgeEl) badgeEl.textContent = interval;
+
+  const yahooSymbol = tvToYahoo[symbol] || (symbol.includes(":") ? symbol.split(":")[1] : symbol);
+  const { interval: yInt, range } = getYahooParams(interval);
+
+  try {
+    const data = await fetchYahooData(yahooSymbol, yInt, range);
+    const result = data?.chart?.result?.[0];
+    if (!result) throw new Error("No data");
+
+    const timestamps = result.timestamp;
+    const q = result.indicators.quote[0];
+    const meta = result.meta;
+
+    // Update symbol name in header
+    const nameEl = document.getElementById("chartSymbolName");
+    if (nameEl) nameEl.textContent = meta?.shortName || meta?.symbol || yahooSymbol;
+
+    // Build candle + volume arrays
+    const candles = [], volumes = [];
+    for (let i = 0; i < timestamps.length; i++) {
+      const o = q.open[i], h = q.high[i], l = q.low[i], c = q.close[i], v = q.volume[i];
+      if (o == null || h == null || l == null || c == null) continue;
+      candles.push({ time: timestamps[i], open: o, high: h, low: l, close: c });
+      volumes.push({
+        time: timestamps[i],
+        value: v || 0,
+        color: c >= o ? "rgba(38,166,154,0.45)" : "rgba(239,83,80,0.45)",
+      });
+    }
+
+    // Update OHLCV header with latest candle
+    if (candles.length > 0) {
+      const last = candles[candles.length - 1];
+      const prev = candles.length > 1 ? candles[candles.length - 2].close : last.open;
+      const ch = last.close - prev;
+      const chPct = prev ? (ch / prev) * 100 : 0;
+      updateChartHeaderOHLCV(last, ch, chPct, volumes[volumes.length - 1]?.value);
+    }
+
+    // Clear loading
     container.innerHTML = "";
 
-    // Create widget div
-    const widgetDiv = document.createElement("div");
-    widgetDiv.className = "tradingview-widget-container__widget";
-    widgetDiv.style.height = "calc(100% - 32px)";
-    widgetDiv.style.width = "100%";
-    container.appendChild(widgetDiv);
-
-    // Create script element
-    const script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src =
-      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
-    script.async = true;
-    script.textContent = JSON.stringify({
-      allow_symbol_change: true,
-      calendar: false,
-      details: false,
-      hide_side_toolbar: !sideToolbarVisible,
-      hide_top_toolbar: true,
-      hide_legend: false,
-      hide_volume: false,
-      hotlist: false,
-      interval: interval,
-      locale: "en",
-      save_image: true,
-      style: "1",
-      symbol: symbol,
-      theme: "dark",
-      timezone: "Etc/UTC",
-      backgroundColor: "#0F0F0F",
-      gridColor: "rgba(242, 242, 242, 0.06)",
-      watchlist: [],
-      withdateranges: false,
-      compareSymbols: [],
-      studies: [],
-      autosize: true,
+    // Create Lightweight Chart
+    lwChartInst = LightweightCharts.createChart(container, {
+      autoSize: true,
+      layout: {
+        background: { color: "#0F0F0F" },
+        textColor: "#b2b5be",
+      },
+      grid: {
+        vertLines: { color: "rgba(242,242,242,0.06)" },
+        horzLines: { color: "rgba(242,242,242,0.06)" },
+      },
+      crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+      rightPriceScale: { borderColor: "rgba(242,242,242,0.08)" },
+      timeScale: {
+        borderColor: "rgba(242,242,242,0.08)",
+        timeVisible: true,
+        secondsVisible: false,
+      },
     });
 
-    container.appendChild(script);
+    // Candlestick series
+    lwCandle = lwChartInst.addCandlestickSeries({
+      upColor: "#26a69a",
+      downColor: "#ef5350",
+      borderUpColor: "#26a69a",
+      borderDownColor: "#ef5350",
+      wickUpColor: "#26a69a",
+      wickDownColor: "#ef5350",
+      lastValueVisible: false,  // hide built-in label (we use custom DOM label)
+      priceLineVisible: false,
+    });
+    lwCandle.setData(candles);
 
-    // Fade back in after widget loads
-    setTimeout(() => {
-      container.style.opacity = "1";
-    }, 100);
+    // Volume histogram (overlay, small at bottom)
+    lwVolume = lwChartInst.addHistogramSeries({
+      priceFormat: { type: "volume" },
+      priceScaleId: "vol",
+      lastValueVisible: false,
+    });
+    lwVolume.setData(volumes);
+    lwChartInst.priceScale("vol").applyOptions({
+      scaleMargins: { top: 0.82, bottom: 0 },
+    });
 
-    // Start/restart candle countdown for new interval
-    startCandleCountdown();
-  }, 200);
+    lwChartInst.timeScale().fitContent();
+
+    // Price + timer label overlay (replaces #chartTimer)
+    const lastCandle = candles[candles.length - 1];
+    const prevCandle = candles.length > 1 ? candles[candles.length - 2] : lastCandle;
+    startPriceTimerLabel(container, lastCandle.close, prevCandle.close, symbol);
+
+    // Hide legacy timer overlay
+    const oldTimer = document.getElementById("chartTimer");
+    if (oldTimer) oldTimer.style.display = "none";
+
+    // Hover → update OHLCV in header
+    lwChartInst.subscribeCrosshairMove((param) => {
+      if (!param?.seriesData) return;
+      const cd = param.seriesData.get(lwCandle);
+      const vd = param.seriesData.get(lwVolume);
+      if (cd) {
+        const ch = cd.close - cd.open;
+        const chPct = cd.open ? (ch / cd.open) * 100 : 0;
+        updateChartHeaderOHLCV(cd, ch, chPct, vd?.value);
+      }
+    });
+
+  } catch (err) {
+    container.innerHTML = '<div class="chart-error">Failed to load chart data. Please try again.</div>';
+    console.error("Chart error:", err);
+  }
+
+  startCandleCountdown();
 }
 
 // Date range modal functionality
@@ -500,7 +657,7 @@ document.querySelectorAll(".date-option").forEach((option) => {
     };
 
     currentInterval = intervalMap[range] || "D";
-    loadTradingViewWidget(currentSymbol, currentInterval);
+    loadCustomChart(currentSymbol, currentInterval);
 
     // Close modal after selection
     setTimeout(closeModalFunc, 200);
@@ -571,7 +728,7 @@ document.querySelectorAll(".interval-option").forEach((option) => {
     }
 
     currentInterval = tvInterval;
-    loadTradingViewWidget(currentSymbol, currentInterval);
+    loadCustomChart(currentSymbol, currentInterval);
 
     setTimeout(closeModalFunc, 200);
   });
@@ -583,6 +740,66 @@ document.querySelectorAll(".interval-option").forEach((option) => {
 addIntervalBtn?.addEventListener("click", () => {
   alert("Add custom interval feature coming soon!");
 });
+
+// ==========================
+// PRICE + TIMER LABEL
+// ==========================
+function startPriceTimerLabel(container, lastPrice, prevClose, tvSymbol) {
+  if (priceTimerInterval) { clearInterval(priceTimerInterval); priceTimerInterval = null; }
+
+  // Remove any existing label
+  container.querySelectorAll(".price-timer-label").forEach((el) => el.remove());
+
+  if (!lwChartInst || !lwCandle) return;
+
+  // Color: compare lastPrice vs prevClose (same logic TradingView uses)
+  const isUp = lastPrice >= prevClose;
+  const bgColor = isUp ? "#26a69a" : "#ef5350";
+
+  // Show dashed price line with matching color
+  lwCandle.applyOptions({
+    priceLineVisible: true,
+    priceLineColor: bgColor,
+    priceLineWidth: 1,
+    priceLineStyle: 2, // Dashed
+  });
+
+  // Short symbol name e.g. "NASDAQ:AAPL" → "AAPL"
+  const shortSym = tvSymbol && tvSymbol.includes(":")
+    ? tvSymbol.split(":")[1]
+    : (tvSymbol || "");
+
+  const label = document.createElement("div");
+  label.className = "price-timer-label";
+  label.style.visibility = "hidden";
+  // No background on parent — color applied to children
+  container.appendChild(label);
+
+  function update() {
+    if (!lwCandle) return;
+    const y = lwCandle.priceToCoordinate(lastPrice);
+    if (y === null || y === undefined) return;
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2, "0");
+    const m = String(now.getMinutes()).padStart(2, "0");
+    const s = String(now.getSeconds()).padStart(2, "0");
+    label.style.top = `${Math.round(y)}px`;
+    label.innerHTML =
+      `<span class="ptl-left"><span class="ptl-symbol">${shortSym}</span></span>` +
+      `<span class="ptl-right"><span class="ptl-price">${lastPrice.toFixed(2)}</span><span class="ptl-time">${h}:${m}:${s}</span></span>`;
+    // Apply dynamic color to children only
+    const leftEl = label.querySelector(".ptl-left");
+    const rightEl = label.querySelector(".ptl-right");
+    if (leftEl) leftEl.style.background = bgColor;
+    if (rightEl) rightEl.style.background = bgColor;
+  }
+
+  // Show immediately, start ticking every second
+  label.style.visibility = "visible";
+  update();
+  priceTimerInterval = setInterval(update, 1000);
+  lwChartInst?.timeScale().subscribeVisibleTimeRangeChange(update);
+}
 
 // ==========================
 // CANDLE COUNTDOWN TIMER

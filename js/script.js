@@ -574,7 +574,7 @@ window.handleTabMenu = function () {
         if (appBanner) appBanner.style.display = "none";
         // Load TradingView widget if not already done
         if (!chartInitialized) {
-          loadTradingViewWidget(currentSymbol, currentInterval);
+          loadCustomChart(currentSymbol, currentInterval);
           chartInitialized = true;
         }
       }

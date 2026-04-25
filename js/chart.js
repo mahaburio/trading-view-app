@@ -630,7 +630,17 @@ function startCandleCountdown() {
       const h = String(now.getHours()).padStart(2, "0");
       const m = String(now.getMinutes()).padStart(2, "0");
       const s = String(now.getSeconds()).padStart(2, "0");
-      el.textContent = `${h}:${m}:${s}`;
+      // Extract short symbol name (e.g. "NASDAQ:AAPL" -> "AAPL")
+      const symbolEl = document.getElementById("chartTimerSymbol");
+      if (symbolEl) {
+        const shortName = currentSymbol.includes(":")
+          ? currentSymbol.split(":")[1]
+          : currentSymbol;
+        symbolEl.textContent = shortName;
+      }
+      el.textContent = "";
+      if (symbolEl) el.appendChild(symbolEl);
+      el.append(` ${h}:${m}:${s}`);
     }
 
     tick();

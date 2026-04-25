@@ -248,6 +248,9 @@ function loadTradingViewWidget(symbol = "NASDAQ:AAPL", interval = "D") {
     setTimeout(() => {
       container.style.opacity = "1";
     }, 100);
+
+    // Start/restart candle countdown for new interval
+    startCandleCountdown();
   }, 200);
 }
 
@@ -580,6 +583,55 @@ document.querySelectorAll(".interval-option").forEach((option) => {
 addIntervalBtn?.addEventListener("click", () => {
   alert("Add custom interval feature coming soon!");
 });
+
+// ==========================
+// CANDLE COUNTDOWN TIMER
+// ==========================
+let countdownTimer = null;
+
+function getIntervalMs(interval) {
+  // Convert TradingView interval string to milliseconds
+  if (!interval) return 0;
+  const str = String(interval).toUpperCase();
+  if (str === "D") return 24 * 60 * 60 * 1000;
+  if (str === "W") return 7 * 24 * 60 * 60 * 1000;
+  if (str === "M") return 30 * 24 * 60 * 60 * 1000; // approx
+  // Seconds intervals like "1S", "5S"
+  if (str.endsWith("S")) return parseInt(str) * 1000;
+  // Everything else is minutes
+  const mins = parseInt(str);
+  return isNaN(mins) ? 0 : mins * 60 * 1000;
+}
+
+function formatCountdown(ms) {
+  if (ms <= 0) return "00:00:00";
+  const totalSec = Math.ceil(ms / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${pad(h)}:${pad(m)}:${pad(s)}`;
+}
+
+function startCandleCountdown() {
+  if (countdownTimer) clearInterval(countdownTimer);
+  const el = document.getElementById("chartTimerValue");
+  const wrapper = document.getElementById("chartTimer");
+  if (!el || !wrapper) return;
+
+  wrapper.style.display = "";
+
+  function tick() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2, "0");
+    const m = String(now.getMinutes()).padStart(2, "0");
+    const s = String(now.getSeconds()).padStart(2, "0");
+    el.textContent = `${h}:${m}:${s}`;
+  }
+
+  tick();
+  countdownTimer = setInterval(tick, 1000);
+}
 
 // ==========================
 // INIT

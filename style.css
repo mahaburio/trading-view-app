@@ -1,9 +1,4 @@
 .app-banner {
-  display: flex;
-  justify-content: center;
-  justify-content: center;
-  position: sticky;
-  top: 0px;
   padding: 10px 0px;
   z-index: 100;
 }
@@ -12,11 +7,6 @@
   padding: 6px 8px;
   border-radius: 50px;
   max-width: fit-content;
-  background-color: #000;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .app-banner img {
@@ -24,13 +14,6 @@
 }
 
 /* Header */
-
-header {
-  /*   position: sticky;
-  top: 48px; */
-  background-color: var(--color-white);
-  z-index: 99;
-}
 
 .header-actions {
   padding: 0px 24px 0px 24px;
@@ -41,15 +24,6 @@ header {
 .header-actions .logo,
 .header-actions .more-action {
   width: 33%;
-}
-.header-actions .logo {
-  text-align: center;
-}
-.header-actions .more-action {
-  text-align: right;
-  font-size: 22px;
-  font-weight: 500;
-  cursor: pointer;
 }
 
 /* Bottom Sheet Modal */
@@ -78,7 +52,7 @@ header {
   max-height: calc(100dvh - 60px);
   background: var(--color-white);
   transform: translateY(100%);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -178,14 +152,6 @@ header {
   padding: 12px;
   margin: 0;
   display: flex;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.tabs-list::-webkit-scrollbar {
-  display: none;
 }
 
 .tab-item {
@@ -455,6 +421,24 @@ header {
   position: relative;
 }
 
+/* Candle countdown timer overlay — sits on the right price axis */
+.chart-timer {
+  position: absolute;
+  right: 4px;
+  background: transparent;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 5px;
+  z-index: 10;
+  pointer-events: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Trebuchet MS", Roboto, Ubuntu, sans-serif;
+  letter-spacing: 0.2px;
+  line-height: 1;
+  text-align: center;
+  top: 50%;
+}
+
 /* Bottom Navigation */
 .chart-bottom-nav {
   display: flex;
@@ -575,20 +559,6 @@ header {
   flex: 1;
   min-width: 0;
   overflow: hidden;
-}
-
-.tool-icons {
-  display: flex;
-  gap: 4px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  width: 100%;
-}
-
-.tool-icons::-webkit-scrollbar {
-  display: none;
 }
 
 .tool-icon {
@@ -748,18 +718,8 @@ header {
 }
 
 .date-range-options {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
   padding-bottom: 4px;
   margin-top: 20px;
-}
-
-.date-range-options::-webkit-scrollbar {
-  display: none;
 }
 
 .date-option {
@@ -812,16 +772,6 @@ header {
   color: var(--color-gray);
   margin-bottom: 12px;
   letter-spacing: 0.5px;
-}
-
-.interval-options {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  padding-bottom: 4px;
 }
 
 .interval-option {
@@ -2152,14 +2102,8 @@ header {
 .bh-tabs-row {
   display: flex;
   border-bottom: 1px solid #f0f0f0;
-  overflow-x: auto;
   flex-shrink: 0;
-  scrollbar-width: none;
   padding: 0 8px;
-}
-
-.bh-tabs-row::-webkit-scrollbar {
-  display: none;
 }
 
 .bh-tab {
@@ -2416,10 +2360,6 @@ header {
   border-bottom: 1px solid #f0f0f0;
   padding: 0 8px;
   flex-shrink: 0;
-}
-
-.bh-sub-tabs::-webkit-scrollbar {
-  display: none;
 }
 
 .bh-sub-tab {

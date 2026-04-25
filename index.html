@@ -32,12 +32,12 @@
   <body>
     <div id="mainWrapper">
       <div class="container">
-        <div class="app-banner">
-          <div class="logo">
+        <div class="app-banner d-flex items-center justify-center sticky-top">
+          <div class="logo bg-black mx-auto d-flex items-center justify-center">
             <img src="./assets/white-full-logo.svg" alt="Trading View Logo" />
           </div>
         </div>
-        <header>
+        <header class="bg-white">
           <div class="header-actions d-flex justify-between items-center">
             <div class="expand-action" id="expandAction">
               <i class="ri-more-fill"></i>
@@ -126,7 +126,7 @@
                 </div>
               </div>
             </div>
-            <a href="/" class="logo fw-bold">
+            <a href="/" class="logo fw-bold text-center">
               <svg
                 width="48"
                 height="48"
@@ -144,7 +144,10 @@
                 </g>
               </svg>
             </a>
-            <div class="more-action" id="moreAction">
+            <div
+              class="more-action text-right fs-22 cursor-pointer fw-medium"
+              id="moreAction"
+            >
               <i class="ri-add-large-line"></i>
             </div>
           </div>
@@ -190,7 +193,7 @@
                   alt=""
                 />
               </div>
-              <ul class="tabs-list">
+              <ul class="tabs-list scroller-x">
                 <li class="tab-item active" data-tab="all">All</li>
                 <li class="tab-item" data-tab="stocks">Stocks</li>
                 <li class="tab-item" data-tab="funds">Funds</li>
@@ -226,6 +229,17 @@
                   style="height: 100%; width: 100%"
                 ></div>
                 <!-- TradingView Widget END -->
+
+                <!-- Candle countdown timer overlay -->
+                <div class="chart-timer" id="chartTimer">
+                  <span id="chartTimerValue" style="
+                    background: #e53935;
+                    padding: 2px 5px;
+                    border-radius: 2px;
+                    font-size: 10px;
+                    white-space: nowrap;
+                  ">--:--</span>
+                </div>
               </div>
 
               <!-- Bottom Section -->
@@ -244,7 +258,10 @@
 
                 <!-- Right: Tool Icons -->
                 <div class="tool-icons-container">
-                  <div class="tool-icons" id="toolIcons">
+                  <div
+                    class="tool-icons scroller-x d-flex gap-1 w-full"
+                    id="toolIcons"
+                  >
                     <button class="tool-icon" id="drawingsBtn" title="Drawings">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -964,7 +981,7 @@
             <div class="date-range-scrollable">
               <!-- Date Range Section -->
               <div class="date-range-section">
-                <div class="date-range-options">
+                <div class="date-range-options scroller-x d-flex gap-2">
                   <div class="date-option" data-range="1d">1D</div>
                   <div class="date-option" data-range="5d">5D</div>
                   <div class="date-option" data-range="1m">1M</div>
@@ -984,7 +1001,7 @@
                 <!-- Favorites -->
                 <div class="interval-category">
                   <div class="interval-category-title">FAVORITES</div>
-                  <div class="interval-options">
+                  <div class="interval-options scroller-x d-flex gap-2 pb-1">
                     <div class="interval-option favorite">
                       <span>8m</span>
                       <i class="ri-star-fill"></i>
@@ -995,7 +1012,7 @@
                 <!-- Ticks -->
                 <div class="interval-category">
                   <div class="interval-category-title">TICKS</div>
-                  <div class="interval-options">
+                  <div class="interval-options scroller-x d-flex gap-2 pb-1">
                     <div class="interval-option">1T</div>
                     <div class="interval-option">10T</div>
                     <div class="interval-option">100T</div>
@@ -1006,7 +1023,7 @@
                 <!-- Seconds -->
                 <div class="interval-category">
                   <div class="interval-category-title">SECONDS</div>
-                  <div class="interval-options">
+                  <div class="interval-options scroller-x d-flex gap-2 pb-1">
                     <div class="interval-option">1s</div>
                     <div class="interval-option">5s</div>
                     <div class="interval-option">10s</div>
@@ -1019,7 +1036,7 @@
                 <!-- Minutes -->
                 <div class="interval-category">
                   <div class="interval-category-title">MINUTES</div>
-                  <div class="interval-options">
+                  <div class="interval-options scroller-x d-flex gap-2 pb-1">
                     <div class="interval-option">1m</div>
                     <div class="interval-option">2m</div>
                     <div class="interval-option active">3m</div>
@@ -1039,7 +1056,7 @@
                 <!-- Hours -->
                 <div class="interval-category">
                   <div class="interval-category-title">HOURS</div>
-                  <div class="interval-options">
+                  <div class="interval-options scroller-x d-flex gap-2 pb-1">
                     <div class="interval-option">1H</div>
                     <div class="interval-option">2H</div>
                     <div class="interval-option">3H</div>
@@ -1054,7 +1071,7 @@
                 <!-- Days -->
                 <div class="interval-category">
                   <div class="interval-category-title">DAYS</div>
-                  <div class="interval-options">
+                  <div class="interval-options scroller-x d-flex gap-2 pb-1">
                     <div class="interval-option">1D</div>
                     <div class="interval-option">3D</div>
                     <div class="interval-option">1W</div>
@@ -1067,7 +1084,7 @@
 
                 <div class="interval-category">
                   <div class="interval-category-title">Ranges</div>
-                  <div class="interval-options">
+                  <div class="interval-options scroller-x d-flex gap-2 pb-1">
                     <div class="interval-option">1R</div>
                     <div class="interval-option">10R</div>
                     <div class="interval-option">40R</div>
@@ -1418,7 +1435,7 @@
         </div>
       </div>
       <!-- Tabs -->
-      <div class="bh-tabs-row">
+      <div class="bh-tabs-row scroller-x">
         <button class="bh-tab active" data-bhpanel="bhPanelPositions">
           Positions <span class="bh-tab-count">1</span>
         </button>

@@ -80,7 +80,7 @@ function renderSymbolList() {
   container.innerHTML = "";
 
   const ITEM_H = 24;
-  const count  = symbolsData.length;
+  const count = symbolsData.length;
 
   // Top spacer so first item can center
   const topSpacer = document.createElement("div");
@@ -108,7 +108,7 @@ function renderSymbolList() {
 
   // Start at the active symbol inside the MIDDLE copy
   const activeIndex = symbolsData.findIndex((s) => s.symbol === currentSymbol);
-  const startIndex  = activeIndex >= 0 ? activeIndex : 0;
+  const startIndex = activeIndex >= 0 ? activeIndex : 0;
   container.scrollTop = (count + startIndex) * ITEM_H;
 
   let lastActiveRealIndex = startIndex;
@@ -121,7 +121,10 @@ function renderSymbolList() {
   function updateActive() {
     const realIndex = getRealIndex();
     container.querySelectorAll(".symbol-chip").forEach((el) => {
-      el.classList.toggle("active", parseInt(el.dataset.realIndex) === realIndex);
+      el.classList.toggle(
+        "active",
+        parseInt(el.dataset.realIndex) === realIndex,
+      );
     });
     if (realIndex !== lastActiveRealIndex) {
       lastActiveRealIndex = realIndex;
@@ -136,11 +139,15 @@ function renderSymbolList() {
     if (raw < count) {
       isLooping = true;
       container.scrollTop += count * ITEM_H;
-      setTimeout(() => { isLooping = false; }, 50);
+      setTimeout(() => {
+        isLooping = false;
+      }, 50);
     } else if (raw >= 2 * count) {
       isLooping = true;
       container.scrollTop -= count * ITEM_H;
-      setTimeout(() => { isLooping = false; }, 50);
+      setTimeout(() => {
+        isLooping = false;
+      }, 50);
     }
   }
 
@@ -167,114 +174,65 @@ function renderSymbolList() {
   container.querySelectorAll(".symbol-chip").forEach((chip) => {
     chip.addEventListener("click", () => {
       const realIdx = parseInt(chip.dataset.realIndex);
-      container.scrollTo({ top: (count + realIdx) * ITEM_H, behavior: "smooth" });
+      container.scrollTo({
+        top: (count + realIdx) * ITEM_H,
+        behavior: "smooth",
+      });
     });
   });
 }
 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Global chart instance
 let chartInstance = null;
 let currentSymbol = "NASDAQ:AAPL";
-let currentInterval = "3"; // Default: 3 minutes
-let sideToolbarVisible = false; // Default: toolbar hidden
+let currentInterval = "3";
+let sideToolbarVisible = false;
 
 // ==========================
-// SYMBOL → YAHOO FINANCE MAP
+// DUMMY DATA GENERATOR
 // ==========================
-const tvToYahoo = {
-  "NASDAQ:AAPL": "AAPL",
-  "NASDAQ:TSLA": "TSLA",
-  "NASDAQ:GOOGL": "GOOGL",
-  "NASDAQ:MSFT": "MSFT",
-  "NASDAQ:AMZN": "AMZN",
-  "NASDAQ:META": "META",
-  "NASDAQ:NVDA": "NVDA",
-  "NASDAQ:NFLX": "NFLX",
-  "SP:SPX": "^GSPC",
-  "DJ:DJI": "^DJI",
-  "NASDAQ:NDX": "^NDX",
-  "BINANCE:BTCUSDT": "BTC-USD",
-  "BINANCE:ETHUSDT": "ETH-USD",
-  "BINANCE:BNBUSDT": "BNB-USD",
-  "BINANCE:SOLUSDT": "SOL-USD",
-  "BINANCE:XRPUSDT": "XRP-USD",
-  "BINANCE:ADAUSDT": "ADA-USD",
-  "FX:EURUSD": "EURUSD=X",
-  "FX:GBPUSD": "GBPUSD=X",
-  "FX:USDJPY": "JPY=X",
-  "FX:AUDUSD": "AUDUSD=X",
-  "COMEX:GC1!": "GC=F",
-  "COMEX:SI1!": "SI=F",
-  "NYMEX:CL1!": "CL=F",
-};
+function generateDummyData(count = 120, startPrice = 150) {
+  const candles = [];
+  const volumes = [];
 
-function getYahooParams(tvInterval) {
-  const map = {
-    "1S": { interval: "1m", range: "1d" },
-    "5S": { interval: "1m", range: "1d" },
-    "1":  { interval: "1m", range: "1d" },
-    "2":  { interval: "2m", range: "5d" },
-    "3":  { interval: "5m", range: "2d" },
-    "5":  { interval: "5m", range: "5d" },
-    "15": { interval: "15m", range: "5d" },
-    "30": { interval: "30m", range: "1mo" },
-    "60": { interval: "60m", range: "3mo" },
-    "D":  { interval: "1d", range: "1y" },
-    "W":  { interval: "1wk", range: "5y" },
-    "M":  { interval: "1mo", range: "max" },
-  };
-  return map[String(tvInterval).toUpperCase()] || { interval: "1d", range: "1y" };
-}
+  let time = Math.floor(Date.now() / 1000) - count * 60;
+  let price = startPrice;
 
-function fetchWithTimeout(url, ms = 8000) {
-  const ctrl = new AbortController();
-  const id = setTimeout(() => ctrl.abort(), ms);
-  return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(id));
-}
+  for (let i = 0; i < count; i++) {
+    const open = price;
+    const move = (Math.random() - 0.5) * 2;
+    const close = open + move;
 
-async function fetchYahooData(yahooSymbol, interval, range) {
-  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${yahooSymbol}?interval=${interval}&range=${range}&includePrePost=false&corsDomain=finance.yahoo.com`;
+    const high = Math.max(open, close) + Math.random();
+    const low = Math.min(open, close) - Math.random();
 
-  const attempts = [
-    // 1. Direct
-    async () => {
-      const res = await fetchWithTimeout(url, 5000);
-      if (!res.ok) throw new Error(`Direct ${res.status}`);
-      return res.json();
-    },
-    // 2. corsproxy.io
-    async () => {
-      const res = await fetchWithTimeout(`https://corsproxy.io/?${encodeURIComponent(url)}`, 8000);
-      if (!res.ok) throw new Error(`corsproxy ${res.status}`);
-      return res.json();
-    },
-    // 3. allorigins.win
-    async () => {
-      const res = await fetchWithTimeout(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`, 8000);
-      if (!res.ok) throw new Error(`allorigins ${res.status}`);
-      const wrapper = await res.json();
-      return JSON.parse(wrapper.contents);
-    },
-    // 4. thingproxy
-    async () => {
-      const res = await fetchWithTimeout(`https://thingproxy.freeboard.io/fetch/${url}`, 8000);
-      if (!res.ok) throw new Error(`thingproxy ${res.status}`);
-      return res.json();
-    },
-  ];
+    const volume = Math.floor(Math.random() * 1000 + 200);
 
-  for (const attempt of attempts) {
-    try {
-      const data = await attempt();
-      if (data?.chart?.result) return data;
-    } catch (e) {
-      console.warn("[Chart] fetch attempt failed:", e.message);
-    }
+    candles.push({
+      time,
+      open,
+      high,
+      low,
+      close,
+    });
+
+    volumes.push({
+      time,
+      value: volume,
+      color: close >= open ? "rgba(38,166,154,0.45)" : "rgba(239,83,80,0.45)",
+    });
+
+    price = close;
+    time += 60;
   }
 
-  throw new Error("All data sources failed");
+  return { candles, volumes };
 }
 
+// ==========================
+// HELPERS
+// ==========================
 function formatVol(v) {
   if (v == null || isNaN(v)) return "--";
   if (v >= 1e9) return (v / 1e9).toFixed(2) + "B";
@@ -287,11 +245,17 @@ let lwChartInst = null;
 let lwCandle = null;
 let lwVolume = null;
 let priceTimerInterval = null;
+let currentLivePrice = null; // updated by live interval, read by price-timer label
 
 function destroyLWChart() {
-  if (priceTimerInterval) { clearInterval(priceTimerInterval); priceTimerInterval = null; }
+  if (priceTimerInterval) {
+    clearInterval(priceTimerInterval);
+    priceTimerInterval = null;
+  }
   if (lwChartInst) {
-    try { lwChartInst.remove(); } catch (e) {}
+    try {
+      lwChartInst.remove();
+    } catch (e) {}
     lwChartInst = null;
     lwCandle = null;
     lwVolume = null;
@@ -300,147 +264,153 @@ function destroyLWChart() {
 
 function updateChartHeaderOHLCV(candle, change, changePct, vol) {
   const fmt = (n) => (n != null ? Number(n).toFixed(2) : "--");
-  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-  set("chartOpen",  fmt(candle.open));
-  set("chartHigh",  fmt(candle.high));
-  set("chartLow",   fmt(candle.low));
+
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
+
+  set("chartOpen", fmt(candle.open));
+  set("chartHigh", fmt(candle.high));
+  set("chartLow", fmt(candle.low));
   set("chartClose", fmt(candle.close));
+
   const changeEl = document.getElementById("chartChange");
   if (changeEl) {
     const pos = change >= 0;
     changeEl.textContent = `${pos ? "+" : ""}${fmt(change)} (${pos ? "+" : ""}${changePct.toFixed(2)}%)`;
     changeEl.style.color = pos ? "#26a69a" : "#ef5350";
   }
+
   set("chartVol", formatVol(vol));
 }
 
-// Load Custom Lightweight Chart
-async function loadCustomChart(symbol = "NASDAQ:AAPL", interval = "D") {
+// ==========================
+// MAIN CHART FUNCTION
+// ==========================
+function loadCustomChart(symbol = "NASDAQ:AAPL", interval = "3") {
   const container = document.getElementById("lwChart");
   if (!container) return;
 
-  // Show loading spinner
   destroyLWChart();
-  container.innerHTML = '<div class="chart-loading"><div class="chart-loading-spinner"></div></div>';
+  currentLivePrice = null;
 
-  // Update interval badge
+  container.innerHTML =
+    '<div class="chart-loading"><div class="chart-loading-spinner"></div></div>';
+
+  // Short symbol: "NASDAQ:AAPL" → "AAPL"
+  const shortSym = symbol.includes(":") ? symbol.split(":")[1] : symbol;
+
   const badgeEl = document.getElementById("chartIntervalBadge");
   if (badgeEl) badgeEl.textContent = interval;
 
-  const yahooSymbol = tvToYahoo[symbol] || (symbol.includes(":") ? symbol.split(":")[1] : symbol);
-  const { interval: yInt, range } = getYahooParams(interval);
+  // Set short symbol name in header
+  const nameEl = document.getElementById("chartSymbolName");
+  if (nameEl) nameEl.textContent = shortSym;
 
-  try {
-    const data = await fetchYahooData(yahooSymbol, yInt, range);
-    const result = data?.chart?.result?.[0];
-    if (!result) throw new Error("No data");
+  // 🔥 Generate dummy data
+  const { candles, volumes } = generateDummyData(120, 150);
 
-    const timestamps = result.timestamp;
-    const q = result.indicators.quote[0];
-    const meta = result.meta;
+  // Header update
+  const last = candles[candles.length - 1];
+  const prev =
+    candles.length > 1 ? candles[candles.length - 2].close : last.open;
 
-    // Update symbol name in header
-    const nameEl = document.getElementById("chartSymbolName");
-    if (nameEl) nameEl.textContent = meta?.shortName || meta?.symbol || yahooSymbol;
+  const ch = last.close - prev;
+  const chPct = prev ? (ch / prev) * 100 : 0;
 
-    // Build candle + volume arrays
-    const candles = [], volumes = [];
-    for (let i = 0; i < timestamps.length; i++) {
-      const o = q.open[i], h = q.high[i], l = q.low[i], c = q.close[i], v = q.volume[i];
-      if (o == null || h == null || l == null || c == null) continue;
-      candles.push({ time: timestamps[i], open: o, high: h, low: l, close: c });
-      volumes.push({
-        time: timestamps[i],
-        value: v || 0,
-        color: c >= o ? "rgba(38,166,154,0.45)" : "rgba(239,83,80,0.45)",
-      });
+  updateChartHeaderOHLCV(last, ch, chPct, volumes.at(-1)?.value);
+
+  container.innerHTML = "";
+  container.style.position = "relative"; // required for price-timer label positioning
+
+  // Create chart
+  lwChartInst = LightweightCharts.createChart(container, {
+    autoSize: true,
+    layout: {
+      background: { color: "#0F0F0F" },
+      textColor: "#b2b5be",
+    },
+    grid: {
+      vertLines: { color: "rgba(255,255,255,0.05)" },
+      horzLines: { color: "rgba(255,255,255,0.05)" },
+    },
+    timeScale: {
+      timeVisible: true,
+      secondsVisible: false,
+      tickMarkFormatter: (time) => {
+        const d = new Date(time * 1000);
+        const h = String(d.getHours()).padStart(2, "0");
+        const m = String(d.getMinutes()).padStart(2, "0");
+        return `${h}:${m}`;
+      },
+    },
+  });
+
+  lwCandle = lwChartInst.addCandlestickSeries({
+    upColor: "#26a69a",
+    downColor: "#ef5350",
+    wickUpColor: "#26a69a",
+    wickDownColor: "#ef5350",
+    lastValueVisible: false, // hide built-in price label (we use custom one)
+    priceLineVisible: false, // set dynamically via startPriceTimerLabel
+  });
+
+  lwCandle.setData(candles);
+
+  lwVolume = lwChartInst.addHistogramSeries({
+    priceFormat: { type: "volume" },
+    priceScaleId: "vol",
+  });
+
+  lwVolume.setData(volumes);
+
+  lwChartInst.priceScale("vol").applyOptions({
+    scaleMargins: { top: 0.8, bottom: 0 },
+  });
+
+  lwChartInst.timeScale().fitContent();
+
+  // Set initial live price
+  currentLivePrice = last.close;
+
+  // Start price + timer label
+  startPriceTimerLabel(container, last.close, prev, symbol);
+
+  // Hover update
+  lwChartInst.subscribeCrosshairMove((param) => {
+    const cd = param?.seriesData?.get(lwCandle);
+    const vd = param?.seriesData?.get(lwVolume);
+
+    if (cd) {
+      const ch = cd.close - cd.open;
+      const chPct = (ch / cd.open) * 100;
+      updateChartHeaderOHLCV(cd, ch, chPct, vd?.value);
     }
+  });
 
-    // Update OHLCV header with latest candle
-    if (candles.length > 0) {
-      const last = candles[candles.length - 1];
-      const prev = candles.length > 1 ? candles[candles.length - 2].close : last.open;
-      const ch = last.close - prev;
-      const chPct = prev ? (ch / prev) * 100 : 0;
-      updateChartHeaderOHLCV(last, ch, chPct, volumes[volumes.length - 1]?.value);
-    }
+  // ==========================
+  // FAKE LIVE UPDATE
+  // ==========================
+  setInterval(() => {
+    if (!lwCandle) return;
 
-    // Clear loading
-    container.innerHTML = "";
+    const last = candles[candles.length - 1];
+    const newClose = last.close + (Math.random() - 0.5);
 
-    // Create Lightweight Chart
-    lwChartInst = LightweightCharts.createChart(container, {
-      autoSize: true,
-      layout: {
-        background: { color: "#0F0F0F" },
-        textColor: "#b2b5be",
-      },
-      grid: {
-        vertLines: { color: "rgba(242,242,242,0.06)" },
-        horzLines: { color: "rgba(242,242,242,0.06)" },
-      },
-      crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-      rightPriceScale: { borderColor: "rgba(242,242,242,0.08)" },
-      timeScale: {
-        borderColor: "rgba(242,242,242,0.08)",
-        timeVisible: true,
-        secondsVisible: false,
-      },
-    });
+    const updated = {
+      ...last,
+      close: newClose,
+      high: Math.max(last.high, newClose),
+      low: Math.min(last.low, newClose),
+    };
 
-    // Candlestick series
-    lwCandle = lwChartInst.addCandlestickSeries({
-      upColor: "#26a69a",
-      downColor: "#ef5350",
-      borderUpColor: "#26a69a",
-      borderDownColor: "#ef5350",
-      wickUpColor: "#26a69a",
-      wickDownColor: "#ef5350",
-      lastValueVisible: false,  // hide built-in label (we use custom DOM label)
-      priceLineVisible: false,
-    });
-    lwCandle.setData(candles);
+    candles[candles.length - 1] = updated;
+    lwCandle.update(updated);
 
-    // Volume histogram (overlay, small at bottom)
-    lwVolume = lwChartInst.addHistogramSeries({
-      priceFormat: { type: "volume" },
-      priceScaleId: "vol",
-      lastValueVisible: false,
-    });
-    lwVolume.setData(volumes);
-    lwChartInst.priceScale("vol").applyOptions({
-      scaleMargins: { top: 0.82, bottom: 0 },
-    });
-
-    lwChartInst.timeScale().fitContent();
-
-    // Price + timer label overlay (replaces #chartTimer)
-    const lastCandle = candles[candles.length - 1];
-    const prevCandle = candles.length > 1 ? candles[candles.length - 2] : lastCandle;
-    startPriceTimerLabel(container, lastCandle.close, prevCandle.close, symbol);
-
-    // Hide legacy timer overlay
-    const oldTimer = document.getElementById("chartTimer");
-    if (oldTimer) oldTimer.style.display = "none";
-
-    // Hover → update OHLCV in header
-    lwChartInst.subscribeCrosshairMove((param) => {
-      if (!param?.seriesData) return;
-      const cd = param.seriesData.get(lwCandle);
-      const vd = param.seriesData.get(lwVolume);
-      if (cd) {
-        const ch = cd.close - cd.open;
-        const chPct = cd.open ? (ch / cd.open) * 100 : 0;
-        updateChartHeaderOHLCV(cd, ch, chPct, vd?.value);
-      }
-    });
-
-  } catch (err) {
-    container.innerHTML = '<div class="chart-error">Failed to load chart data. Please try again.</div>';
-    console.error("Chart error:", err);
-  }
-
-  startCandleCountdown();
+    // Keep live price in sync so the timer label tracks it
+    currentLivePrice = newClose;
+  }, 1000);
 }
 
 // Date range modal functionality
@@ -777,7 +747,10 @@ addIntervalBtn?.addEventListener("click", () => {
 // PRICE + TIMER LABEL
 // ==========================
 function startPriceTimerLabel(container, lastPrice, prevClose, tvSymbol) {
-  if (priceTimerInterval) { clearInterval(priceTimerInterval); priceTimerInterval = null; }
+  if (priceTimerInterval) {
+    clearInterval(priceTimerInterval);
+    priceTimerInterval = null;
+  }
 
   // Remove any existing label
   container.querySelectorAll(".price-timer-label").forEach((el) => el.remove());
@@ -797,9 +770,10 @@ function startPriceTimerLabel(container, lastPrice, prevClose, tvSymbol) {
   });
 
   // Short symbol name e.g. "NASDAQ:AAPL" → "AAPL"
-  const shortSym = tvSymbol && tvSymbol.includes(":")
-    ? tvSymbol.split(":")[1]
-    : (tvSymbol || "");
+  const shortSym =
+    tvSymbol && tvSymbol.includes(":")
+      ? tvSymbol.split(":")[1]
+      : tvSymbol || "";
 
   const label = document.createElement("div");
   label.className = "price-timer-label";
@@ -809,7 +783,10 @@ function startPriceTimerLabel(container, lastPrice, prevClose, tvSymbol) {
 
   function update() {
     if (!lwCandle) return;
-    const y = lwCandle.priceToCoordinate(lastPrice);
+    // Use live price if available, fall back to initial
+    const price = currentLivePrice != null ? currentLivePrice : lastPrice;
+    const dynColor = price >= prevClose ? "#26a69a" : "#ef5350";
+    const y = lwCandle.priceToCoordinate(price);
     if (y === null || y === undefined) return;
     const now = new Date();
     const h = String(now.getHours()).padStart(2, "0");
@@ -818,12 +795,13 @@ function startPriceTimerLabel(container, lastPrice, prevClose, tvSymbol) {
     label.style.top = `${Math.round(y)}px`;
     label.innerHTML =
       `<span class="ptl-left"><span class="ptl-symbol">${shortSym}</span></span>` +
-      `<span class="ptl-right"><span class="ptl-price">${lastPrice.toFixed(2)}</span><span class="ptl-time">${h}:${m}:${s}</span></span>`;
-    // Apply dynamic color to children only
+      `<span class="ptl-right"><span class="ptl-price">${price.toFixed(2)}</span><span class="ptl-time">${h}:${m}:${s}</span></span>`;
+    // Apply dynamic color to children + sync price line
     const leftEl = label.querySelector(".ptl-left");
     const rightEl = label.querySelector(".ptl-right");
-    if (leftEl) leftEl.style.background = bgColor;
-    if (rightEl) rightEl.style.background = bgColor;
+    if (leftEl) leftEl.style.background = dynColor;
+    if (rightEl) rightEl.style.background = dynColor;
+    lwCandle.applyOptions({ priceLineColor: dynColor });
   }
 
   // Show immediately, start ticking every second
@@ -914,25 +892,33 @@ document.addEventListener("DOMContentLoaded", () => {
 // ANALYSIS HUB MODAL
 // ==========================
 function initAnalysisHub() {
-  const ahBtn     = document.getElementById("analysisHubBtn");
-  const ahModal   = document.getElementById("analysisHubModal");
-  const ahContent = ahModal ? ahModal.querySelector(".analysis-hub-content") : null;
-  const ahScroll  = ahModal ? ahModal.querySelector(".analysis-hub-scrollable") : null;
+  const ahBtn = document.getElementById("analysisHubBtn");
+  const ahModal = document.getElementById("analysisHubModal");
+  const ahContent = ahModal
+    ? ahModal.querySelector(".analysis-hub-content")
+    : null;
+  const ahScroll = ahModal
+    ? ahModal.querySelector(".analysis-hub-scrollable")
+    : null;
   const ahCloseBtn = document.getElementById("closeAnalysisHub");
-  const ahBroker  = document.getElementById("ahBrokerBtn");
+  const ahBroker = document.getElementById("ahBrokerBtn");
 
   if (!ahModal || !ahContent) return;
 
   // Positions
-  const AH_FULL  = 0;
-  const AH_HALF  = window.innerHeight * 0.45;
+  const AH_FULL = 0;
+  const AH_HALF = window.innerHeight * 0.45;
   const AH_CLOSE = window.innerHeight;
 
-  let ahStartY = 0, ahCurrentY = 0;
-  let ahStartTr = 0, ahCurrentTr = 0;
+  let ahStartY = 0,
+    ahCurrentY = 0;
+  let ahStartTr = 0,
+    ahCurrentTr = 0;
   let ahIntent = null;
   let ahStartScroll = 0;
-  let ahVelocity = 0, ahLastY = 0, ahLastTime = 0;
+  let ahVelocity = 0,
+    ahLastY = 0,
+    ahLastTime = 0;
 
   function ahGetTr() {
     return new DOMMatrix(getComputedStyle(ahContent).transform).m42;
@@ -949,14 +935,16 @@ function initAnalysisHub() {
     requestAnimationFrame(() => {
       ahSetTr(AH_CLOSE);
       requestAnimationFrame(() => {
-        ahContent.style.transition = "transform 0.35s cubic-bezier(0.32, 0.72, 0, 1)";
+        ahContent.style.transition =
+          "transform 0.35s cubic-bezier(0.32, 0.72, 0, 1)";
         ahSetTr(AH_HALF);
       });
     });
   }
 
   function ahClose() {
-    ahContent.style.transition = "transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)";
+    ahContent.style.transition =
+      "transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)";
     ahSetTr(AH_CLOSE);
     setTimeout(() => {
       ahModal.classList.remove("active");
@@ -978,50 +966,73 @@ function initAnalysisHub() {
   });
 
   // Touch: drag or scroll intent detection
-  ahContent.addEventListener("touchstart", (e) => {
-    ahStartY     = e.touches[0].clientY;
-    ahStartTr    = ahGetTr();
-    ahStartScroll = ahScroll ? ahScroll.scrollTop : 0;
-    ahLastY = ahStartY; ahLastTime = Date.now(); ahVelocity = 0;
-    ahIntent = null;
-    ahContent.style.transition = "none";
-  }, { passive: true });
+  ahContent.addEventListener(
+    "touchstart",
+    (e) => {
+      ahStartY = e.touches[0].clientY;
+      ahStartTr = ahGetTr();
+      ahStartScroll = ahScroll ? ahScroll.scrollTop : 0;
+      ahLastY = ahStartY;
+      ahLastTime = Date.now();
+      ahVelocity = 0;
+      ahIntent = null;
+      ahContent.style.transition = "none";
+    },
+    { passive: true },
+  );
 
-  ahContent.addEventListener("touchmove", (e) => {
-    ahCurrentY = e.touches[0].clientY;
-    const diff = ahCurrentY - ahStartY;
-    const abs  = Math.abs(diff);
-    const isTop = (ahScroll ? ahScroll.scrollTop : 0) <= 0;
+  ahContent.addEventListener(
+    "touchmove",
+    (e) => {
+      ahCurrentY = e.touches[0].clientY;
+      const diff = ahCurrentY - ahStartY;
+      const abs = Math.abs(diff);
+      const isTop = (ahScroll ? ahScroll.scrollTop : 0) <= 0;
 
-    if (ahIntent === null && abs > 5) {
-      if (ahCurrentTr !== AH_FULL)      ahIntent = "drag";
-      else if (diff > 0 && isTop)       ahIntent = "drag";
-      else                               ahIntent = "scroll";
-    }
-    if (ahIntent === null || ahIntent === "scroll") return;
+      if (ahIntent === null && abs > 5) {
+        if (ahCurrentTr !== AH_FULL) ahIntent = "drag";
+        else if (diff > 0 && isTop) ahIntent = "drag";
+        else ahIntent = "scroll";
+      }
+      if (ahIntent === null || ahIntent === "scroll") return;
 
-    e.preventDefault();
-    let next = ahStartTr + diff;
-    if (next < 0) next *= 0.25;
-    if (next > AH_CLOSE) next = AH_CLOSE;
-    ahSetTr(next);
+      e.preventDefault();
+      let next = ahStartTr + diff;
+      if (next < 0) next *= 0.25;
+      if (next > AH_CLOSE) next = AH_CLOSE;
+      ahSetTr(next);
 
-    const now = Date.now();
-    if (now - ahLastTime > 0) ahVelocity = (ahCurrentY - ahLastY) / (now - ahLastTime);
-    ahLastY = ahCurrentY; ahLastTime = now;
-  }, { passive: false });
+      const now = Date.now();
+      if (now - ahLastTime > 0)
+        ahVelocity = (ahCurrentY - ahLastY) / (now - ahLastTime);
+      ahLastY = ahCurrentY;
+      ahLastTime = now;
+    },
+    { passive: false },
+  );
 
   ahContent.addEventListener("touchend", () => {
     if (ahIntent !== "drag") return;
-    ahContent.style.transition = "transform 0.35s cubic-bezier(0.32, 0.72, 0, 1)";
-    if (ahVelocity < -0.5) { ahSetTr(AH_FULL); return; }
-    if (ahVelocity >  0.5) { ahClose();          return; }
-    if (ahCurrentTr < window.innerHeight * 0.25)      ahSetTr(AH_FULL);
+    ahContent.style.transition =
+      "transform 0.35s cubic-bezier(0.32, 0.72, 0, 1)";
+    if (ahVelocity < -0.5) {
+      ahSetTr(AH_FULL);
+      return;
+    }
+    if (ahVelocity > 0.5) {
+      ahClose();
+      return;
+    }
+    if (ahCurrentTr < window.innerHeight * 0.25) ahSetTr(AH_FULL);
     else if (ahCurrentTr < window.innerHeight * 0.65) ahSetTr(AH_HALF);
-    else                                               ahClose();
+    else ahClose();
   });
 
-  ahScroll?.addEventListener("touchmove", (e) => {
-    if (ahCurrentTr !== AH_FULL) e.preventDefault();
-  }, { passive: false });
+  ahScroll?.addEventListener(
+    "touchmove",
+    (e) => {
+      if (ahCurrentTr !== AH_FULL) e.preventDefault();
+    },
+    { passive: false },
+  );
 }

@@ -226,21 +226,53 @@ function getYahooParams(tvInterval) {
   return map[String(tvInterval).toUpperCase()] || { interval: "1d", range: "1y" };
 }
 
+function fetchWithTimeout(url, ms = 8000) {
+  const ctrl = new AbortController();
+  const id = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(id));
+}
+
 async function fetchYahooData(yahooSymbol, interval, range) {
   const url = `https://query1.finance.yahoo.com/v8/finance/chart/${yahooSymbol}?interval=${interval}&range=${range}&includePrePost=false&corsDomain=finance.yahoo.com`;
-  // Try direct
-  try {
-    const res = await fetch(url);
-    if (res.ok) {
-      const data = await res.json();
+
+  const attempts = [
+    // 1. Direct
+    async () => {
+      const res = await fetchWithTimeout(url, 5000);
+      if (!res.ok) throw new Error(`Direct ${res.status}`);
+      return res.json();
+    },
+    // 2. corsproxy.io
+    async () => {
+      const res = await fetchWithTimeout(`https://corsproxy.io/?${encodeURIComponent(url)}`, 8000);
+      if (!res.ok) throw new Error(`corsproxy ${res.status}`);
+      return res.json();
+    },
+    // 3. allorigins.win
+    async () => {
+      const res = await fetchWithTimeout(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`, 8000);
+      if (!res.ok) throw new Error(`allorigins ${res.status}`);
+      const wrapper = await res.json();
+      return JSON.parse(wrapper.contents);
+    },
+    // 4. thingproxy
+    async () => {
+      const res = await fetchWithTimeout(`https://thingproxy.freeboard.io/fetch/${url}`, 8000);
+      if (!res.ok) throw new Error(`thingproxy ${res.status}`);
+      return res.json();
+    },
+  ];
+
+  for (const attempt of attempts) {
+    try {
+      const data = await attempt();
       if (data?.chart?.result) return data;
+    } catch (e) {
+      console.warn("[Chart] fetch attempt failed:", e.message);
     }
-  } catch (e) {}
-  // Fallback: CORS proxy
-  const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-  const res = await fetch(proxyUrl);
-  if (!res.ok) throw new Error("Data fetch failed");
-  return res.json();
+  }
+
+  throw new Error("All data sources failed");
 }
 
 function formatVol(v) {

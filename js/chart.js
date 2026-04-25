@@ -619,18 +619,23 @@ function startCandleCountdown() {
   const wrapper = document.getElementById("chartTimer");
   if (!el || !wrapper) return;
 
-  wrapper.style.display = "";
+  // Reset: remove active class until 2s delay passes
+  wrapper.classList.remove("active");
 
-  function tick() {
-    const now = new Date();
-    const h = String(now.getHours()).padStart(2, "0");
-    const m = String(now.getMinutes()).padStart(2, "0");
-    const s = String(now.getSeconds()).padStart(2, "0");
-    el.textContent = `${h}:${m}:${s}`;
-  }
+  setTimeout(() => {
+    wrapper.classList.add("active");
 
-  tick();
-  countdownTimer = setInterval(tick, 1000);
+    function tick() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, "0");
+      const m = String(now.getMinutes()).padStart(2, "0");
+      const s = String(now.getSeconds()).padStart(2, "0");
+      el.textContent = `${h}:${m}:${s}`;
+    }
+
+    tick();
+    countdownTimer = setInterval(tick, 1000);
+  }, 1000);
 }
 
 // ==========================

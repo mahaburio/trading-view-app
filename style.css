@@ -437,6 +437,11 @@
   line-height: 1;
   text-align: center;
   top: 50%;
+  visibility: hidden;
+}
+
+.chart-timer.active{
+  visibility: visible;
 }
 
 /* Bottom Navigation */
